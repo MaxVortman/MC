@@ -20,9 +20,21 @@ namespace MC
     /// </summary>
     public partial class MainWindow : Window
     {
+
+        GraphicalApp graphics;
+        LogicForUI logic;
+        const string defaultPath = "C:/";
+
         public MainWindow()
         {
             InitializeComponent();
+            graphics = new GraphicalApp(this);
+            logic = new LogicForUI(graphics);
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            logic.FillInList(defaultPath);
         }
     }
 }
