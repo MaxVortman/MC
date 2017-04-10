@@ -82,9 +82,9 @@ namespace MC
         {
             try
             {
-                System.IO.File.Open(Path, FileMode.Open);
+                System.IO.File.Open(Path, FileMode.Open, FileAccess.ReadWrite);
             }
-            catch (FileNotFoundException e)
+            catch (Exception e)
             {
                 MessageBox.Show(e.Message, "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
             }
