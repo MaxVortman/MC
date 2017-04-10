@@ -10,9 +10,9 @@ namespace MC
     abstract class List_sElement
     {
         public object Image { get; protected set; }
-        public string Name { get; protected set; }
-        public string Size { get; protected set; }
-        public string Date { get; protected set; }
+        public string Name { get; set; }
+        public string Size { get; set; }
+        public string Date { get; set; }
         public string Path { get; protected set; }
 
         public List_sElement(string Path)
