@@ -65,7 +65,8 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Abstract Classes\List%27sElement.cs" />
-    <Compile Include="Classes\GraphicalApp.cs" />
+    <Compile Include="Classes\Graphics\GraphicalApp.cs" />
+    <Compile Include="Classes\Graphics\ListViewCustom.cs" />
     <Compile Include="Classes\List%27sElement\File.cs" />
     <Compile Include="Classes\List%27sElement\Folder.cs" />
     <Compile Include="Classes\LogicForUI.cs" />
@@ -102,7 +103,9 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Images\Icons\Folder1.png" />
+  </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\Icons\Folder.png" />
   </ItemGroup>

@@ -17,8 +17,9 @@ namespace MC
             this.graphics = graphics;
         }
 
-        public void FillInList(string path)
+        private void FillInList(string path)
         {
+            graphics.ClearList();   
             //enumerate folder's path
             foreach (var item in Directory.EnumerateDirectories(path))
             {
@@ -31,6 +32,15 @@ namespace MC
                 graphics.AddLine(new File(item));
             }
 
+        }
+
+        public void OpenElem(object elem)
+        {
+            //test for folder
+            if (((List_sElement)elem).Open())
+            {
+                FillInList(((List_sElement)elem).Path);
+            }
         }
     }
 }

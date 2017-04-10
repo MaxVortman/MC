@@ -34,7 +34,15 @@ namespace MC
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            logic.FillInList(defaultPath);
+            logic.OpenElem(new Folder(defaultPath));
+        }
+
+        private void ListView1_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if (ListView1.SelectedItem is List_sElement)
+            {
+                logic.OpenElem(ListView1.SelectedItem);
+            }
         }
     }
 }

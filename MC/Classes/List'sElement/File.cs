@@ -42,26 +42,26 @@ namespace MC
         }
         private string FormatSize(string size)
         {
-            Int64 size_i = Convert.ToInt64(size);
+            double size_i = Convert.ToDouble(size);
             double d23 = Math.Pow(2, 33);
             if (size_i >= d23)
             {
-                size_i /= (long)d23;
-                size = size_i.ToString() + "GB";
+                size_i /= d23;
+                size = String.Format("{0:f} GB", size_i);
             }
             else if (size_i >= 1024 * 8 * 1024)
             {
                 size_i /= (1024 * 8 * 1024);
-                size = size_i.ToString() + "MB";
+                size = String.Format("{0:f} MB", size_i);
             }
             else if (size_i >= 1024 * 8)
             {
                 size_i /= (1024 * 8);
-                size = size_i.ToString() + "KiB";
+                size = String.Format("{0:f} KiB", size_i);
             }
             else
-                size += "B";
-            
+                size += " B";
+
             return size;
         }
 
@@ -76,6 +76,19 @@ namespace MC
             Name = f.Name;
             Size = FormatSize(f.Length.ToString());
             Date = Convert.ToString(f.CreationTime);
+        }
+
+        public override bool Open()
+        {
+            try
+            {
+                System.IO.File.Open(Path, FileMode.Open);
+            }
+            catch (FileNotFoundException e)
+            {
+                MessageBox.Show(e.Message, "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            return false;
         }
     }
 }

@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace MC
 {
@@ -20,5 +23,13 @@ namespace MC
         {
             window.ListView1.Items.Add(elem);
         }
+
+        public void ClearList()
+        {
+            window.ListView1.Items.Clear();
+        }
+
     }
+
+    
 }

@@ -22,5 +22,7 @@ namespace MC
         }
 
         protected abstract void GetAndSetInfo();
+
+        public abstract bool Open();
     }
 }
