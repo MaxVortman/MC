@@ -9,6 +9,7 @@ using System.Windows.Media.Imaging;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Media;
+using System.Diagnostics;
 
 namespace MC
 {
@@ -82,7 +83,7 @@ namespace MC
         {
             try
             {
-                System.IO.File.Open(Path, FileMode.Open, FileAccess.ReadWrite);
+                Process.Start(Path);
             }
             catch (Exception e)
             {

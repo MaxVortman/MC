@@ -14,30 +14,32 @@ namespace MC
     class GraphicalApp
     {
 
-        private MainWindow window;
+        private ListViewCustom list;
+        private TextBlock text;
 
         public ObservableCollection<List_sElement> DataSource
         {
             set
             {
-                window.ListView1.ItemsSource = value;
+                list.ItemsSource = value;
             }
         }
 
 
-        public GraphicalApp(MainWindow window)
+        public GraphicalApp(ListViewCustom list, TextBlock text)
         {
-            this.window = window;
+            this.list = list;
+            this.text = text;
         }
 
         public void AddLine(List_sElement elem)
         {
-            window.ListView1.Items.Add(elem);
+            list.Items.Add(elem);
         }
 
         public void ClearList()
         {
-            window.ListView1.ClearValue(ListViewCustom.ItemsSourceProperty);
+            list.ClearValue(ListViewCustom.ItemsSourceProperty);
             //if (window.PathOfListView1.Text.Length > 3)
             //{
             //    string parentPath = Directory.GetParent(window.PathOfListView1.Text).FullName;
@@ -47,7 +49,7 @@ namespace MC
 
         public void SetCaptionOfPath(string path)
         {
-            window.PathOfListView1.Text = path;
+            text.Text = path;
         }
 
     }

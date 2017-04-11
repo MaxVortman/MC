@@ -21,28 +21,34 @@ namespace MC
     public partial class MainWindow : Window
     {
 
-        GraphicalApp graphics;
+        GraphicalApp graphics1;
+        GraphicalApp graphics2;
         LogicForUI logic;
-        const string defaultPath = "C:/";
+        const string defaultPath1 = "C:/";
+        const string defaultPath2 = "D:/";
 
         public MainWindow()
         {
             InitializeComponent();
-            graphics = new GraphicalApp(this);
-            logic = new LogicForUI(graphics);
+            graphics1 = new GraphicalApp(this.ListView1, this.PathOfListView1);
+            graphics2 = new GraphicalApp(this.ListView2, this.PathOfListView2);
+            logic = new LogicForUI();
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            logic.OpenElem(new Folder(defaultPath));
+            logic.OpenElem(new Folder(defaultPath1), graphics1);
+            logic.OpenElem(new Folder(defaultPath2), graphics2);
         }
 
         private void ListView1_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            if (ListView1.SelectedItem is List_sElement)
-            {
-                logic.OpenElem(ListView1.SelectedItem);
-            }
+            logic.OpenElem(ListView1.SelectedItem, graphics1);
+        }
+
+        private void ListView2_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            logic.OpenElem(ListView2.SelectedItem, graphics2);
         }
     }
 }

@@ -11,15 +11,9 @@ namespace MC
 {
     class LogicForUI
     {
-        private GraphicalApp graphics;
 
 
-        public LogicForUI(GraphicalApp graphics)
-        {
-            this.graphics = graphics;
-        }
-
-        private void FillInList(string path)
+        private void FillInList(string path, GraphicalApp graphics)
         {
 
             //List for ListViewSource
@@ -50,7 +44,7 @@ namespace MC
             graphics.DataSource = DataList;
         }
 
-        public void OpenElem(object elem)
+        public void OpenElem(object elem, GraphicalApp graphics)
         {
             //test for folder
             if (((List_sElement)elem).Open())
@@ -58,7 +52,7 @@ namespace MC
                 try
                 {
                     graphics.SetCaptionOfPath(((List_sElement)elem).Path);
-                    FillInList(((List_sElement)elem).Path);
+                    FillInList(((List_sElement)elem).Path, graphics);
 
                 }
                 catch (UnauthorizedAccessException e)
