@@ -67,6 +67,7 @@
     <Compile Include="Abstract Classes\List%27sElement.cs" />
     <Compile Include="Classes\Graphics\GraphicalApp.cs" />
     <Compile Include="Classes\Graphics\ListViewCustom.cs" />
+    <Compile Include="Classes\List%27sElement\Drive.cs" />
     <Compile Include="Classes\List%27sElement\File.cs" />
     <Compile Include="Classes\List%27sElement\Folder.cs" />
     <Compile Include="Classes\LogicForUI.cs" />
@@ -108,6 +109,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\Icons\Folder.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Icons\Drive.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

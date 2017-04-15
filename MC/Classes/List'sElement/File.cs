@@ -41,33 +41,12 @@ namespace MC
             var bmp = icon.ToBitmap();
             return loadBitmap(bmp);
         }
-        private string FormatSize(string size)
-        {
-            double size_i = Convert.ToDouble(size);
-            double d23 = Math.Pow(2, 33);
-            if (size_i >= d23)
-            {
-                size_i /= d23;
-                size = String.Format("{0:f} GB", size_i);
-            }
-            else if (size_i >= 1024 * 8 * 1024)
-            {
-                size_i /= (1024 * 8 * 1024);
-                size = String.Format("{0:f} MB", size_i);
-            }
-            else if (size_i >= 1024 * 8)
-            {
-                size_i /= (1024 * 8);
-                size = String.Format("{0:f} KiB", size_i);
-            }
-            else
-                size += " B";
+        
 
-            return size;
-        }
-
-        public File(string Path) : base(Path)
+        public File(string Path)
         {
+            this.Path = Path;
+            GetAndSetInfo();
         }
 
         protected override void GetAndSetInfo()
@@ -75,7 +54,7 @@ namespace MC
             Image = IconFromFile(Path);
             FileInfo f = new FileInfo(Path);
             Name = f.Name;
-            Size = FormatSize(f.Length.ToString());
+            Size = FormatSize(f.Length);
             Date = Convert.ToString(f.CreationTime);
         }
 

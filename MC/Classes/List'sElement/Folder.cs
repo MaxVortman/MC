@@ -9,8 +9,10 @@ namespace MC
 {
     class Folder : List_sElement
     {
-        public Folder(string Path) : base(Path)
+        public Folder(string Path)
         {
+            this.Path = Path;
+            GetAndSetInfo();
         }
 
         protected override void GetAndSetInfo()

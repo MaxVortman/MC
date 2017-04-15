@@ -6,23 +6,19 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Windows;
 using System.Collections.ObjectModel;
+using System.Windows.Controls;
 
 namespace MC
 {
-    class LogicForUI
+    static class LogicForUI
     {
 
-
-        private void FillInList(string path, GraphicalApp graphics)
+        //List for ListViewSource
+        //it is really faster
+        static ObservableCollection<List_sElement> DataList = new ObservableCollection<List_sElement>();
+        static private void FillInList(string path)
         {
-
-            //List for ListViewSource
-            //it is really faster
-            ObservableCollection<List_sElement> DataList = new ObservableCollection<List_sElement>();
-
-
-            graphics.ClearList();
-
+            DataList = new ObservableCollection<List_sElement>();
             // ... folder
             if (path.Length > 3)
             {
@@ -41,10 +37,9 @@ namespace MC
                 DataList.Add(new File(item));
                 //graphics.AddLine(new File(item));
             }
-            graphics.DataSource = DataList;
         }
 
-        public void OpenElem(object elem, GraphicalApp graphics)
+        static public void OpenElem(object elem, GraphicalApp graphics)
         {
             //test for folder
             if (((List_sElement)elem).Open())
@@ -52,14 +47,30 @@ namespace MC
                 try
                 {
                     graphics.SetCaptionOfPath(((List_sElement)elem).Path);
-                    FillInList(((List_sElement)elem).Path, graphics);
+                    graphics.ClearList();
+                    FillInList(((List_sElement)elem).Path);
 
                 }
                 catch (UnauthorizedAccessException e)
                 {
                     MessageBox.Show(e.Message, "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
+                finally
+                {
+                    graphics.DataSource = DataList;
+                }
             }
+        }
+
+        static public ObservableCollection<List_sElement> FillTheListBoxWithDrives()
+        {
+            DriveInfo[] drives = DriveInfo.GetDrives();
+            ObservableCollection<List_sElement> drivesElem = new ObservableCollection<List_sElement>(); 
+            foreach (DriveInfo info in drives)
+            {
+                drivesElem.Add(new Drive(info));
+            }
+            return drivesElem;
         }
     }
 }
