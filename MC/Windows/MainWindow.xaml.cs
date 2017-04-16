@@ -53,8 +53,30 @@ namespace MC
 
         private void Places_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
+            //fix error and add new image usb
             bool focus = e.ButtonState == e.LeftButton;
             LogicForUI.OpenElem(Places.SelectedItem, focus ? graphics1 : graphics2);
+        }
+
+        private void ContextMenu1_Click(object sender, RoutedEventArgs e)
+        {
+            MenuItem item = sender as MenuItem;
+            ContextMenu menu = item.Parent as ContextMenu;
+            switch (item.Header.ToString())
+            {
+                case "Copy":
+                    LogicForUI.CopyElem(menu.Name == "ContextMenu1" ? ListView1.SelectedItem : ListView2.SelectedItem);
+                    break;
+                case "Paste":
+                    LogicForUI.PasteElem(ListView1.IsFocused ? graphics1 : graphics2);
+                    break;
+                case "Cut":
+                    LogicForUI.CutElem(menu.Name == "ContextMenu1" ? ListView1.SelectedItem : ListView2.SelectedItem, ListView1.IsFocused ? graphics1 : graphics2);
+                    break;
+                case "Delete":
+                    LogicForUI.DeleteElem(menu.Name == "ContextMenu1" ? ListView1.SelectedItem : ListView2.SelectedItem, ListView1.IsFocused ? graphics1 : graphics2);
+                    break;
+            }
         }
     }
 }

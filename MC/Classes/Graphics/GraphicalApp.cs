@@ -17,11 +17,23 @@ namespace MC
         private ListViewCustom list;
         private TextBlock text;
 
+        public string Path
+        {
+            get
+            {
+                return text.Text;
+            }
+        }
+
         public ObservableCollection<List_sElement> DataSource
         {
             set
             {
                 list.ItemsSource = value;
+            }
+            get
+            {
+                return (ObservableCollection<List_sElement>)list.ItemsSource;
             }
         }
 

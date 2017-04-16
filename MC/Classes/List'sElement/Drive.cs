@@ -34,5 +34,15 @@ namespace MC
             }
             Image = "/Images/Icons/Drive.png";
         }
+
+        public override Buffer Copy()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Paste(string path, Buffer buffer)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

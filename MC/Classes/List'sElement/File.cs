@@ -48,14 +48,14 @@ namespace MC
             this.Path = Path;
             GetAndSetInfo();
         }
-
+        FileInfo info;
         protected override void GetAndSetInfo()
         {
             Image = IconFromFile(Path);
-            FileInfo f = new FileInfo(Path);
-            Name = f.Name;
-            Size = FormatSize(f.Length);
-            Date = Convert.ToString(f.CreationTime);
+            info = new FileInfo(Path);
+            Name = info.Name;
+            Size = FormatSize(info.Length);
+            Date = Convert.ToString(info.CreationTime);
         }
 
         public override bool Open()
@@ -70,5 +70,62 @@ namespace MC
             }
             return false;
         }
+
+        public override Buffer Copy()
+        {
+            int bytesCopied = 0;
+            int bytesToCopy = 16384;
+            byte[] PartBuffer = new byte[bytesToCopy];
+            string tempPath = System.IO.Path.GetTempFileName();
+            using (FileStream inStream = System.IO.File.Open(Path, FileMode.Open, FileAccess.Read, FileShare.Read))
+            {
+                using (FileStream outStream = System.IO.File.Open(tempPath, FileMode.Append, FileAccess.Write, FileShare.None))
+                {
+                    do
+                    {
+                        bytesCopied = inStream.Read(PartBuffer, 0, bytesToCopy);
+                        if (bytesCopied > 0)
+                        {
+                            outStream.Write(PartBuffer, 0, bytesCopied);
+                        }
+                    } while (bytesCopied > 0); 
+                }
+            }
+
+            return new FileBuffer(Name, tempPath);
+        }
+
+        public override void Paste(string path, Buffer buffer)
+        {
+            string tempPath = (buffer as FileBuffer).tempPath;
+            int bytesCopied = 0;
+            int bytesToCopy = 16384;
+            byte[] PartBuffer = new byte[bytesToCopy];
+            using (FileStream inStream = System.IO.File.Open(tempPath, FileMode.Open, FileAccess.Read, FileShare.Read))
+            {
+                using (FileStream outStream = System.IO.File.Open(path, FileMode.Create, FileAccess.Write, FileShare.None))
+                {
+                    do
+                    {
+                        bytesCopied = inStream.Read(PartBuffer, 0, bytesToCopy);
+                        if (bytesCopied > 0)
+                        {
+                            outStream.Write(PartBuffer, 0, bytesCopied);
+                        }
+                    } while (bytesCopied > 0);
+                }
+            }
+           // System.IO.File.Delete(tempPath);
+        }
+
+        //private void ConstrainedCopy(List<byte> sourceArray, long sourceIndex, List<byte> destinationArray, long destinationIndex, long length)
+        //{
+        //    long j = 0;
+        //    for (long i = sourceIndex; i < length; i++)
+        //    {
+        //        destinationArray.Add(sourceArray[i]);
+        //        j++;
+        //    }
+        //}
     }
 }

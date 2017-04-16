@@ -65,6 +65,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Abstract Classes\List%27sElement.cs" />
+    <Compile Include="Classes\Buffer.cs" />
     <Compile Include="Classes\Graphics\GraphicalApp.cs" />
     <Compile Include="Classes\Graphics\ListViewCustom.cs" />
     <Compile Include="Classes\List%27sElement\Drive.cs" />

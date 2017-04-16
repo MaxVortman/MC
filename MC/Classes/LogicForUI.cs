@@ -9,16 +9,18 @@ using System.Collections.ObjectModel;
 using System.Windows.Controls;
 
 namespace MC
-{
+{   
+
     static class LogicForUI
     {
 
         //List for ListViewSource
         //it is really faster
-        static ObservableCollection<List_sElement> DataList = new ObservableCollection<List_sElement>();
+        static List<List_sElement> DataList;
         static private void FillInList(string path)
         {
-            DataList = new ObservableCollection<List_sElement>();
+                                   //must be faster
+            DataList = new List<List_sElement>(500);
             // ... folder
             if (path.Length > 3)
             {
@@ -57,7 +59,7 @@ namespace MC
                 }
                 finally
                 {
-                    graphics.DataSource = DataList;
+                    graphics.DataSource = new ObservableCollection<List_sElement>(DataList);
                 }
             }
         }
@@ -71,6 +73,116 @@ namespace MC
                 drivesElem.Add(new Drive(info));
             }
             return drivesElem;
+        }
+
+        static Buffer buffer;
+
+        static private List_sElement DataToCopy;
+
+        internal static void CopyElem(object elem)
+        {
+            DeleteTemp(buffer);
+
+            List_sElement item = elem as List_sElement;
+            try
+            {
+                buffer = item.Copy();
+                DataToCopy = item;
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message, "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private static void DeleteTemp(Buffer buffer)
+        {
+            if (buffer != null)
+            {
+                if (buffer is FileBuffer)
+                {
+                    FileBuffer fileBuffer = buffer as FileBuffer;
+                    System.IO.File.Delete(fileBuffer.tempPath);
+                }
+                else
+                {
+                    FolderBuffer folderBuffer = buffer as FolderBuffer;
+                    foreach (Buffer item in folderBuffer.FoldersBuffer)
+                    {
+                        DeleteTemp(item);
+                    }
+                }
+            }
+        }
+
+        internal static void CutElem(object elem, GraphicalApp graphics)
+        {
+            try
+            {
+                CopyElem(elem);
+                DeleteElem(elem, graphics);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message, "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        internal static void PasteElem(GraphicalApp graphics)
+        {
+            if (buffer != null)
+            {
+                //For the dynamics
+                ObservableCollection<List_sElement> Data = graphics.DataSource;
+                string path = System.IO.Path.Combine(graphics.Path, DataToCopy.Name);
+
+                try
+                {
+                    DataToCopy.Paste(path, buffer);
+                    //that's it
+                    if (DataToCopy is Folder)
+                    {
+                        Data.Add(new Folder(path));
+                    }
+                    else
+                        Data.Add(new File(path));
+                    graphics.DataSource = Data;
+                    //
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show(e.Message, "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
+                }                
+            }
+        }
+
+        internal static void DeleteElem(object elem, GraphicalApp graphics)
+        {
+            try
+            {
+                //For the dynamics
+                ObservableCollection<List_sElement> Data = graphics.DataSource;
+
+
+                List_sElement item = elem as List_sElement;
+                string path = item.Path;
+                if (item is File)
+                {
+                    System.IO.File.Delete(path);
+                }
+                else
+                {
+                    System.IO.Directory.Delete(path, true);
+                }
+                //that's it
+                Data.Remove(item);
+                graphics.DataSource = Data;
+                //
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message, "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
     }
 }

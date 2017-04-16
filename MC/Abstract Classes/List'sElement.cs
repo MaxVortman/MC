@@ -44,5 +44,9 @@ namespace MC
         }
 
         public abstract bool Open();
+
+        public abstract Buffer Copy();
+
+        public abstract void Paste(string path, Buffer buffer);
     }
 }
