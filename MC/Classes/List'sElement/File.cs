@@ -43,19 +43,6 @@ namespace MC
             return loadBitmap(bmp);
         }
 
-
-        public new string isArchive
-        {
-            get
-            {
-                if (System.IO.Path.GetExtension(Path) == "rar")
-                {
-                    return "Unarchive";
-                }
-                return "Archive";
-            }
-        }
-
         public File(string Path)
         {
             this.Path = Path;
@@ -71,7 +58,19 @@ namespace MC
             Date = Convert.ToString(info.CreationTime);
         }
 
-        public override bool Open()
+        public override void UpdateName(string newPath)
+        {
+            Path = newPath;
+            info = new FileInfo(Path);
+            Name = info.Name;
+        }
+
+        public override void UpdateSize()
+        {
+            Size = FormatSize(info.Length);
+        }
+
+        public override void Open()
         {
             try
             {
@@ -81,7 +80,6 @@ namespace MC
             {
                 MessageBox.Show(e.Message, "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-            return false;
         }
 
         public override Buffer Copy()

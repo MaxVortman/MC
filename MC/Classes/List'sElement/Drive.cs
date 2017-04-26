@@ -17,9 +17,8 @@ namespace MC
             GetAndSetInfo();
         }
 
-        public override bool Open()
+        public override void Open()
         {
-            return true;
         }
 
         protected override void GetAndSetInfo()
@@ -48,6 +47,20 @@ namespace MC
         public override void Archive(string pathZip)
         {
             throw new NotImplementedException();
-        }        
+        }
+
+        public override void UpdateSize()
+        {
+            if (driveInfo.IsReady)
+            {
+                Size = "Free Size: " + FormatSize(driveInfo.TotalFreeSpace * 8);
+                TotalSize = "Total Size: " + FormatSize(driveInfo.TotalSize * 8);
+            }
+        }
+
+        public override void UpdateName(string newPath)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

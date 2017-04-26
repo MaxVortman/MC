@@ -16,7 +16,6 @@ namespace MC
         public string Size { get; set; }
         public string Date { get; set; }
         public string Path { get; protected set; }
-        public string isArchive { get { return "Archive"; } }
 
 
         protected abstract void GetAndSetInfo();
@@ -47,7 +46,11 @@ namespace MC
             return stringSize;
         }
 
-        public abstract bool Open();
+        public abstract void UpdateSize();
+
+        public abstract void UpdateName(string newPath);
+
+        public abstract void Open();
 
         public abstract Buffer Copy();
 
