@@ -10,6 +10,7 @@ namespace MC
 {
     public class ListViewCustom : ListView
     {
+
         protected override void PrepareContainerForItemOverride(DependencyObject element, object item)
         {
             base.PrepareContainerForItemOverride(element, item);

@@ -1,6 +1,5 @@
 ﻿<Window x:Class="MC.MainWindow" Loaded="Window_Loaded"
         Background="LightGray"
-        
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -35,7 +34,7 @@
                                                Height="15"
                                                VerticalAlignment="Center"       
                                                HorizontalAlignment="Left" Source="{Binding Image}"/>
-                                        <TextBlock Text="{Binding Name}"/>
+                                        <TextBox Text="{Binding Name}" Background="{x:Null}" BorderBrush="{x:Null}" IsReadOnly="True" Cursor="AppStarting"/>
                                     </StackPanel>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
@@ -67,6 +66,7 @@
                         <MenuItem Header="Paste" Click="ContextMenu1_Click"></MenuItem>
                         <MenuItem Header="Cut" Click="ContextMenu1_Click"></MenuItem>
                         <MenuItem Header="Delete" Click="ContextMenu1_Click"></MenuItem>
+                        <MenuItem Header="Archive/Unarchive" Click="ContextMenu1_Click"></MenuItem>
                     </ContextMenu>
                 </ListView.ContextMenu>
             </local:ListViewCustom>
@@ -113,11 +113,12 @@
                     </Style>
                 </ListView.ItemContainerStyle>
                 <ListView.ContextMenu>
-                    <ContextMenu x:Name="ContextMenu2">
+                <ContextMenu x:Name="ContextMenu2">
                         <MenuItem Header="Copy" Click="ContextMenu1_Click"></MenuItem>
                         <MenuItem Header="Paste" Click="ContextMenu1_Click"></MenuItem>
                         <MenuItem Header="Cut" Click="ContextMenu1_Click"></MenuItem>
                         <MenuItem Header="Delete" Click="ContextMenu1_Click"></MenuItem>
+                        <MenuItem Header="Archive/Unarchive" Click="ContextMenu1_Click"></MenuItem>
                     </ContextMenu>
                 </ListView.ContextMenu>
             </local:ListViewCustom>

@@ -44,5 +44,10 @@ namespace MC
         {
             throw new NotImplementedException();
         }
+
+        public override void Archive(string pathZip)
+        {
+            throw new NotImplementedException();
+        }        
     }
 }

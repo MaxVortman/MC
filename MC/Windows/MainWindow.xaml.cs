@@ -76,6 +76,9 @@ namespace MC
                 case "Delete":
                     LogicForUI.DeleteElem(menu.Name == "ContextMenu1" ? ListView1.SelectedItem : ListView2.SelectedItem, ListView1.IsFocused ? graphics1 : graphics2);
                     break;
+                case "Archive/Unarchive":
+                    LogicForUI.ArchiveOrUnachiveElem(menu.Name == "ContextMenu1" ? ListView1.SelectedItem : ListView2.SelectedItem);
+                    break;
             }
         }
     }

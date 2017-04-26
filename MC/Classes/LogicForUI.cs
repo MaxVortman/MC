@@ -7,6 +7,7 @@ using System.IO;
 using System.Windows;
 using System.Collections.ObjectModel;
 using System.Windows.Controls;
+using Microsoft.Win32;
 
 namespace MC
 {   
@@ -92,6 +93,50 @@ namespace MC
             catch (Exception e)
             {
                 MessageBox.Show(e.Message, "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        internal static void ArchiveOrUnachiveElem(object elem)
+        {
+            List_sElement item = elem as List_sElement;
+
+            try
+            {
+                if (Path.GetExtension(item.Path) == ".rar")
+                {
+                    Unarchive(item);
+                }
+                else
+                {
+                    Archive(item);
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message, "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private static void Unarchive(List_sElement item)
+        {
+            System.Windows.Forms.FolderBrowserDialog folderDialog = new System.Windows.Forms.FolderBrowserDialog();
+            if (System.Windows.Forms.DialogResult.OK == folderDialog.ShowDialog())
+            {
+                item.Unarchive(folderDialog.SelectedPath);
+            }
+        }
+
+        private static void Archive(List_sElement item)
+        {
+
+            SaveFileDialog fileDialog = new SaveFileDialog();
+            fileDialog.Filter = "All Files | *.* ";
+            fileDialog.AddExtension = true;
+            fileDialog.DefaultExt = "rar";
+            //getting full file name, where we'll save the archive
+            if (fileDialog.ShowDialog() == true)
+            {
+                item.Archive(fileDialog.FileName);
             }
         }
 
