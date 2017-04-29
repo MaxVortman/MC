@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,17 +16,15 @@ using System.Windows.Shapes;
 
 namespace MC
 {
-    /// <summary>
-    /// Логика взаимодействия для MainWindow.xaml
-    /// </summary>
+    /*
+     * Баги: с watcher-ами(create and rename).
+     * Нужно: изобрести watcher на изменение состояния дисков.
+    */
     public partial class MainWindow : Window
     {
 
         GraphicalApp graphics1;
         GraphicalApp graphics2;
-        //need to fix
-        const string defaultPath1 = "C:/";
-        const string defaultPath2 = "D:/";
 
         public MainWindow()
         {
@@ -36,9 +35,10 @@ namespace MC
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            Places.ItemsSource = LogicForUI.FillTheListBoxWithDrives();
-            LogicForUI.OpenElem(new Folder(defaultPath1), graphics1, Dispatcher);
-            LogicForUI.OpenElem(new Folder(defaultPath2), graphics2, Dispatcher);
+            DriveInfo[] drives = DriveInfo.GetDrives();
+            Places.ItemsSource = LogicForUI.FillTheListBoxWithDrives(drives);
+            LogicForUI.OpenElem(new Folder(drives[0].Name), graphics1, Dispatcher);
+            LogicForUI.OpenElem(new Folder(drives[1].Name), graphics2, Dispatcher);
         }
 
         private void ListView1_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -53,9 +53,17 @@ namespace MC
 
         private void Places_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            //fix error and add new image usb
             bool focus = e.ButtonState == e.LeftButton;
-            LogicForUI.OpenElem(Places.SelectedItem, focus ? graphics1 : graphics2, Dispatcher);
+            ListBoxItem item = sender as ListBoxItem;
+            Drive drive = item.DataContext as Drive;
+            if (drive.isReady)
+            {
+                LogicForUI.OpenElem(Places.SelectedItem, focus ? graphics1 : graphics2, Dispatcher);
+            }
+            else
+            {
+                MessageBox.Show("Can not open because disk is not ready.", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void ContextMenu1_Click(object sender, RoutedEventArgs e)
@@ -98,9 +106,7 @@ namespace MC
                     myTextBox.IsReadOnly = false;
                     myTextBox.SelectionStart = 0;
                     myTextBox.SelectionLength = myTextBox.Text.Length;
-                    KeyDown += Rename_KeyDown;
-
-                    //LogicForUI.RenameFile(menu.Name == "ContextMenu1" ? ListView1.SelectedItem : ListView2.SelectedItem);
+                    KeyDown += Rename_KeyDown;                    
                     break;
             }
         }

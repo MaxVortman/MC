@@ -177,13 +177,31 @@ namespace MC
             //
         }
 
-        static public ObservableCollection<List_sElement> FillTheListBoxWithDrives()
-        {
-            DriveInfo[] drives = DriveInfo.GetDrives();
+        static public ObservableCollection<List_sElement> FillTheListBoxWithDrives(DriveInfo[] drives)
+        {           
             ObservableCollection<List_sElement> drivesElem = new ObservableCollection<List_sElement>(); 
             foreach (DriveInfo info in drives)
             {
-                drivesElem.Add(new Drive(info));
+                switch (info.DriveType.ToString())
+                {
+                    case "Fixed":
+                        drivesElem.Add(new Fixed(info));
+                        break;
+                    case "CDRom":                        
+                        drivesElem.Add(new CDRom(info));
+                        break;
+                    case "Network":
+                        throw new NotImplementedException();
+                    case "NoRootDirectory":
+                        throw new NotImplementedException();
+                    case "Ram":
+                        throw new NotImplementedException();
+                    case "Removable":
+                        drivesElem.Add(new Removable(info));
+                        break;
+                    case "Unknown":
+                        throw new NotImplementedException();
+                }
             }
             return drivesElem;
         }

@@ -7,12 +7,14 @@ using System.Threading.Tasks;
 
 namespace MC
 {
-    class Drive : List_sElement
+    abstract class Drive : List_sElement
     {
-        public string TotalSize { private set; get;}
+        public bool isReady { private set; get; }
+        public string TotalSize { private set; get; }
         DriveInfo driveInfo;
         public Drive(DriveInfo driveInfo)
         {
+            isReady = driveInfo.IsReady;
             this.driveInfo = driveInfo;
             GetAndSetInfo();
         }
@@ -26,10 +28,10 @@ namespace MC
             Path = driveInfo.RootDirectory.ToString();
             Name = driveInfo.Name;
 
-            if (driveInfo.IsReady)
+            if (isReady)
             {
                 Size = "Free Size: " + FormatSize(driveInfo.TotalFreeSpace * 8);
-                TotalSize = "Total Size: " + FormatSize(driveInfo.TotalSize * 8); 
+                TotalSize = "Total Size: " + FormatSize(driveInfo.TotalSize * 8);
             }
             Image = "/Images/Icons/Drive.png";
         }
@@ -44,23 +46,25 @@ namespace MC
             throw new NotImplementedException();
         }
 
-        public override void Archive(string pathZip)
+        public new void Unarchive(string pathZip)
         {
             throw new NotImplementedException();
         }
 
         public override void UpdateSize()
         {
-            if (driveInfo.IsReady)
-            {
-                Size = "Free Size: " + FormatSize(driveInfo.TotalFreeSpace * 8);
-                TotalSize = "Total Size: " + FormatSize(driveInfo.TotalSize * 8);
-            }
+            throw new NotImplementedException();
         }
 
         public override void UpdateName(string newPath)
         {
             throw new NotImplementedException();
         }
+
+        public override void Archive(string pathZip)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
+

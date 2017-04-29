@@ -63,6 +63,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Compile Include="Abstract Classes\Drive.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -71,9 +72,11 @@
     <Compile Include="Classes\Buffer.cs" />
     <Compile Include="Classes\Graphics\GraphicalApp.cs" />
     <Compile Include="Classes\Graphics\ListViewCustom.cs" />
-    <Compile Include="Classes\List%27sElement\Drive.cs" />
+    <Compile Include="Classes\List%27sElement\Drives\CDRom.cs" />
+    <Compile Include="Classes\List%27sElement\Drives\Fixed.cs" />
     <Compile Include="Classes\List%27sElement\File.cs" />
     <Compile Include="Classes\List%27sElement\Folder.cs" />
+    <Compile Include="Classes\List%27sElement\Drives\Removable.cs" />
     <Compile Include="Classes\LogicForUI.cs" />
     <Compile Include="Windows\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -117,6 +120,12 @@
   <ItemGroup>
     <Resource Include="Images\Icons\Drive.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Icons\hard-drive-icon.png" />
+    <Resource Include="Images\Icons\Cd-ROM-icon.png" />
+    <Content Include="Images\Icons\USB.svg" />
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
