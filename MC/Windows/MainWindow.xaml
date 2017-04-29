@@ -88,7 +88,7 @@
                                                Height="15"
                                                VerticalAlignment="Center"       
                                                HorizontalAlignment="Left" Source="{Binding Image}"/>
-                                        <TextBlock Text="{Binding Name}"/>
+                                        <TextBox Text="{Binding Name}" Background="{x:Null}" BorderBrush="{x:Null}" IsReadOnly="True" Cursor="AppStarting" x:Name="ItemNameBox"/>
                                     </StackPanel>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
@@ -111,15 +111,17 @@
                 </ListView.View>
                 <ListView.ItemContainerStyle>
                     <Style TargetType="ListViewItem">
+                        <EventSetter Event="MouseEnter" Handler="TextBox_MouseDown"/>
                         <EventSetter Event="MouseDoubleClick"  Handler="ListView2_MouseDoubleClick" />
                     </Style>
                 </ListView.ItemContainerStyle>
                 <ListView.ContextMenu>
-                <ContextMenu x:Name="ContextMenu2">
+                <ContextMenu x:Name="ContextMenu2" Opened="ContextMenu1_Opened">
                         <MenuItem Header="Copy" Click="ContextMenu1_Click"></MenuItem>
                         <MenuItem Header="Paste" Click="ContextMenu1_Click"></MenuItem>
                         <MenuItem Header="Cut" Click="ContextMenu1_Click"></MenuItem>
                         <MenuItem Header="Delete" Click="ContextMenu1_Click"></MenuItem>
+                        <MenuItem Header="Rename" Click="ContextMenu1_Click"></MenuItem>
                         <MenuItem Header="Archive/Unarchive" Click="ContextMenu1_Click"></MenuItem>
                     </ContextMenu>
                 </ListView.ContextMenu>

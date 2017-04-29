@@ -52,11 +52,6 @@ namespace MC
         public void ClearList()
         {
             list.ClearValue(ListViewCustom.ItemsSourceProperty);
-            //if (window.PathOfListView1.Text.Length > 3)
-            //{
-            //    string parentPath = Directory.GetParent(window.PathOfListView1.Text).FullName;
-            //    window.ListView1.Items.Add(new Folder(parentPath) { Name = "...", Date = "", Size = "" });
-            //}
         }
 
         public void SetCaptionOfPath(string path)
@@ -64,6 +59,10 @@ namespace MC
             text.Text = path;
         }
 
+        public void Refresh()
+        {
+            list.Items.Refresh();
+        }
     }
 
     

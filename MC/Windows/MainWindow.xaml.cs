@@ -37,6 +37,7 @@ namespace MC
         {
             DriveInfo[] drives = DriveInfo.GetDrives();
             Places.ItemsSource = LogicForUI.FillTheListBoxWithDrives(drives);
+            LogicForUI.CreateWatchersAndSetGraphics(graphics1, graphics2);
             LogicForUI.OpenElem(new Folder(drives[0].Name), graphics1, Dispatcher);
             LogicForUI.OpenElem(new Folder(drives[1].Name), graphics2, Dispatcher);
         }

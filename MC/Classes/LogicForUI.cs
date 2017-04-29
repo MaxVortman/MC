@@ -34,31 +34,39 @@ namespace MC
             foreach (var item in Directory.EnumerateDirectories(path))
             {
                 DataList.Add(new Folder(item));
-                //graphics.AddLine(new Folder(item));
             }
             //enumerate file's path
             foreach (var item in Directory.EnumerateFiles(path))
             {
                 DataList.Add(new File(item));
-                //graphics.AddLine(new File(item));
             }
         }
-        private static GraphicalApp currentGraphics;
+        
         private static Dispatcher dispatcher;
         static public void OpenElem(object o, GraphicalApp graphics, Dispatcher disp)
         {
-            dispatcher = disp;
             currentGraphics = graphics;
+            dispatcher = disp;            
             List_sElement elem = o as List_sElement;
             if (elem is Folder || elem is Drive)
             {
-                //create watcher
-                CreateWatcher(elem);
-                //test for folder                
+                //Assign a path of watcher
+                ChangePathOfWatcher(elem.Path, graphics.Path);
+                //start fill            
                 try
                 {
                     graphics.SetCaptionOfPath(elem.Path);
-                    graphics.ClearList();
+                    //test for two list on the same path
+                    if (graphics1.Path == graphics2.Path)
+                    {
+                        if (graphics1 == graphics)
+                        {
+                            graphics1.DataSource = graphics2.DataSource;
+                        }
+                        else
+                            graphics2.DataSource = graphics1.DataSource;
+                    }
+                    else
                     FillInList(elem.Path);
 
                 }
@@ -68,19 +76,53 @@ namespace MC
                 }
                 finally
                 {
-                    graphics.DataSource = new ObservableCollection<List_sElement>(DataList);
+                    //test for two list on the same path
+                    if (graphics1.Path != graphics2.Path)
+                        graphics.DataSource = new ObservableCollection<List_sElement>(DataList);
                 }
             }
             else
             {
                 elem.Open();
             }
-        }               
+        }
 
-        private static void CreateWatcher(List_sElement elem)
+
+        private static void ChangePathOfWatcher(string path, string oldPath)
         {
-            System.IO.FileSystemWatcher watcher = new System.IO.FileSystemWatcher();
-            watcher.Path = elem.Path;
+            if (watcher1.Path == oldPath)
+            {
+                watcher1.Path = path;
+                watcher1.EnableRaisingEvents = true;
+            }
+            else
+            {
+                watcher2.Path = path;
+                watcher2.EnableRaisingEvents = true;
+            }
+            //test for two list on the same path
+            if (graphics1.Path == graphics2.Path)
+            {
+                watcher1 = watcher2;
+            }
+        }
+
+        private static FileSystemWatcher watcher1;
+        private static FileSystemWatcher watcher2;
+        private static GraphicalApp graphics1;
+        private static GraphicalApp graphics2;
+        private static GraphicalApp currentGraphics;
+        public static void CreateWatchersAndSetGraphics(GraphicalApp graphics1, GraphicalApp graphics2)
+        {
+            LogicForUI.graphics1 = graphics1;
+            LogicForUI.graphics2 = graphics2;
+            watcher1 = CreateWatcher();
+            watcher2 = CreateWatcher();
+        }
+
+        private static FileSystemWatcher CreateWatcher()
+        {
+            FileSystemWatcher watcher = new FileSystemWatcher();
             watcher.NotifyFilter = System.IO.NotifyFilters.Size | System.IO.NotifyFilters.FileName |
                 System.IO.NotifyFilters.DirectoryName | System.IO.NotifyFilters.CreationTime;
             watcher.Filter = "*.*";
@@ -88,12 +130,11 @@ namespace MC
             watcher.Created += Watcher_Created;
             watcher.Deleted += Watcher_Deleted;
             watcher.Renamed += new RenamedEventHandler(Watcher_Renamed);
-            watcher.EnableRaisingEvents = true;
+            return watcher;
         }
 
         private static void Watcher_Renamed(object sender, RenamedEventArgs e)
         {
-            //For the dynamics
             ObservableCollection<List_sElement> Data = currentGraphics.DataSource;
             List_sElement elem = null;
             foreach (var item in Data)
@@ -107,7 +148,18 @@ namespace MC
             dispatcher.BeginInvoke(DispatcherPriority.ApplicationIdle, (ThreadStart)delegate ()
             {
                 //that's it
-                elem?.UpdateName(e.FullPath);
+                if (elem != null)
+                {
+                    elem.UpdateName(e.FullPath);
+                    //test for two list on the same path
+                    if (graphics1.Path == graphics2.Path)
+                    {
+                        graphics1.Refresh();
+                        graphics2.Refresh();
+                    }
+                    else
+                        currentGraphics.Refresh();
+                }
                 //
             });
         }
@@ -127,8 +179,19 @@ namespace MC
             }
             dispatcher.BeginInvoke(DispatcherPriority.ApplicationIdle, (ThreadStart)delegate ()
             {
-                elem?.UpdateSize();
-                
+                if (elem != null)
+                {
+                    elem.UpdateSize();
+                    //test for two list on the same path
+                    if (graphics1.Path == graphics2.Path)
+                    {
+                        graphics1.Refresh();
+                        graphics2.Refresh();
+                    }
+                    else
+                        currentGraphics.Refresh();
+                }
+
             });
         }
 

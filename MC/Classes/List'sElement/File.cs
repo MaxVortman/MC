@@ -67,6 +67,7 @@ namespace MC
 
         public override void UpdateSize()
         {
+            info = new FileInfo(Path);
             Size = FormatSize(info.Length);
         }
 
