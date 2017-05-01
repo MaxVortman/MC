@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -23,6 +24,13 @@ namespace MC
     */
     public partial class MainWindow : Window
     {
+
+        public MainWindow()
+        {
+            InitializeComponent();
+            graphics1 = new GraphicalApp(this.ListView1, this.PathOfListView1);
+            graphics2 = new GraphicalApp(this.ListView2, this.PathOfListView2);
+        }
 
         GraphicalApp graphics1;
         GraphicalApp graphics2;
@@ -177,6 +185,18 @@ namespace MC
         {
             Settings settings = new Settings();
             settings.Show();
+        }
+
+        private void Go_SubmenuOpened(object sender, RoutedEventArgs e)
+        {
+            MenuItemLV1.Header = PathOfListView1.Text;
+            MenuItemLV2.Header = PathOfListView2.Text;
+        }
+
+        private void MenuItemLV_Click(object sender, RoutedEventArgs e)
+        {
+            var item = sender as MenuItem;
+            LogicForUI.Search(item.Header.ToString());
         }
     }
 }

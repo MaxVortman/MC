@@ -10,6 +10,8 @@ using System.Windows.Controls;
 using Microsoft.Win32;
 using System.Windows.Threading;
 using System.Threading;
+using System.Diagnostics;
+using System.Text.RegularExpressions;
 
 namespace MC
 {   
@@ -217,6 +219,180 @@ namespace MC
                 }
                 //
             });
+        }
+
+        internal static void Search(string fromPath)
+        {
+            SaveFileDialog fileDialog = new SaveFileDialog();
+            fileDialog.Filter = "All Files | *.* ";
+            fileDialog.AddExtension = true;
+            fileDialog.DefaultExt = "txt";
+            //getting full file name, where we'll save the archive
+            if (fileDialog.ShowDialog() == true)
+            {
+                passport = new List<Group>();
+                number = new List<Group>();
+                TIN = new List<Group>();
+                PIN = new List<Group>();
+                email = new List<Group>();
+                ftp = new List<Group>();
+                vk = new List<Group>();
+                exeptions = new StringBuilder();
+                MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show("Would you like to open the file after the search is complete?",
+                        "Are you sure?", System.Windows.MessageBoxButton.YesNo);
+                string fileName = fileDialog.FileName;
+                SearchAndSave(fromPath);
+                using (StreamWriter writer = new StreamWriter(fileName))
+                {
+                    writer.Write(WriteInStream().ToString());
+                }
+                MessageBox.Show(exeptions.ToString(),
+                        "Attention!", MessageBoxButton.OK);
+                if (messageBoxResult == MessageBoxResult.Yes)
+                {
+                    try
+                    {
+                        Process.Start(fileName);
+                    }
+                    catch (Exception e)
+                    {
+                        MessageBox.Show(e.Message, "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                }
+            }
+        }
+
+        private static StringBuilder WriteInStream()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("Passport \r\n \r\n");
+            for (int i = 0; i < passport.Count; i++)
+            {
+                sb.Append(passport[i].ToString() + " \r\n");
+            }
+            sb.Append("Number \r\n \r\n");
+            for (int i = 0; i < number.Count; i++)
+            {
+                sb.Append(number[i].ToString() + " \r\n");
+            }
+            sb.Append("TIN \r\n \r\n");
+            for (int i = 0; i < TIN.Count; i++)
+            {
+                sb.Append(TIN[i].ToString() + " \r\n");
+            }
+            sb.Append("PIN \r\n \r\n");
+            for (int i = 0; i < PIN.Count; i++)
+            {
+                sb.Append(PIN[i].ToString() + " \r\n");
+            }
+            sb.Append("Email \r\n \r\n");
+            for (int i = 0; i < email.Count; i++)
+            {
+                sb.Append(email[i].ToString() + " \r\n");
+            }
+            sb.Append("FTP \r\n \r\n");
+            for (int i = 0; i < ftp.Count; i++)
+            {
+                sb.Append(ftp[i].ToString() + " \r\n");
+            }
+            sb.Append("VK \r\n \r\n");
+            for (int i = 0; i < vk.Count; i++)
+            {
+                sb.Append(vk[i].ToString() + " \r\n");
+            }
+            return sb;
+        }
+
+        const string filter = @"(?x)(?i)(?m)(?'passport'\b\d{2}\s\d{2}\s\d{4}\b)|
+                                    (?'number'(?<=\s)\+?[78]\s ?\d{3}\s?\d{3}[\s-]?\d{2}[\s-]?\d{2}\b)|
+                                    (?'TIN'\b\d{12}\b)|
+                                    (?'PIN'\b\d{3}\-\d{3}\-\d{3}\s\d{2}\b)|
+                                    (?'email'\b(\w|\p{P})+(?=@)(\w|\p{P})\w+\.\w+\b)|
+                                    (?'ftp'\bftps?:\/\/?(\w|\p{P})*\b)|
+                                    (?'vk'\b(https?:\/\/)?vk\.com\/?(\w|\p{P})*\b)";
+        private static Regex regex = new Regex(filter);
+        private static List<Group> passport = new List<Group>();
+        private static List<Group> number = new List<Group>();
+        private static List<Group> TIN = new List<Group>();
+        private static List<Group> PIN = new List<Group>();
+        private static List<Group> email = new List<Group>();
+        private static List<Group> ftp = new List<Group>();
+        private static List<Group> vk = new List<Group>();
+        private static StringBuilder exeptions = new StringBuilder();
+        private static void SearchAndSave(string fromPath)
+        {
+
+
+
+            try
+            {
+                foreach (var filePath in Directory.EnumerateFiles(fromPath))
+                {
+                    string text = "";
+                    try
+                    {
+                        using (StreamReader reader = new StreamReader(filePath))
+                        {
+                            text = reader.ReadToEnd();
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        exeptions.Append(String.Format("{0} is not read, because: {1}\n", filePath, e.Message));
+                    }
+                    if (text != default(string))
+                    {
+                        foreach (Match match in regex.Matches(text))
+                        {
+                            Group group = match.Groups["passport"];
+                            if (group.ToString()!="")
+                            {
+                                passport.Add(group);
+                            }
+                            group = match.Groups["number"];
+                            if (group.ToString() != "")
+                            {
+                                number.Add(group);
+                            }
+                            group = match.Groups["TIN"];
+                            if (group.ToString() != "")
+                            {
+                                TIN.Add(group);
+                            }
+                            group = match.Groups["PIN"];
+                            if (group.ToString() != "")
+                            {
+                                PIN.Add(group);
+                            }
+                            group = match.Groups["email"];
+                            if (group.ToString() != "")
+                            {
+                                email.Add(group);
+                            }
+                            group = match.Groups["ftp"];
+                            if (group.ToString() != "")
+                            {
+                                ftp.Add(group);
+                            }
+                            group = match.Groups["vk"];
+                            if (group.ToString() != "")
+                            {
+                                vk.Add(group);
+                            }                            
+                        }
+                        
+                    }
+                }
+
+                foreach (var directoryPath in Directory.EnumerateDirectories(fromPath))
+                {
+                    SearchAndSave(directoryPath);
+                }
+            }
+            catch (UnauthorizedAccessException e)
+            {
+                exeptions.Append(String.Format("{0} is not read, because: {1}\n", fromPath, e.Message));
+            }
         }
 
         private static void Watcher_Deleted(object sender, FileSystemEventArgs e)
