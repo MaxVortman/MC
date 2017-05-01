@@ -23,6 +23,8 @@ namespace MC
         }
 
         public Theme Theme { get; set; }
+        public string Password { get; set; }
+        public string Login { get; set; }
 
         private string _f;
         [OnSerializing]

@@ -22,8 +22,18 @@ namespace MC
     /// </summary>
     public partial class Settings : Window
     {
+        private string login;
+        private string password;
+
         public Settings()
         {
+            InitializeComponent();
+        }
+
+        public Settings(string login, string password)
+        {
+            this.login = login;
+            this.password = password;
             InitializeComponent();
         }
 
@@ -40,10 +50,10 @@ namespace MC
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            if (MainWindow.currentPrefs != null)
+            if (MainWindow.userPrefs != null)
             {
-                Background = MainWindow.currentPrefs.Theme.BackColor;
-                FontFamily = MainWindow.currentPrefs.FontFamily;
+                Background = MainWindow.userPrefs.Theme.BackColor;
+                FontFamily = MainWindow.userPrefs.FontFamily;
             }
             
 
@@ -59,12 +69,23 @@ namespace MC
 
         private void SaveBtn_Click(object sender, RoutedEventArgs e)
         {
-            UserPrefs userPrefs = new UserPrefs();
+            UserPrefs userPrefs = null;
+            //If the calling window is not welcome screen
+            if (login == default(string))
+            {
+                userPrefs = MainWindow.userPrefs;
+            }
+            else
+            {
+                userPrefs = new UserPrefs();
+                userPrefs.Login = login;
+                userPrefs.Password = password;
+            }
             userPrefs.FontFamily = new FontFamily(CB.Text);
-            userPrefs.Theme = Theme.ThemeSelection(TS.Text);
+            userPrefs.Theme = Theme.ThemeSelection(TS.Text);            
             //Serializing userPrefs
             BinaryFormatter binFormat = new BinaryFormatter();
-            using (FileStream fStream = System.IO.File.Open(System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal),@"MC\user.dat"),
+            using (FileStream fStream = System.IO.File.Open(System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal),@"MC\" + userPrefs.Login + ".dat"),
                 FileMode.Create, FileAccess.Write, FileShare.None))
             {
                 binFormat.Serialize(fStream, userPrefs);

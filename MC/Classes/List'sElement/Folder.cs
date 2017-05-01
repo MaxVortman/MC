@@ -18,7 +18,7 @@ namespace MC
         DirectoryInfo dir;
         protected override void GetAndSetInfo()
         {
-            Image = MainWindow.currentPrefs?.Theme.FolderIconPath;
+            Image = MainWindow.userPrefs?.Theme.FolderIconPath;
             dir = new DirectoryInfo(Path);
             Name = dir.Name;
             try

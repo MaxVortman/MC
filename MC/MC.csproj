@@ -66,6 +66,9 @@
     <Compile Include="Windows\Settings.xaml.cs">
       <DependentUpon>Settings.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Windows\WelcomeScreen.xaml.cs">
+      <DependentUpon>WelcomeScreen.xaml</DependentUpon>
+    </Compile>
     <Page Include="Windows\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -90,6 +93,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Windows\Settings.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\WelcomeScreen.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -132,6 +139,10 @@
     <Resource Include="Images\Icons\Drive.png" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Images\Icons\CDROM2.png" />
+    <Resource Include="Images\Icons\Drive2.png" />
+    <Resource Include="Images\Icons\Folder2.png" />
+    <Resource Include="Images\Icons\USB2.png" />
     <Resource Include="Images\Icons\hard-drive-icon.png" />
     <Resource Include="Images\Icons\Cd-ROM-icon.png" />
     <Content Include="Images\Icons\USB.svg" />

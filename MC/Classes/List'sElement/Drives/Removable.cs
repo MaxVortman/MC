@@ -11,7 +11,7 @@ namespace MC
     {
         public Removable(DriveInfo driveInfo) : base(driveInfo)
         {
-            Image = MainWindow.currentPrefs?.Theme.USBIconPath;
+            Image = MainWindow.userPrefs?.Theme.USBIconPath;
         }
     }
 }

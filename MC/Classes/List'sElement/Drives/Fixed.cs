@@ -11,7 +11,7 @@ namespace MC
     {
         public Fixed(DriveInfo driveInfo) : base(driveInfo)
         {
-            Image = MainWindow.currentPrefs?.Theme.DriveIconPath;
+            Image = MainWindow.userPrefs?.Theme.DriveIconPath;
         }
     }
 }

@@ -11,7 +11,7 @@ namespace MC
     {
         public CDRom(DriveInfo driveInfo) : base(driveInfo)
         {
-            Image = MainWindow.currentPrefs?.Theme.CDRomIconPath;
+            Image = MainWindow.userPrefs?.Theme.CDRomIconPath;
         }
     }
 }
