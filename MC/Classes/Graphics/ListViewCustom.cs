@@ -19,11 +19,11 @@ namespace MC
             List_sElement p = (List_sElement)item;
             if (index % 2 == 0)
             {
-                lbItem.Background = System.Windows.Media.Brushes.AliceBlue;
+                lbItem.Background = MainWindow.currentPrefs?.Theme.LVColor[0];
             }
             else
             {
-                lbItem.Background = System.Windows.Media.Brushes.White;
+                lbItem.Background = MainWindow.currentPrefs?.Theme.LVColor[1];
             }
         }
     }

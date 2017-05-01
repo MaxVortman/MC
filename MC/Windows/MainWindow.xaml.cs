@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -31,15 +32,43 @@ namespace MC
             InitializeComponent();
             graphics1 = new GraphicalApp(this.ListView1, this.PathOfListView1);
             graphics2 = new GraphicalApp(this.ListView2, this.PathOfListView2);
-        }       
+        }
 
+        private DirectoryInfo appDirectory;
+        public static UserPrefs currentPrefs; 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+
+            //Create app folder
+            appDirectory = Directory.CreateDirectory(System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), @"MC"));
+
+            //Deserializing (if exist)
+            currentPrefs = Deserializing();
+            if (currentPrefs != null)
+            {
+                FontFamily = currentPrefs.FontFamily;
+                Background = currentPrefs.Theme.BackColor;
+            }
+
             DriveInfo[] drives = DriveInfo.GetDrives();
             Places.ItemsSource = LogicForUI.FillTheListBoxWithDrives(drives);
             LogicForUI.CreateWatchersAndSetGraphics(graphics1, graphics2);
             LogicForUI.OpenElem(new Folder(drives[0].Name), graphics1, Dispatcher);
             LogicForUI.OpenElem(new Folder(drives[1].Name), graphics2, Dispatcher);
+        }
+
+        private UserPrefs Deserializing()
+        {
+            string datPath = appDirectory.FullName + @"\user.dat";
+            if (System.IO.File.Exists(datPath))
+            {
+                BinaryFormatter binFormat = new BinaryFormatter();
+                using (FileStream fStream = System.IO.File.OpenRead(datPath))
+                {
+                    return binFormat.Deserialize(fStream) as UserPrefs;
+                }
+            }
+            return null;
         }
 
         private void ListView1_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -160,6 +189,12 @@ namespace MC
         {
             ContextMenu menu = sender as ContextMenu;
             selectedItem = menu.Name == "ContextMenu1" ? ListView1.SelectedItem : ListView2.SelectedItem;
+        }
+
+        private void Settings_Click(object sender, RoutedEventArgs e)
+        {
+            Settings settings = new Settings();
+            settings.Show();
         }
     }
 }

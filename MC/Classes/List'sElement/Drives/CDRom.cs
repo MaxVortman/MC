@@ -11,7 +11,7 @@ namespace MC
     {
         public CDRom(DriveInfo driveInfo) : base(driveInfo)
         {
-            Image = @"C:\Users\Максим Борисович\Documents\Visual Studio 2015\Projects\MC\MC\Images\Icons\Cd-ROM-icon.png";
+            Image = MainWindow.currentPrefs?.Theme.CDRomIconPath;
         }
     }
 }

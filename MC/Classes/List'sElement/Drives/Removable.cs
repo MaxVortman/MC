@@ -11,7 +11,7 @@ namespace MC
     {
         public Removable(DriveInfo driveInfo) : base(driveInfo)
         {
-            Image = @"C:\Users\Максим Борисович\Documents\Visual Studio 2015\Projects\MC\MC\Images\Icons\USB.svg";
+            Image = MainWindow.currentPrefs?.Theme.USBIconPath;
         }
     }
 }
