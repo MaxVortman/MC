@@ -9,21 +9,26 @@ using System.Windows.Media;
 namespace MC
 {
     [Serializable]
-    public abstract class Theme
+    public class Theme
     {
+        public string Name { get; set; }
 
         [NonSerialized]
         private BrushConverter colorConverter = new BrushConverter();
 
         [NonSerialized]
         private Brush BackgroundColor;
+        public string BackColorString
+        {            
+            set
+            {
+                BackgroundColor = (Brush)colorConverter.ConvertFrom(value);
+            }
+        }
         public Brush BackColor
         {
             get { return BackgroundColor; }
-            protected set
-            {
-                BackgroundColor = value;
-            }
+            protected set { BackgroundColor = value; }
         }
         [NonSerialized]
         private Brush[] ListViewItemsColor;
@@ -34,12 +39,26 @@ namespace MC
             {
                 ListViewItemsColor = value;
             }
-        }        
+        }
 
-        public string FolderIconPath { get; protected set; }
-        public string DriveIconPath { get; protected set; }
-        public string USBIconPath { get; protected set; }
-        public string CDRomIconPath { get; protected set; }
+        public string[] LVColorString
+        {            
+            set
+            {
+                colorConverter = new BrushConverter();
+                ListViewItemsColor = new Brush[value.Length];
+
+                for (int i = 0; i < value.Length; i++)
+                {
+                    ListViewItemsColor[i] = (Brush)colorConverter.ConvertFrom(value[i]); 
+                }
+            }
+        }
+
+        public string FolderIconPath { get;  set; }
+        public string DriveIconPath { get;  set; }
+        public string USBIconPath { get;  set; }
+        public string CDRomIconPath { get;  set; }
 
 
         private string _bc;
@@ -68,17 +87,9 @@ namespace MC
             }
         }
 
-        public static Theme ThemeSelection(string themeName)
+        public override string ToString()
         {
-            switch (themeName)
-            {
-                case "Blue":
-                    return new BlueTheme();
-                case "Dark":
-                    return new DarkTheme();
-                default:
-                    throw new NotImplementedException("There is no such topic.");
-            }
+            return Name;
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿using Microsoft.Win32;
+﻿using MahApps.Metro.Controls;
+using MahAppsMetroThemesSample;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -19,10 +21,12 @@ using System.Windows.Shapes;
 namespace MC
 {
     /*
-     * Баги: с watcher-ами(create and rename).
-     * Нужно: изобрести watcher на изменение состояния дисков.
+     * Нужно: изобрести watcher на изменение состояния дисков,
+     *        добавить настройку цвета окна.
+     * Можно: добавить визуализацию настроек,
+     *        загрузку изображений по URL для иконок.   
     */
-    public partial class MainWindow : Window
+    public partial class MainWindow : MetroWindow
     {
 
         public MainWindow()
@@ -46,13 +50,9 @@ namespace MC
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
 
-            if (userPrefs != null)
-            {
-                FontFamily = userPrefs.FontFamily;
-                Background = userPrefs.Theme.BackColor; 
-            }
-
-
+            HelloBtn.Content = String.Format("Hello, {0}!", userPrefs.Login);
+            FontFamily = userPrefs.FontFamily;
+            Background = userPrefs.Theme.BackColor;
 
             DriveInfo[] drives = DriveInfo.GetDrives();
             Places.ItemsSource = LogicForUI.FillTheListBoxWithDrives(drives);
@@ -181,10 +181,24 @@ namespace MC
             selectedItem = menu.Name == "ContextMenu1" ? ListView1.SelectedItem : ListView2.SelectedItem;
         }
 
+
+        //private MetroWindow accentThemeTestWindow;
         private void Settings_Click(object sender, RoutedEventArgs e)
         {
             Settings settings = new Settings();
             settings.Show();
+            //if (accentThemeTestWindow != null)
+            //{
+            //    accentThemeTestWindow.Activate();
+            //    return;
+            //}
+
+            //accentThemeTestWindow = new AccentStyleWindow();
+            //accentThemeTestWindow.Owner = this;
+            //accentThemeTestWindow.Closed += (o, args) => accentThemeTestWindow = null;
+            //accentThemeTestWindow.Left = this.Left + this.ActualWidth / 2.0;
+            //accentThemeTestWindow.Top = this.Top + this.ActualHeight / 2.0;
+            //accentThemeTestWindow.Show();
         }
 
         private void Go_SubmenuOpened(object sender, RoutedEventArgs e)
@@ -197,6 +211,19 @@ namespace MC
         {
             var item = sender as MenuItem;
             LogicForUI.Search(item.Header.ToString());
+        }
+
+        private void HelloBtn_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show("Do you want to change profile?",
+                "Are you sure?", System.Windows.MessageBoxButton.OKCancel);
+            if (messageBoxResult == MessageBoxResult.OK)
+            {
+                WelcomeScreen welcomeScreen = new WelcomeScreen();
+                welcomeScreen.Show();
+                Close();
+            }
+            else return;            
         }
     }
 }

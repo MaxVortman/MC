@@ -34,13 +34,25 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>
+    </ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
+    <Reference Include="MahApps.Metro, Version=1.5.0.23, Culture=neutral, PublicKeyToken=f4fb5a3c4d1e5b4f, processorArchitecture=MSIL">
+      <HintPath>..\packages\MahApps.Metro.1.5.0\lib\net45\MahApps.Metro.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\MahApps.Metro.1.5.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -59,26 +71,57 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Abstract Classes\Theme.cs" />
+    <Compile Include="Abstract and Parent Classes\Theme.cs" />
+    <Compile Include="Classes\Graphics\ThemeManagerHelper.cs" />
     <Compile Include="Classes\Graphics\Themes\BlueTheme.cs" />
     <Compile Include="Classes\Graphics\Themes\DarkTheme.cs" />
     <Compile Include="Classes\UserPrefs.cs" />
+    <Compile Include="Windows\AccentStyleWindow.xaml.cs">
+      <DependentUpon>AccentStyleWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\AddTheme.xaml.cs">
+      <DependentUpon>AddTheme.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\Settings.xaml.cs">
       <DependentUpon>Settings.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\WelcomeScreen.xaml.cs">
       <DependentUpon>WelcomeScreen.xaml</DependentUpon>
     </Compile>
+    <Page Include="Classes\Graphics\CustomAccent1.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Classes\Graphics\CustomAccent2.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Classes\Graphics\CustomTheme.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Images\Icons\Icons.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Windows\AccentStyleWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Windows\AddTheme.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Windows\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="Abstract Classes\Drive.cs" />
+    <Compile Include="Abstract and Parent Classes\Drive.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Abstract Classes\List%27sElement.cs" />
+    <Compile Include="Abstract and Parent Classes\List%27sElement.cs" />
     <Compile Include="Classes\Buffer.cs" />
     <Compile Include="Classes\Graphics\GraphicalApp.cs" />
     <Compile Include="Classes\Graphics\ListViewCustom.cs" />
@@ -119,6 +162,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -139,12 +183,14 @@
     <Resource Include="Images\Icons\Drive.png" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="LogoGrande_400x400.ico" />
     <Resource Include="Images\Icons\CDROM2.png" />
     <Resource Include="Images\Icons\Drive2.png" />
     <Resource Include="Images\Icons\Folder2.png" />
     <Resource Include="Images\Icons\USB2.png" />
     <Resource Include="Images\Icons\hard-drive-icon.png" />
     <Resource Include="Images\Icons\Cd-ROM-icon.png" />
+    <Resource Include="Images\Icons\LogoGrande_400x400.ico" />
     <Content Include="Images\Icons\USB.svg" />
   </ItemGroup>
   <ItemGroup />

@@ -1,8 +1,9 @@
-﻿<Window x:Class="MC.WelcomeScreen"
+﻿<Controls:MetroWindow x:Class="MC.WelcomeScreen"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         xmlns:local="clr-namespace:MC"
         mc:Ignorable="d"
         Title="MC" Height="300" Width="300" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded" KeyDown="Window_KeyDown">
@@ -14,7 +15,7 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="20*"/>
-            <RowDefinition Height="50*"/>
+            <RowDefinition Height="70*"/>
             <RowDefinition Height="20*"/>
         </Grid.RowDefinitions>
 
@@ -32,4 +33,4 @@
             <Button Background="{x:Null}" Click="Button_Click">OK</Button>
         </StackPanel>
     </Grid>
-</Window>
+</Controls:MetroWindow>

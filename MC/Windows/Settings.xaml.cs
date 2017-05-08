@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MahApps.Metro.Controls;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -20,7 +21,7 @@ namespace MC
     /// <summary>
     /// Логика взаимодействия для Settings.xaml
     /// </summary>
-    public partial class Settings : Window
+    public partial class Settings : MetroWindow
     {
         private string login;
         private string password;
@@ -50,12 +51,8 @@ namespace MC
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            if (MainWindow.userPrefs != null)
-            {
-                Background = MainWindow.userPrefs.Theme.BackColor;
-                FontFamily = MainWindow.userPrefs.FontFamily;
-            }
-            
+            Background = MainWindow.userPrefs.Theme.BackColor;
+            FontFamily = MainWindow.userPrefs.FontFamily;
 
 
             //Fill font combobox
@@ -65,6 +62,27 @@ namespace MC
                 SourceCB.Add(font.Name);
             }
             CB.ItemsSource = SourceCB;
+
+            //Fill theme combobox
+            BinaryFormatter binFormat = new BinaryFormatter();
+            List<Theme> customThemes = new List<Theme>();
+            customThemes.Add(new BlueTheme());
+            customThemes.Add(new DarkTheme());
+            string pathOfThemes = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "MC", "Themes");
+            if (Directory.Exists(pathOfThemes))
+                foreach (string directory in Directory.EnumerateDirectories(pathOfThemes))
+                {
+                    //can fix?
+                    foreach (string file in Directory.GetFiles(directory))
+                    {
+                        using (FileStream fStream = System.IO.File.OpenRead(file))
+                        {
+                            customThemes.Add(binFormat.Deserialize(fStream) as Theme);
+                        }
+                    }
+                }
+            TS.ItemsSource = customThemes;
+
         }
 
         private void SaveBtn_Click(object sender, RoutedEventArgs e)
@@ -82,7 +100,7 @@ namespace MC
                 userPrefs.Password = password;
             }
             userPrefs.FontFamily = new FontFamily(CB.Text);
-            userPrefs.Theme = Theme.ThemeSelection(TS.Text);            
+            userPrefs.Theme = TS.SelectedItem as Theme;     
             //Serializing userPrefs
             BinaryFormatter binFormat = new BinaryFormatter();
             using (FileStream fStream = System.IO.File.Open(System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal),@"MC\" + userPrefs.Login + ".dat"),
@@ -103,6 +121,13 @@ namespace MC
         private void CancelBtn_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
+        }
+
+        private void AddThemeButton_Click(object sender, RoutedEventArgs e)
+        {
+            AddTheme addTheme = new AddTheme();
+            addTheme.Show();
+            Close();
         }
     }
 }

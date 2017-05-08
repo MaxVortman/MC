@@ -227,7 +227,7 @@ namespace MC
             fileDialog.Filter = "All Files | *.* ";
             fileDialog.AddExtension = true;
             fileDialog.DefaultExt = "txt";
-            //getting full file name, where we'll save the archive
+            //getting full file name, where we'll save the txt
             if (fileDialog.ShowDialog() == true)
             {
                 passport = new List<Group>();

@@ -1,11 +1,17 @@
-﻿<Window x:Class="MC.MainWindow" Loaded="Window_Loaded"
+﻿<Controls:MetroWindow x:Class="MC.MainWindow" Loaded="Window_Loaded"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         xmlns:local="clr-namespace:MC"
         mc:Ignorable="d"
-        Title="MainWindow" Height="750" Width="1000">
+        Title="MC" Height="750" Width="1000">
+    <Controls:MetroWindow.RightWindowCommands>
+        <Controls:WindowCommands>
+            <Button FontSize="13" Name="HelloBtn" Click="HelloBtn_Click"/>
+        </Controls:WindowCommands>
+    </Controls:MetroWindow.RightWindowCommands>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="40*"/>
@@ -17,21 +23,22 @@
             <RowDefinition Height="100*"/>
             <RowDefinition Height="5*"/>
         </Grid.RowDefinitions>
-
-        <Menu Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Background="{x:Null}">
-            <MenuItem Header="File"></MenuItem>
-            <MenuItem Header="Edit"></MenuItem>
-            <MenuItem Header="View"></MenuItem>
-            <MenuItem Header="Go"  SubmenuOpened="Go_SubmenuOpened">
+        
+        
+        <Menu Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Background="{x:Null}" FontSize="13" Height="Auto">
+            <MenuItem Header="File" Background="{x:Null}"></MenuItem>
+            <MenuItem Header="Edit" Background="{x:Null}"></MenuItem>
+            <MenuItem Header="View" Background="{x:Null}"></MenuItem>
+            <MenuItem Header="Go" Background="{x:Null}"  SubmenuOpened="Go_SubmenuOpened">
                 <MenuItem Header="Search">
                     <MenuItem Name="MenuItemLV1" Click="MenuItemLV_Click"></MenuItem>
                     <MenuItem Name="MenuItemLV2" Click="MenuItemLV_Click"></MenuItem>
                 </MenuItem>
             </MenuItem>
-            <MenuItem Header="Tools"></MenuItem>
-            <MenuItem Header="Settings" Click="Settings_Click">
+            <MenuItem Header="Tools" Background="{x:Null}"></MenuItem>
+            <MenuItem Header="Settings" Background="{x:Null}" Click="Settings_Click">
             </MenuItem>
-            <MenuItem Header="Help"></MenuItem>
+            <MenuItem Header="Help" Background="{x:Null}"></MenuItem>
         </Menu>
         
         <DockPanel Grid.Column="1" Grid.Row="1" Height="Auto">
@@ -174,4 +181,4 @@
             </ListBox>
         </DockPanel>
     </Grid>
-</Window>
+</Controls:MetroWindow>

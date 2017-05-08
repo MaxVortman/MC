@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MahApps.Metro.Controls;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -19,7 +20,7 @@ namespace MC
     /// <summary>
     /// Логика взаимодействия для WelcomeScreen.xaml
     /// </summary>
-    public partial class WelcomeScreen : Window
+    public partial class WelcomeScreen : MetroWindow
     {
         public WelcomeScreen()
         {
@@ -34,7 +35,7 @@ namespace MC
                 "Are you sure?", System.Windows.MessageBoxButton.OKCancel);
                 if (messageBoxResult == MessageBoxResult.OK)
                 {
-                    MainWindow main = new MainWindow(null);
+                    MainWindow main = new MainWindow(new UserPrefs() { FontFamily = new FontFamily("Arial"), Login = "default", Password = "", Theme = new BlueTheme() });
                     main.Show();
                     Close();
                 }
@@ -79,7 +80,6 @@ namespace MC
         DirectoryInfo appDirectory;
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-
             //Create app folder
             appDirectory = Directory.CreateDirectory(System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), @"MC"));
         }

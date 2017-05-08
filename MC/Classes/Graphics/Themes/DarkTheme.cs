@@ -12,6 +12,7 @@ namespace MC
     {
         public DarkTheme()
         {
+            Name = "Dark";
             BackColor = Brushes.DarkKhaki;
             LVColor = new Brush[] { Brushes.Cornsilk, Brushes.SteelBlue };
             FolderIconPath = @"/Images/Icons/Folder2.png";
