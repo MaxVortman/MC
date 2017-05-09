@@ -177,9 +177,6 @@
     <Resource Include="Images\Icons\Folder1.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\Icons\Folder.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Images\Icons\Drive.png" />
   </ItemGroup>
   <ItemGroup>
@@ -190,7 +187,6 @@
     <Resource Include="Images\Icons\USB2.png" />
     <Resource Include="Images\Icons\hard-drive-icon.png" />
     <Resource Include="Images\Icons\Cd-ROM-icon.png" />
-    <Resource Include="Images\Icons\LogoGrande_400x400.ico" />
     <Content Include="Images\Icons\USB.svg" />
   </ItemGroup>
   <ItemGroup />

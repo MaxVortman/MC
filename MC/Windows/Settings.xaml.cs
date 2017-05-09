@@ -51,8 +51,11 @@ namespace MC
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            Background = MainWindow.userPrefs.Theme.BackColor;
-            FontFamily = MainWindow.userPrefs.FontFamily;
+            if (MainWindow.userPrefs != null)
+            {
+                Background = MainWindow.userPrefs.Theme.BackColor;
+                FontFamily = MainWindow.userPrefs.FontFamily; 
+            }
 
 
             //Fill font combobox

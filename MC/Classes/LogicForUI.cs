@@ -321,9 +321,6 @@ namespace MC
         private static StringBuilder exeptions = new StringBuilder();
         private static void SearchAndSave(string fromPath)
         {
-
-
-
             try
             {
                 foreach (var filePath in Directory.EnumerateFiles(fromPath))
