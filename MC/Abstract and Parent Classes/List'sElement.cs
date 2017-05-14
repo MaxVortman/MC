@@ -59,13 +59,6 @@ namespace MC
         public abstract void Archive(string pathZip);
         public void Unarchive(string extractPath)
         {
-            //using (FileStream zipToOpen = new FileStream(Path, FileMode.Open, FileAccess.Read, FileShare.Read))
-            //{
-            //    using (ZipArchive archive = new ZipArchive(zipToOpen, ZipArchiveMode.Read))
-            //    {
-            //        archive.ExtractToDirectory(extractPath);
-            //    }
-            //}
             ZipFile.ExtractToDirectory(Path, extractPath);
         }
     }

@@ -6,7 +6,7 @@
         xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         xmlns:local="clr-namespace:MC"
         mc:Ignorable="d"
-        Title="MC" Height="750" Width="1000">
+        Title="MC" Height="750" Width="1000" Closing="MetroWindow_Closing">
     <Controls:MetroWindow.RightWindowCommands>
         <Controls:WindowCommands>
             <Button FontSize="13" Name="HelloBtn" Click="HelloBtn_Click"/>

@@ -29,7 +29,6 @@ namespace MC
     */
     public partial class MainWindow : MetroWindow
     {
-
         public MainWindow()
         {
             InitializeComponent();
@@ -106,7 +105,8 @@ namespace MC
                     LogicForUI.DeleteElem(selectedItem);
                     break;
                 case "Archive/Unarchive":
-                    LogicForUI.ArchiveOrUnachiveElem(selectedItem);
+                    DialogThreadWindow dialog = new DialogThreadWindow(selectedItem);
+                    dialog.Show();
                     break;
                 case "Rename":
                     // Getting the currently selected ListBoxItem
@@ -211,7 +211,8 @@ namespace MC
         private void MenuItemLV_Click(object sender, RoutedEventArgs e)
         {
             var item = sender as MenuItem;
-            LogicForUI.Search(item.Header.ToString());
+            DialogThreadWindow dialog = new DialogThreadWindow(item.Header.ToString());
+            dialog.Show();
         }
 
         private void HelloBtn_Click(object sender, RoutedEventArgs e)
@@ -225,6 +226,18 @@ namespace MC
                 Close();
             }
             else return;            
+        }
+
+        private void MetroWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            try
+            {
+                LogicForUI.Closing();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
     }
 }

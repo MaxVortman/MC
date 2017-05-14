@@ -12,26 +12,24 @@ using System.Windows.Threading;
 using System.Threading;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
+using System.Collections;
+using System.IO.Compression;
 
 namespace MC
-{   
-
+{
+    public delegate void ActionWithThread(string pFile);
+    public delegate void PackFiles(string sPath);
+    public delegate void ThreadProcess(InThreadProcess process);
+    public delegate void InThreadProcess(object threads);
     static class LogicForUI
-    {
-
+    {        
         //List for ListViewSource
         //it is really faster
         static List<List_sElement> DataList;
         static private void FillInList(string path)
         {
-                                   //must be faster
-            DataList = new List<List_sElement>(500);
-            // ... folder
-            if (path.Length > 3)
-            {
-                string parentPath = Directory.GetParent(path).FullName;
-                DataList.Add(new Folder(parentPath) { Name = "...", Date = "", Size = "" });
-            }
+            //must be faster
+            CreateDataList(path);
             //enumerate folder's path
             foreach (var item in Directory.EnumerateDirectories(path))
             {
@@ -43,20 +41,32 @@ namespace MC
                 DataList.Add(new File(item));
             }
         }
-        
+
+        private static void CreateDataList(string path)
+        {
+            DataList = new List<List_sElement>(500);
+            // ... folder
+            if (path.Length > 3)
+            {
+                string parentPath = Directory.GetParent(path).FullName;
+                DataList.Add(new Folder(parentPath) { Name = "...", Date = "", Size = "" });
+            }
+        }       
+
         private static Dispatcher dispatcher;
         static public void OpenElem(object o, GraphicalApp graphics, Dispatcher disp)
         {
             currentGraphics = graphics;
-            dispatcher = disp;            
+            dispatcher = disp;
             List_sElement elem = o as List_sElement;
-            if (elem is Folder || elem is Drive)
+            try
             {
-                //Assign a path of watcher
-                ChangePathOfWatcher(elem.Path, graphics.Path);
-                //start fill            
-                try
+                if (elem is Folder || elem is Drive)
                 {
+                    //Assign a path of watcher
+                    ChangePathOfWatcher(elem.Path, graphics.Path);
+                    //start fill            
+
                     graphics.SetCaptionOfPath(elem.Path);
                     //test for two list on the same path
                     if (graphics1.Path == graphics2.Path)
@@ -69,24 +79,29 @@ namespace MC
                             graphics2.DataSource = graphics1.DataSource;
                     }
                     else
-                    FillInList(elem.Path);
-
+                        FillInList(elem.Path);
                 }
-                catch (UnauthorizedAccessException e)
+                else
                 {
-                    MessageBox.Show(e.Message, "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
-                finally
-                {
-                    //test for two list on the same path
-                    if (graphics1.Path != graphics2.Path)
-                        graphics.DataSource = new ObservableCollection<List_sElement>(DataList);
+                    elem.Open();
                 }
             }
-            else
+            catch (UnauthorizedAccessException e)
             {
-                elem.Open();
+                MessageBox.Show(e.Message, "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+            catch (FileNotFoundException e)
+            {
+                MessageBox.Show(e.Message, "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
+                CreateDataList(elem.Path);
+            }
+            finally
+            {
+                //test for two list on the same path
+                if (graphics1.Path != graphics2.Path)
+                    graphics.DataSource = new ObservableCollection<List_sElement>(DataList);
+            }
+
         }
 
 
@@ -221,7 +236,7 @@ namespace MC
             });
         }
 
-        internal static void Search(string fromPath)
+        internal static void SearchInThread(string fromPath, ThreadProcess StartThread)
         {
             SaveFileDialog fileDialog = new SaveFileDialog();
             fileDialog.Filter = "All Files | *.* ";
@@ -241,24 +256,44 @@ namespace MC
                 MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show("Would you like to open the file after the search is complete?",
                         "Are you sure?", System.Windows.MessageBoxButton.YesNo);
                 string fileName = fileDialog.FileName;
-                SearchAndSave(fromPath);
-                using (StreamWriter writer = new StreamWriter(fileName))
+                StartThread((item)=>
                 {
-                    writer.Write(WriteInStream().ToString());
-                }
-                MessageBox.Show(exeptions.ToString(),
-                        "Attention!", MessageBoxButton.OK);
-                if (messageBoxResult == MessageBoxResult.Yes)
-                {
-                    try
+                    var threads = item as Classes.Threading.ThreadQueue[];
+                    for (int i = 0; i < threads.Length; i++)
                     {
-                        Process.Start(fileName);
+                        if (threads[i].TheThread.IsAlive)
+                        {
+                            Thread.Sleep(3000);
+                        }
                     }
-                    catch (Exception e)
+                    using (StreamWriter writer = new StreamWriter(fileName))
                     {
-                        MessageBox.Show(e.Message, "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
+                        writer.Write(WriteInStream().ToString());
                     }
-                }
+                    MessageBox.Show(exeptions.ToString(),
+                            "Attention!", MessageBoxButton.OK);
+                    if (messageBoxResult == MessageBoxResult.Yes)
+                    {
+                        try
+                        {
+                            Process.Start(fileName);
+                        }
+                        catch (Exception e)
+                        {
+                            MessageBox.Show(e.Message, "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
+                        }
+                    }
+                });                
+            }
+        }
+
+        
+        public static bool isFree = false;
+        internal static void Closing()
+        {
+            if (threads != null && !isFree)
+            {
+                throw new Exception("The action is not finished. Close the program is impossible.");
             }
         }
 
@@ -319,76 +354,69 @@ namespace MC
         private static List<Group> ftp = new List<Group>();
         private static List<Group> vk = new List<Group>();
         private static StringBuilder exeptions = new StringBuilder();
-        private static void SearchAndSave(string fromPath)
+        private static void SearchAndSave(string filePath)
         {
             try
             {
-                foreach (var filePath in Directory.EnumerateFiles(fromPath))
+                string text = "";
+                try
                 {
-                    string text = "";
-                    try
+                    using (StreamReader reader = new StreamReader(filePath))
                     {
-                        using (StreamReader reader = new StreamReader(filePath))
-                        {
-                            text = reader.ReadToEnd();
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        exeptions.Append(String.Format("{0} is not read, because: {1}\n", filePath, e.Message));
-                    }
-                    if (text != default(string))
-                    {
-                        foreach (Match match in regex.Matches(text))
-                        {
-                            Group group = match.Groups["passport"];
-                            if (group.ToString()!="")
-                            {
-                                passport.Add(group);
-                            }
-                            group = match.Groups["number"];
-                            if (group.ToString() != "")
-                            {
-                                number.Add(group);
-                            }
-                            group = match.Groups["TIN"];
-                            if (group.ToString() != "")
-                            {
-                                TIN.Add(group);
-                            }
-                            group = match.Groups["PIN"];
-                            if (group.ToString() != "")
-                            {
-                                PIN.Add(group);
-                            }
-                            group = match.Groups["email"];
-                            if (group.ToString() != "")
-                            {
-                                email.Add(group);
-                            }
-                            group = match.Groups["ftp"];
-                            if (group.ToString() != "")
-                            {
-                                ftp.Add(group);
-                            }
-                            group = match.Groups["vk"];
-                            if (group.ToString() != "")
-                            {
-                                vk.Add(group);
-                            }                            
-                        }
-                        
+                        text = reader.ReadToEnd();
                     }
                 }
-
-                foreach (var directoryPath in Directory.EnumerateDirectories(fromPath))
+                catch (Exception e)
                 {
-                    SearchAndSave(directoryPath);
+                    exeptions.Append(String.Format("{0} is not read, because: {1}\n", filePath, e.Message));
+                }
+                if (text != default(string))
+                {
+                    foreach (Match match in regex.Matches(text))
+                    {
+                        Group group = match.Groups["passport"];
+                        if (group.ToString() != "")
+                        {
+                            passport.Add(group);
+                        }
+                        group = match.Groups["number"];
+                        if (group.ToString() != "")
+                        {
+                            number.Add(group);
+                        }
+                        group = match.Groups["TIN"];
+                        if (group.ToString() != "")
+                        {
+                            TIN.Add(group);
+                        }
+                        group = match.Groups["PIN"];
+                        if (group.ToString() != "")
+                        {
+                            PIN.Add(group);
+                        }
+                        group = match.Groups["email"];
+                        if (group.ToString() != "")
+                        {
+                            email.Add(group);
+                        }
+                        group = match.Groups["ftp"];
+                        if (group.ToString() != "")
+                        {
+                            ftp.Add(group);
+                        }
+                        group = match.Groups["vk"];
+                        if (group.ToString() != "")
+                        {
+                            vk.Add(group);
+                        }
+                    }
+
                 }
             }
+
             catch (UnauthorizedAccessException e)
             {
-                exeptions.Append(String.Format("{0} is not read, because: {1}\n", fromPath, e.Message));
+                exeptions.Append(String.Format("{0} is not read, because: {1}\n", filePath, e.Message));
             }
         }
 
@@ -397,7 +425,7 @@ namespace MC
             //For the dynamics
             ObservableCollection<List_sElement> Data = currentGraphics.DataSource;
             //that's it
-            List_sElement elem = null;            
+            List_sElement elem = null;
             foreach (var item in Data)
             {
                 if (item.Path == e.FullPath)
@@ -414,8 +442,8 @@ namespace MC
         }
 
         static public ObservableCollection<List_sElement> FillTheListBoxWithDrives(DriveInfo[] drives)
-        {           
-            ObservableCollection<List_sElement> drivesElem = new ObservableCollection<List_sElement>(); 
+        {
+            ObservableCollection<List_sElement> drivesElem = new ObservableCollection<List_sElement>();
             foreach (DriveInfo info in drives)
             {
                 switch (info.DriveType.ToString())
@@ -423,7 +451,7 @@ namespace MC
                     case "Fixed":
                         drivesElem.Add(new Fixed(info));
                         break;
-                    case "CDRom":                        
+                    case "CDRom":
                         drivesElem.Add(new CDRom(info));
                         break;
                     case "Network":
@@ -462,47 +490,12 @@ namespace MC
             }
         }
 
-        internal static void ArchiveOrUnachiveElem(object elem)
-        {
-            List_sElement item = elem as List_sElement;
-
-            try
-            {
-                if (Path.GetExtension(item.Path) == ".rar")
-                {
-                    Unarchive(item);
-                }
-                else
-                {
-                    Archive(item);
-                }
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(e.Message, "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
-       
-        private static void Unarchive(List_sElement item)
+        private static void UnarchiveElemInThread(List_sElement item)
         {
             System.Windows.Forms.FolderBrowserDialog folderDialog = new System.Windows.Forms.FolderBrowserDialog();
             if (System.Windows.Forms.DialogResult.OK == folderDialog.ShowDialog())
             {
                 item.Unarchive(folderDialog.SelectedPath);
-            }
-        }
-
-        private static void Archive(List_sElement item)
-        {
-
-            SaveFileDialog fileDialog = new SaveFileDialog();
-            fileDialog.Filter = "All Files | *.* ";
-            fileDialog.AddExtension = true;
-            fileDialog.DefaultExt = "rar";
-            //getting full file name, where we'll save the archive
-            if (fileDialog.ShowDialog() == true)
-            {
-                item.Archive(fileDialog.FileName);
             }
         }
 
@@ -566,7 +559,7 @@ namespace MC
         internal static void PasteElem(GraphicalApp graphics)
         {
             if (buffer != null)
-            {              
+            {
                 string path = System.IO.Path.Combine(graphics.Path, DataToCopy.Name);
                 try
                 {
@@ -575,7 +568,7 @@ namespace MC
                 catch (Exception e)
                 {
                     MessageBox.Show(e.Message, "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
-                }                
+                }
             }
         }
 
@@ -599,6 +592,140 @@ namespace MC
                 MessageBox.Show(e.Message, "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
+        internal static void ThreadOperation(object item)
+        {
+            if (item is string)
+            {                    
+                var path = item as string;
+                SearchInThread(path, (process)=>
+                {
+                    Queue<string>[] filesQueue = CreateAndFillQueue(path, new PackFiles(GetFilesPathFromFolder));
+                    Classes.Threading.ThreadQueue[] threads = new Classes.Threading.ThreadQueue[filesQueue.Length];
+                    for (int i = 0; i < filesQueue.Length; i++)
+                    {
+                        threads[i] = new Classes.Threading.ThreadQueue(filesQueue[i], SearchAndSave);
+                        threads[i].BeginProcessData();
+                    }
+                    Thread processThread = new Thread(new ParameterizedThreadStart(process));
+                    processThread.Start(threads);
+                });
+            }
+            else
+            {
+                ArchiveOrUnarchiveElemInThread(item as List_sElement);
+            }
+        }
+        public static int countOfCompliteThread = 0;
+        public static Classes.Threading.ThreadQueue[] threads { get; private set; }
+        private static ZipArchive archive;        
+        private static void ArchiveOrUnarchiveElemInThread(List_sElement elem)
+        {
+            try
+            {
+                if (Regex.IsMatch(System.IO.Path.GetExtension(elem.Path), @"\w*\.(RAR|ZIP|GZ|TAR)"))
+                {
+                    UnarchiveElemInThread(elem);
+                }
+                else
+                {
+                    ArchiveElemInThread(elem.Path);
+                }
+            }
+            catch (ArgumentException e)
+            {
+                MessageBox.Show(e.Message, "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private static void ArchiveElemInThread(string pElem)
+        {
+            Queue<string>[] filesQueue = CreateAndFillQueue(pElem, new PackFiles(GetFilesPathFromFolder));
+            var pZip = GetPathOnDialog();
+            var zipToOpen = new FileStream(pZip, FileMode.Create, FileAccess.ReadWrite, FileShare.Inheritable);
+            archive = new ZipArchive(zipToOpen, ZipArchiveMode.Update);
+            threads = new Classes.Threading.ThreadQueue[filesQueue.Length];
+            Classes.Threading.ThreadQueue.ThreadingComplite += CompressComplite;
+            for (int i = 0; i < filesQueue.Length; i++)
+            {
+                threads[i] = new Classes.Threading.ThreadQueue(filesQueue[i], (pFile) =>
+                {
+                    int BufferSize = 16384;
+                    byte[] byteBuffer = new byte[BufferSize];
+                    ZipArchiveEntry fileEntry = archive.CreateEntry(pFile.Substring(pElem.Length + 1));
+                    using (Stream inFileStream = System.IO.File.Open(pFile, FileMode.Open, FileAccess.Read, FileShare.Read))
+                    {
+                        using (Stream writer = fileEntry.Open())
+                        {
+                            int bytesRead = 0;
+                            do
+                            {
+                                bytesRead = inFileStream.Read(byteBuffer, 0, BufferSize);
+                                writer.Write(byteBuffer, 0, bytesRead);
+                            } while (bytesRead > 0);
+                        }
+                    }
+                });
+                threads[i].BeginProcessData();
+            }
+        }
+
+        private static void CompressComplite(object sender, EventArgs e)
+        {
+            archive.Dispose();
+            threads = null;
+            GC.Collect(2);
+            GC.WaitForPendingFinalizers();
+        }
+
+        private const string  ARCHIVEEXTENSION = "RAR";
+        private static string GetPathOnDialog()
+        {
+            SaveFileDialog fileDialog = new SaveFileDialog();
+            fileDialog.Filter = "All Files | *.* ";
+            fileDialog.AddExtension = true;
+            fileDialog.DefaultExt = ARCHIVEEXTENSION;
+            //getting full file name, where we'll save the archive
+            if (fileDialog.ShowDialog() == true)
+            {
+                return fileDialog.FileName;
+            }
+            throw new ArgumentException("Pick folder pls.");
+        }
+
+        private static Queue<string>[] CreateAndFillQueue(string path, PackFiles GetFiles)
+        {
+            int countOfProcessor = Environment.ProcessorCount;
+            Queue<string>[] filesQueue = new Queue<string>[countOfProcessor];
+            for (int i = 0; i < countOfProcessor; i++)
+            {
+                filesQueue[i] = new Queue<string>();
+            }
+            listOfPath = new List<string>();
+            GetFiles(path);
+            int k = 0;
+            while (k < listOfPath.Count)
+            {
+                for (int j = 0; j < countOfProcessor && k < listOfPath.Count; j++)
+                {
+                    filesQueue[j].Enqueue(listOfPath[k++]);
+                }
+            }
+            return filesQueue;
+        }        
+                
+        private static List<string> listOfPath;
+        private static void GetFilesPathFromFolder(string path)
+        {
+            foreach (string item in Directory.GetFiles(path))
+            {
+                listOfPath.Add(item);
+            }
+            foreach(string item in Directory.GetDirectories(path))
+            {
+                GetFilesPathFromFolder(item);
+            }
+        }        
     }
 }
 

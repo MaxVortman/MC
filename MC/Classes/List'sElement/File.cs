@@ -127,7 +127,6 @@ namespace MC
                     } while (bytesCopied > 0);
                 }
             }
-            // System.IO.File.Delete(tempPath);
         }
 
         public override void Archive(string pathZip)
