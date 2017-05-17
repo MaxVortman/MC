@@ -29,7 +29,7 @@ namespace MC.Classes.Threading
         {
             Thread.Sleep(50);
             int count = queueOfFiles.Count;
-            for (int i = 0; i < count; i++)
+            for (int i = 0; i < count && queueOfFiles.Count > 0; i++)
             {
                 func(queueOfFiles.Dequeue());
             }

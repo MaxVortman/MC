@@ -259,11 +259,20 @@ namespace MC
                 StartThread((item)=>
                 {
                     var threads = item as Classes.Threading.ThreadQueue[];
-                    for (int i = 0; i < threads.Length; i++)
+
+                    for (; ; Thread.Sleep(3000))
                     {
-                        if (threads[i].TheThread.IsAlive)
+                        int count = 0;
+                        for (int i = 0; i < threads.Length; i++)
                         {
-                            Thread.Sleep(3000);
+                            if (threads[i].TheThread.ThreadState == System.Threading.ThreadState.Stopped)
+                            {
+                                count++;
+                            }
+                        }
+                        if (count == threads.Length)
+                        {
+                            break;
                         }
                     }
                     using (StreamWriter writer = new StreamWriter(fileName))
@@ -637,9 +646,10 @@ namespace MC
                 MessageBox.Show(e.Message, "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-
+        private static object lockToken = new object();
         private static void ArchiveElemInThread(string pElem)
         {
+            isFree = false;
             Queue<string>[] filesQueue = CreateAndFillQueue(pElem, new PackFiles(GetFilesPathFromFolder));
             var pZip = GetPathOnDialog();
             var zipToOpen = new FileStream(pZip, FileMode.Create, FileAccess.ReadWrite, FileShare.Inheritable);
@@ -652,7 +662,11 @@ namespace MC
                 {
                     int BufferSize = 16384;
                     byte[] byteBuffer = new byte[BufferSize];
-                    ZipArchiveEntry fileEntry = archive.CreateEntry(pFile.Substring(pElem.Length + 1));
+                    ZipArchiveEntry fileEntry;
+                    lock (lockToken)
+                    {
+                        fileEntry = archive.CreateEntry(pFile.Substring(pElem.Length + 1)); 
+                    }
                     using (Stream inFileStream = System.IO.File.Open(pFile, FileMode.Open, FileAccess.Read, FileShare.Read))
                     {
                         using (Stream writer = fileEntry.Open())
@@ -674,6 +688,7 @@ namespace MC
         {
             archive.Dispose();
             threads = null;
+            countOfCompliteThread = 0;
             GC.Collect(2);
             GC.WaitForPendingFinalizers();
         }
@@ -717,13 +732,20 @@ namespace MC
         private static List<string> listOfPath;
         private static void GetFilesPathFromFolder(string path)
         {
-            foreach (string item in Directory.GetFiles(path))
+            try
             {
-                listOfPath.Add(item);
+                foreach (string item in Directory.GetFiles(path))
+                {
+                    listOfPath.Add(item);
+                }
+                foreach (string item in Directory.GetDirectories(path))
+                {
+                    GetFilesPathFromFolder(item);
+                }
             }
-            foreach(string item in Directory.GetDirectories(path))
+            catch (UnauthorizedAccessException e)
             {
-                GetFilesPathFromFolder(item);
+                exeptions.Append(String.Format("{0} is not read, because: {1}\n", path, e.Message));
             }
         }        
     }

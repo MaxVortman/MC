@@ -51,11 +51,21 @@ namespace MC
         FileInfo info;
         protected override void GetAndSetInfo()
         {
-            Image = IconFromFile(Path);
-            info = new FileInfo(Path);
-            Name = info.Name;
-            Size = FormatSize(info.Length);
-            Date = Convert.ToString(info.CreationTime);
+            try
+            {
+                Image = IconFromFile(Path);
+                info = new FileInfo(Path);
+                Name = info.Name;
+                Size = FormatSize(info.Length);
+                Date = Convert.ToString(info.CreationTime);
+            }
+            catch (FileNotFoundException)
+            {
+                Image = null;
+                Name = null;
+                Size = null;
+                Date = null;
+            }
         }
 
         public override void UpdateName(string newPath)
