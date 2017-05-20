@@ -1,30 +1,25 @@
-﻿using MahApps.Metro.Controls;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using MahApps.Metro.Controls;
+using MC.Classes;
+using MC.Classes.Graphics.Themes;
 
-namespace MC
+namespace MC.Windows
 {
     /// <summary>
     /// Логика взаимодействия для Settings.xaml
     /// </summary>
     public partial class Settings : MetroWindow
     {
-        private string login;
-        private string password;
+        private readonly string _login;
+        private readonly string _password;
 
         public Settings()
         {
@@ -33,28 +28,28 @@ namespace MC
 
         public Settings(string login, string password)
         {
-            this.login = login;
-            this.password = password;
+            this._login = login;
+            this._password = password;
             InitializeComponent();
         }
 
-        void OnComboboxTextChanged(object sender, RoutedEventArgs e)
+        private void OnComboboxTextChanged(object sender, RoutedEventArgs e)
         {
             CB.IsDropDownOpen = true;
             // убрать selection, если dropdown только открылся
             var tb = (TextBox)e.OriginalSource;
             tb.Select(tb.SelectionStart + tb.SelectionLength, 0);
-            CollectionView cv = (CollectionView)CollectionViewSource.GetDefaultView(CB.ItemsSource);
+            var cv = (CollectionView)CollectionViewSource.GetDefaultView(CB.ItemsSource);
             cv.Filter = s =>
                 ((string)s).IndexOf(CB.Text, StringComparison.CurrentCultureIgnoreCase) >= 0;
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            if (MainWindow.userPrefs != null)
+            if (MainWindow.UserPrefs != null)
             {
-                Background = MainWindow.userPrefs.Theme.BackColor;
-                FontFamily = MainWindow.userPrefs.FontFamily; 
+                Background = MainWindow.UserPrefs.Theme.BackColor;
+                FontFamily = MainWindow.UserPrefs.FontFamily; 
             }
 
 
@@ -67,18 +62,16 @@ namespace MC
             CB.ItemsSource = SourceCB;
 
             //Fill theme combobox
-            BinaryFormatter binFormat = new BinaryFormatter();
-            List<Theme> customThemes = new List<Theme>();
-            customThemes.Add(new BlueTheme());
-            customThemes.Add(new DarkTheme());
-            string pathOfThemes = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "MC", "Themes");
+            var binFormat = new BinaryFormatter();
+            var customThemes = new List<Theme> {new BlueTheme(), new DarkTheme()};
+            var pathOfThemes = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "MC", "Themes");
             if (Directory.Exists(pathOfThemes))
-                foreach (string directory in Directory.EnumerateDirectories(pathOfThemes))
+                foreach (var directory in Directory.EnumerateDirectories(pathOfThemes))
                 {
                     //can fix?
-                    foreach (string file in Directory.GetFiles(directory))
+                    foreach (var file in Directory.GetFiles(directory))
                     {
-                        using (FileStream fStream = System.IO.File.OpenRead(file))
+                        using (var fStream = System.IO.File.OpenRead(file))
                         {
                             customThemes.Add(binFormat.Deserialize(fStream) as Theme);
                         }
@@ -92,26 +85,28 @@ namespace MC
         {
             UserPrefs userPrefs = null;
             //If the calling window is not welcome screen
-            if (login == default(string))
+            if (_login == default(string))
             {
-                userPrefs = MainWindow.userPrefs;
+                userPrefs = MainWindow.UserPrefs;
             }
             else
             {
-                userPrefs = new UserPrefs();
-                userPrefs.Login = login;
-                userPrefs.Password = password;
+                userPrefs = new UserPrefs
+                {
+                    Login = _login,
+                    Password = _password
+                };
             }
             userPrefs.FontFamily = new FontFamily(CB.Text);
             userPrefs.Theme = TS.SelectedItem as Theme;     
             //Serializing userPrefs
-            BinaryFormatter binFormat = new BinaryFormatter();
-            using (FileStream fStream = System.IO.File.Open(System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal),@"MC\" + userPrefs.Login + ".dat"),
+            var binFormat = new BinaryFormatter();
+            using (var fStream = System.IO.File.Open(System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal),@"MC\" + userPrefs.Login + ".dat"),
                 FileMode.Create, FileAccess.Write, FileShare.None))
             {
                 binFormat.Serialize(fStream, userPrefs);
             }
-            MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show("A reboot is required for the changes to take effect.",
+            var messageBoxResult = System.Windows.MessageBox.Show("A reboot is required for the changes to take effect.",
                 "Are you sure?", System.Windows.MessageBoxButton.OKCancel);
             if (messageBoxResult == MessageBoxResult.OK)
             {
@@ -128,7 +123,7 @@ namespace MC
 
         private void AddThemeButton_Click(object sender, RoutedEventArgs e)
         {
-            AddTheme addTheme = new AddTheme();
+            var addTheme = new AddTheme();
             addTheme.Show();
             Close();
         }

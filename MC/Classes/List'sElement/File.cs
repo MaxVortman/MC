@@ -1,27 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Diagnostics;
 using System.IO;
-using System.Drawing;
-using System.Windows.Media.Imaging;
+using System.IO.Compression;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Media;
-using System.Diagnostics;
-using System.IO.Compression;
+using System.Windows.Media.Imaging;
+using MC.Abstract_and_Parent_Classes;
 
-namespace MC
+namespace MC.Classes
 {
-    class File : List_sElement
+    internal class File : ListSElement
     {
 
         [DllImport("gdi32")]
-        static extern int DeleteObject(IntPtr o);
+        private static extern int DeleteObject(IntPtr o);
         private static BitmapSource loadBitmap(System.Drawing.Bitmap source)
         {
-            IntPtr ip = source.GetHbitmap();
+            var ip = source.GetHbitmap();
             BitmapSource bs;
             try
             {
@@ -36,7 +32,8 @@ namespace MC
 
             return bs;
         }
-        private ImageSource IconFromFile(string fileName)
+
+        private static ImageSource IconFromFile(string fileName)
         {
             var icon = System.Drawing.Icon.ExtractAssociatedIcon(fileName);
             var bmp = icon.ToBitmap();
@@ -48,16 +45,17 @@ namespace MC
             this.Path = Path;
             GetAndSetInfo();
         }
-        FileInfo info;
-        protected override void GetAndSetInfo()
+
+        private FileInfo _info;
+        protected sealed override void GetAndSetInfo()
         {
             try
             {
                 Image = IconFromFile(Path);
-                info = new FileInfo(Path);
-                Name = info.Name;
-                Size = FormatSize(info.Length);
-                Date = Convert.ToString(info.CreationTime);
+                _info = new FileInfo(Path);
+                Name = _info.Name;
+                Size = FormatSize(_info.Length);
+                Date = Convert.ToString(_info.CreationTime);
             }
             catch (FileNotFoundException)
             {
@@ -71,14 +69,14 @@ namespace MC
         public override void UpdateName(string newPath)
         {
             Path = newPath;
-            info = new FileInfo(Path);
-            Name = info.Name;
+            _info = new FileInfo(Path);
+            Name = _info.Name;
         }
 
         public override void UpdateSize()
         {
-            info = new FileInfo(Path);
-            Size = FormatSize(info.Length);
+            _info = new FileInfo(Path);
+            Size = FormatSize(_info.Length);
         }
 
         public override void Open()
@@ -95,20 +93,20 @@ namespace MC
 
         public override Buffer Copy()
         {
-            int bytesCopied = 0;
-            int bytesToCopy = 16384;
-            byte[] PartBuffer = new byte[bytesToCopy];
-            string tempPath = System.IO.Path.GetTempFileName();
-            using (FileStream inStream = System.IO.File.Open(Path, FileMode.Open, FileAccess.Read, FileShare.Read))
+            const int bytesToCopy = 16384;
+            var partBufferFile = new byte[bytesToCopy];
+            var tempPath = System.IO.Path.GetTempFileName();
+            using (var inStream = System.IO.File.Open(Path, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
-                using (FileStream outStream = System.IO.File.Open(tempPath, FileMode.Append, FileAccess.Write, FileShare.None))
+                using (var outStream = System.IO.File.Open(tempPath, FileMode.Append, FileAccess.Write, FileShare.None))
                 {
+                    var bytesCopied = 0;
                     do
                     {
-                        bytesCopied = inStream.Read(PartBuffer, 0, bytesToCopy);
+                        bytesCopied = inStream.Read(partBufferFile, 0, bytesToCopy);
                         if (bytesCopied > 0)
                         {
-                            outStream.Write(PartBuffer, 0, bytesCopied);
+                            outStream.Write(partBufferFile, 0, bytesCopied);
                         }
                     } while (bytesCopied > 0);
                 }
@@ -119,20 +117,20 @@ namespace MC
 
         public override void Paste(string path, Buffer buffer)
         {
-            string tempPath = (buffer as FileBuffer).tempPath;
-            int bytesCopied = 0;
-            int bytesToCopy = 16384;
-            byte[] PartBuffer = new byte[bytesToCopy];
-            using (FileStream inStream = System.IO.File.Open(tempPath, FileMode.Open, FileAccess.Read, FileShare.Read))
+            var tempPath = (buffer as FileBuffer).TempPath;
+            const int bytesToCopy = 16384;
+            var partBufferFile = new byte[bytesToCopy];
+            using (var inStream = System.IO.File.Open(tempPath, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
-                using (FileStream outStream = System.IO.File.Open(path, FileMode.Create, FileAccess.Write, FileShare.None))
+                using (var outStream = System.IO.File.Open(path, FileMode.Create, FileAccess.Write, FileShare.None))
                 {
+                    var bytesCopied = 0;
                     do
                     {
-                        bytesCopied = inStream.Read(PartBuffer, 0, bytesToCopy);
+                        bytesCopied = inStream.Read(partBufferFile, 0, bytesToCopy);
                         if (bytesCopied > 0)
                         {
-                            outStream.Write(PartBuffer, 0, bytesCopied);
+                            outStream.Write(partBufferFile, 0, bytesCopied);
                         }
                     } while (bytesCopied > 0);
                 }
@@ -141,17 +139,17 @@ namespace MC
 
         public override void Archive(string pathZip)
         {
-            int BufferSize = 16384;
-            byte[] buffer = new byte[BufferSize];
+            const int bufferSize = 16384;
+            var buffer = new byte[bufferSize];
 
             using (Stream inFileStream = System.IO.File.Open(Path, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
-                using (GZipStream writer = new GZipStream(System.IO.File.Open(pathZip, FileMode.Append, FileAccess.Write, FileShare.None), CompressionMode.Compress))
+                using (var writer = new GZipStream(System.IO.File.Open(pathZip, FileMode.Append, FileAccess.Write, FileShare.None), CompressionMode.Compress))
                 {
                     int bytesRead = 0;
                     do
                     {
-                        bytesRead = inFileStream.Read(buffer, 0, BufferSize);
+                        bytesRead = inFileStream.Read(buffer, 0, bufferSize);
                         writer.Write(buffer, 0, bytesRead);
                     } while (bytesRead > 0);
                 }

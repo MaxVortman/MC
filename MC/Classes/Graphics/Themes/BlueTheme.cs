@@ -1,24 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Media;
 
-namespace MC
+namespace MC.Classes.Graphics.Themes
 {
     [Serializable]
-    class BlueTheme : Theme
+    internal class BlueTheme : Theme
     {
         public BlueTheme()
         {
             Name = "Blue";
             BackColor = Brushes.LightGray;
-            LVColor = new Brush[] { Brushes.AliceBlue, Brushes.White};
+            LvColor = new Brush[] { Brushes.AliceBlue, Brushes.White};
             FolderIconPath = @"/Images/Icons/Folder1.png";
             DriveIconPath = @"/Images/Icons/hard-drive-icon.png";
-            USBIconPath = @"/Images/Icons/USB.svg";
-            CDRomIconPath = @"/Images/Icons/Cd-ROM-icon.png";
+            UsbIconPath = @"/Images/Icons/USB.svg";
+            CdRomIconPath = @"/Images/Icons/Cd-ROM-icon.png";
         }
     }
 }

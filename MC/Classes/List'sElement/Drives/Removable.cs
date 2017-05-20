@@ -1,17 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.IO;
+using MC.Abstract_and_Parent_Classes;
+using MC.Windows;
 
-namespace MC
+namespace MC.Classes.Drives
 {
-    class Removable : Drive
+    internal class Removable : Drive
     {
         public Removable(DriveInfo driveInfo) : base(driveInfo)
         {
-            Image = MainWindow.userPrefs?.Theme.USBIconPath;
+            Image = MainWindow.UserPrefs?.Theme.UsbIconPath;
         }
     }
 }

@@ -1,67 +1,48 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Collections.ObjectModel;
 using System.Windows.Controls;
+using MC.Abstract_and_Parent_Classes;
 
-namespace MC
+namespace MC.Classes.Graphics
 {
-    class GraphicalApp
+    internal class GraphicalApp
     {
 
-        private ListViewCustom list;
-        private TextBlock text;
+        private readonly ListViewCustom _list;
+        private readonly TextBlock _text;
 
-        public string Path
-        {
-            get
-            {
-                return text.Text;
-            }
-        }
+        public string Path => _text.Text;
 
-        public ObservableCollection<List_sElement> DataSource
+        public ObservableCollection<ListSElement> DataSource
         {
-            set
-            {
-                list.ItemsSource = value;
-            }
-            get
-            {
-                return (ObservableCollection<List_sElement>)list.ItemsSource;
-            }
+            set => _list.ItemsSource = value;
+            get => (ObservableCollection<ListSElement>)_list.ItemsSource;
         }
 
 
         public GraphicalApp(ListViewCustom list, TextBlock text)
         {
-            this.list = list;
-            this.text = text;
+            _list = list;
+            _text = text;
         }
 
-        public void AddLine(List_sElement elem)
+        public void AddLine(ListSElement elem)
         {
-            list.Items.Add(elem);
+            _list.Items.Add(elem);
         }
 
         public void ClearList()
         {
-            list.ClearValue(ListViewCustom.ItemsSourceProperty);
+            _list.ClearValue(ItemsControl.ItemsSourceProperty);
         }
 
         public void SetCaptionOfPath(string path)
         {
-            text.Text = path;
+            _text.Text = path;
         }
 
         public void Refresh()
         {
-            list.Items.Refresh();
+            _list.Items.Refresh();
         }
     }
 

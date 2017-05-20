@@ -11,49 +11,44 @@ namespace MC.Classes.Threading
     public class ThreadQueue
     {
         public static event EventHandler<EventArgs> ThreadingComplite;
-        private Queue<string> queueOfFiles;
-        private ActionWithThread func;
-        private Thread theThread;
-        public Thread TheThread
-        {
-            get { return theThread; }
-        }
+        private readonly Queue<string> _queueOfFiles;
+        private readonly ActionWithThread _func;
+        public Thread TheThread { get; }
+
         public ThreadQueue(Queue<string> queueOfFiles, ActionWithThread func)
         {            
-            this.func = func;
-            this.queueOfFiles = queueOfFiles;
-            theThread = new Thread(new ThreadStart(this.ThreadFunc));
+            this._func = func;
+            this._queueOfFiles = queueOfFiles;
+            TheThread = new Thread(new ThreadStart(this.ThreadFunc));
         }
 
         private void ThreadFunc()
         {
             Thread.Sleep(50);
-            int count = queueOfFiles.Count;
-            for (int i = 0; i < count && queueOfFiles.Count > 0; i++)
+            var count = _queueOfFiles.Count;
+            for (int i = 0; i < count && _queueOfFiles.Count > 0; i++)
             {
-                func(queueOfFiles.Dequeue());
+                _func(_queueOfFiles.Dequeue());
             }
 
-            if (++LogicForUI.countOfCompliteThread == Environment.ProcessorCount && LogicForUI.threads != null)
-            {
-                LogicForUI.isFree = true;
-                ThreadingComplite.Invoke(this, new EventArgs());
-            }
+            if (++LogicForUi.CountOfCompliteThread != Environment.ProcessorCount || LogicForUi.Threads == null) return;
+            LogicForUi.IsFree = true;
+            ThreadingComplite?.Invoke(this, new EventArgs());
         }
 
         public void BeginProcessData()
         {
-            theThread.Start();
+            TheThread.Start();
         }
 
         public void IterruptProcessData()
         {
-            theThread.Interrupt();
+            TheThread.Interrupt();
         }
 
         public void EndProcessData()
         {
-            theThread.Join();
+            TheThread.Join();
         }
 
     }

@@ -1,17 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Drawing;
-using System.IO;
 using System.IO.Compression;
+using Buffer = MC.Classes.Buffer;
 
-namespace MC
+namespace MC.Abstract_and_Parent_Classes
 {
-    abstract class List_sElement
+    internal abstract class ListSElement
     {
-        public object Image { get; protected set; }
+        protected object Image { get; set; }
+
         public string Name { get; set; }
         public string Size { get; set; }
         public string Date { get; set; }
@@ -20,28 +16,28 @@ namespace MC
 
         protected abstract void GetAndSetInfo();
 
-        protected string FormatSize(long size)
+        protected static string FormatSize(long size)
         {
-            string stringSize = "";
-            double size_i = Convert.ToDouble(size);
-            double d23 = Math.Pow(2, 30);
-            if (size_i >= d23)
+            var stringSize = "";
+            var sizeI = Convert.ToDouble(size);
+            var d23 = Math.Pow(2, 30);
+            if (sizeI >= d23)
             {
-                size_i /= d23;
-                stringSize = String.Format("{0:f} GB", size_i);
+                sizeI /= d23;
+                stringSize = $"{sizeI:f} GB";
             }
-            else if (size_i >= 1024 * 1024)
+            else if (sizeI >= 1024 * 1024)
             {
-                size_i /= (1024 * 1024);
-                stringSize = String.Format("{0:f} MB", size_i);
+                sizeI /= (1024 * 1024);
+                stringSize = $"{sizeI:f} MB";
             }
-            else if (size_i >= 1024)
+            else if (sizeI >= 1024)
             {
-                size_i /= (1024);
-                stringSize = String.Format("{0:f} KiB", size_i);
+                sizeI /= (1024);
+                stringSize = $"{sizeI:f} KiB";
             }
             else
-                stringSize = size + " B";
+                stringSize = $"{size} B";
 
             return stringSize;
         }

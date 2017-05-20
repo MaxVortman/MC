@@ -1,17 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.IO;
+using MC.Abstract_and_Parent_Classes;
+using MC.Windows;
 
-namespace MC
+namespace MC.Classes.Drives
 {
-    class CDRom : Drive
+    internal class CdRom : Drive
     {
-        public CDRom(DriveInfo driveInfo) : base(driveInfo)
+        public CdRom(DriveInfo driveInfo) : base(driveInfo)
         {
-            Image = MainWindow.userPrefs?.Theme.CDRomIconPath;
+            Image = MainWindow.UserPrefs?.Theme.CdRomIconPath;
         }
     }
 }

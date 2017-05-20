@@ -1,25 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Media;
 
-namespace MC
+namespace MC.Classes
 {
     [Serializable]
     public class UserPrefs
     {
         [NonSerialized]
-        private FontFamily Font;
+        private FontFamily _font;
         public FontFamily FontFamily
         {
-            get { return Font; }
-            set
-            {
-                Font = value;
-            }
+            get => _font;
+            set => _font = value;
         }
 
         public Theme Theme { get; set; }
@@ -35,7 +29,7 @@ namespace MC
             _keyP = Password.Remove(Password.Length / 2);
             Password = Encode(Password, _keyP);
             //
-            _f = Font.ToString();
+            _f = _font.ToString();
         }
 
         [OnDeserialized]
@@ -44,15 +38,15 @@ namespace MC
             //decoding
             Password = Decode(Password, _keyP);
             //
-            Font = new FontFamily(_f);
+            _font = new FontFamily(_f);
         }
 
         private static string Encode(string pText, string pKey)
         {
-            Encoding strEncode = Encoding.UTF8;
-            byte[] txt = strEncode.GetBytes(pText);
-            byte[] key = strEncode.GetBytes(pKey);
-            byte[] res = new byte[pText.Length];
+            var strEncode = Encoding.UTF8;
+            var txt = strEncode.GetBytes(pText);
+            var key = strEncode.GetBytes(pKey);
+            var res = new byte[pText.Length];
             for (int i = 0; i < txt.Length; i++)
             {
                 res[i] = (byte)(txt[i] ^ key[i % key.Length]);
@@ -62,10 +56,10 @@ namespace MC
 
         private static string Decode(string pText, string pKey)
         {
-            Encoding strEncode = Encoding.UTF8;
-            byte[] txt = strEncode.GetBytes(pText);
-            byte[] res = new byte[txt.Length];
-            byte[] key = strEncode.GetBytes(pKey);
+            var strEncode = Encoding.UTF8;
+            var txt = strEncode.GetBytes(pText);
+            var res = new byte[txt.Length];
+            var key = strEncode.GetBytes(pKey);
             for (int i = 0; i < txt.Length; i++)
             {
                 res[i] = (byte)(txt[i] ^ key[i % key.Length]);

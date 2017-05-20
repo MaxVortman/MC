@@ -1,21 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Buffer = MC.Classes.Buffer;
 
-namespace MC
+namespace MC.Abstract_and_Parent_Classes
 {
-    abstract class Drive : List_sElement
+    internal abstract class Drive : ListSElement
     {
-        public bool isReady { private set; get; }
-        public string TotalSize { private set; get; }
-        DriveInfo driveInfo;
-        public Drive(DriveInfo driveInfo)
+        public bool IsReady { private set; get; }
+        public string TotalSize { set; get; }
+        private readonly DriveInfo _driveInfo;
+
+        protected Drive(DriveInfo driveInfo)
         {
-            isReady = driveInfo.IsReady;
-            this.driveInfo = driveInfo;
+            IsReady = driveInfo.IsReady;
+            _driveInfo = driveInfo;
             GetAndSetInfo();
         }
 
@@ -23,15 +21,15 @@ namespace MC
         {
         }
 
-        protected override void GetAndSetInfo()
+        protected sealed override void GetAndSetInfo()
         {
-            Path = driveInfo.RootDirectory.ToString();
-            Name = driveInfo.Name;
+            Path = _driveInfo.RootDirectory.ToString();
+            Name = _driveInfo.Name;
 
-            if (isReady)
+            if (IsReady)
             {
-                Size = "Free Size: " + FormatSize(driveInfo.TotalFreeSpace * 8);
-                TotalSize = "Total Size: " + FormatSize(driveInfo.TotalSize * 8);
+                Size = "Free Size: " + FormatSize(_driveInfo.TotalFreeSpace * 8);
+                TotalSize = "Total Size: " + FormatSize(_driveInfo.TotalSize * 8);
             }
             Image = "/Images/Icons/Drive.png";
         }

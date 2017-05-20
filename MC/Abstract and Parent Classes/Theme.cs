@@ -14,51 +14,45 @@ namespace MC
         public string Name { get; set; }
 
         [NonSerialized]
-        private BrushConverter colorConverter = new BrushConverter();
+        private BrushConverter _colorConverter = new BrushConverter();
 
         [NonSerialized]
-        private Brush BackgroundColor;
+        private Brush _backgroundColor;
         public string BackColorString
         {            
-            set
-            {
-                BackgroundColor = (Brush)colorConverter.ConvertFrom(value);
-            }
+            set => _backgroundColor = (Brush)_colorConverter.ConvertFrom(value);
         }
         public Brush BackColor
         {
-            get { return BackgroundColor; }
-            protected set { BackgroundColor = value; }
+            get => _backgroundColor;
+            protected set => _backgroundColor = value;
         }
         [NonSerialized]
-        private Brush[] ListViewItemsColor;
-        public Brush[] LVColor
+        private Brush[] _listViewItemsColor;
+        public Brush[] LvColor
         {
-            get { return ListViewItemsColor; }
-            protected set
-            {
-                ListViewItemsColor = value;
-            }
+            get => _listViewItemsColor;
+            protected set => _listViewItemsColor = value;
         }
 
-        public string[] LVColorString
+        public string[] LvColorString
         {            
             set
             {
-                colorConverter = new BrushConverter();
-                ListViewItemsColor = new Brush[value.Length];
+                _colorConverter = new BrushConverter();
+                _listViewItemsColor = new Brush[value.Length];
 
                 for (int i = 0; i < value.Length; i++)
                 {
-                    ListViewItemsColor[i] = (Brush)colorConverter.ConvertFrom(value[i]); 
+                    _listViewItemsColor[i] = (Brush)_colorConverter.ConvertFrom(value[i]); 
                 }
             }
         }
 
         public string FolderIconPath { get;  set; }
         public string DriveIconPath { get;  set; }
-        public string USBIconPath { get;  set; }
-        public string CDRomIconPath { get;  set; }
+        public string UsbIconPath { get;  set; }
+        public string CdRomIconPath { get;  set; }
 
 
         private string _bc;
@@ -67,23 +61,23 @@ namespace MC
         [OnSerializing]
         private void SetValuesOnSerializing(StreamingContext context)
         {
-            _bc = colorConverter.ConvertToString(BackgroundColor);
-            _lvic = new string[ListViewItemsColor.Length];
-            for (int i = 0; i < ListViewItemsColor.Length; i++)
+            _bc = _colorConverter.ConvertToString(_backgroundColor);
+            _lvic = new string[_listViewItemsColor.Length];
+            for (int i = 0; i < _listViewItemsColor.Length; i++)
             {
-                _lvic[i] = colorConverter.ConvertToString(ListViewItemsColor[i]);
+                _lvic[i] = _colorConverter.ConvertToString(_listViewItemsColor[i]);
             }            
         }
 
         [OnDeserialized]
         private void SetValuesOnDeserialized(StreamingContext context)
         {
-            colorConverter = new BrushConverter();
-            BackgroundColor = (Brush)colorConverter.ConvertFrom(_bc);
-            ListViewItemsColor = new Brush[_lvic.Length];
+            _colorConverter = new BrushConverter();
+            _backgroundColor = (Brush)_colorConverter.ConvertFrom(_bc);
+            _listViewItemsColor = new Brush[_lvic.Length];
             for (int i = 0; i < _lvic.Length; i++)
             {
-                ListViewItemsColor[i] = (Brush)colorConverter.ConvertFrom(_lvic[i]);
+                _listViewItemsColor[i] = (Brush)_colorConverter.ConvertFrom(_lvic[i]);
             }
         }
 

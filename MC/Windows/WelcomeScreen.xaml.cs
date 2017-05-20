@@ -1,21 +1,14 @@
-﻿using MahApps.Metro.Controls;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.IO;
-using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using MahApps.Metro.Controls;
+using MC.Classes;
+using MC.Classes.Graphics.Themes;
 
-namespace MC
+namespace MC.Windows
 {
     /// <summary>
     /// Логика взаимодействия для WelcomeScreen.xaml
@@ -31,31 +24,31 @@ namespace MC
         {
             if (LoginBox.Text == "")
             {
-                MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show("You did not specify a login. Click OK if you want to start with the default settings.",
+                var messageBoxResult = System.Windows.MessageBox.Show("You did not specify a login. Click OK if you want to start with the default settings.",
                 "Are you sure?", System.Windows.MessageBoxButton.OKCancel);
                 if (messageBoxResult == MessageBoxResult.OK)
                 {
-                    MainWindow main = new MainWindow(new UserPrefs() { FontFamily = new FontFamily("Arial"), Login = "default", Password = "", Theme = new BlueTheme() });
+                    var main = new MainWindow(new UserPrefs() { FontFamily = new FontFamily("Arial"), Login = "default", Password = "", Theme = new BlueTheme() });
                     main.Show();
                     Close();
                 }
             }
             else
             {
-                string datPath = System.IO.Path.Combine(appDirectory.FullName, LoginBox.Text + ".dat");
+                var datPath = System.IO.Path.Combine(_appDirectory.FullName, LoginBox.Text + ".dat");
                 //if user registered
                 if (System.IO.File.Exists(datPath))
                 {
-                    BinaryFormatter binFormat = new BinaryFormatter();
+                    var binFormat = new BinaryFormatter();
                     UserPrefs userPrefs = null;
-                    using (FileStream fStream = System.IO.File.OpenRead(datPath))
+                    using (var fStream = System.IO.File.OpenRead(datPath))
                     {
                         userPrefs = binFormat.Deserialize(fStream) as UserPrefs;
                     }
 
-                    if (userPrefs.Password == PassBox.Password)
+                    if (userPrefs != null && userPrefs.Password == PassBox.Password)
                     {
-                        MainWindow main = new MainWindow(userPrefs);
+                        var main = new MainWindow(userPrefs);
                         main.Show();
                         Close();
                     }
@@ -65,11 +58,11 @@ namespace MC
                 //if user didn't register
                 else
                 {
-                    MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show("You are not registred. Do you want to be one?",
+                    var messageBoxResult = System.Windows.MessageBox.Show("You are not registred. Do you want to be one?",
                 "MC", System.Windows.MessageBoxButton.YesNo);
                     if (messageBoxResult == MessageBoxResult.Yes)
                     {
-                        Settings settings = new Settings(LoginBox.Text, PassBox.Password);
+                        var settings = new Settings(LoginBox.Text, PassBox.Password);
                         settings.Show();
                         Close();
                     }
@@ -77,11 +70,12 @@ namespace MC
             }
 
         }
-        DirectoryInfo appDirectory;
+
+        private DirectoryInfo _appDirectory;
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             //Create app folder
-            appDirectory = Directory.CreateDirectory(System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), @"MC"));
+            _appDirectory = Directory.CreateDirectory(System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), @"MC"));
         }
 
         private void Window_KeyDown(object sender, KeyEventArgs e)

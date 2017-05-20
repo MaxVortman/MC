@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
+using MC.Windows;
 
-namespace MC
+namespace MC.Classes.Graphics
 {
     public class ListViewCustom : ListView
     {
@@ -14,17 +10,13 @@ namespace MC
         protected override void PrepareContainerForItemOverride(DependencyObject element, object item)
         {
             base.PrepareContainerForItemOverride(element, item);
-            int index = ItemContainerGenerator.IndexFromContainer(element);
-            ListBoxItem lbItem = element as ListBoxItem;
-            List_sElement p = (List_sElement)item;
-            if (index % 2 == 0)
-            {
-                lbItem.Background = MainWindow.userPrefs?.Theme.LVColor[0];
-            }
-            else
-            {
-                lbItem.Background = MainWindow.userPrefs?.Theme.LVColor[1];
-            }
+            if (element == null) return;
+            var index = ItemContainerGenerator.IndexFromContainer(element);
+            var lbItem = element as ListBoxItem;
+            if (lbItem != null)
+                lbItem.Background = index % 2 == 0
+                    ? MainWindow.UserPrefs?.Theme.LvColor[0]
+                    : MainWindow.UserPrefs?.Theme.LvColor[1];
         }
     }
 }

@@ -5,10 +5,15 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.IO.Compression;
+using MC.Abstract_and_Parent_Classes;
+using MC.Classes;
+using MC.Windows;
+using Buffer = MC.Classes.Buffer;
+using File = MC.Classes.File;
 
 namespace MC
 {
-    class Folder : List_sElement
+    class Folder : ListSElement
     {
         public Folder(string Path)
         {
@@ -18,7 +23,7 @@ namespace MC
         DirectoryInfo dir;
         protected override void GetAndSetInfo()
         {
-            Image = MainWindow.userPrefs?.Theme.FolderIconPath;
+            Image = MainWindow.UserPrefs?.Theme.FolderIconPath;
             dir = new DirectoryInfo(Path);
             Name = dir.Name;
             try
@@ -64,11 +69,11 @@ namespace MC
         public override Buffer Copy()
         {
 
-            List<List_sElement> DataList = getData();
+            List<ListSElement> DataList = getData();
             int count = DataList.Count;
             Buffer[] buffer = new Buffer[count];
             int i = 0;
-            foreach (List_sElement elem in DataList)
+            foreach (ListSElement elem in DataList)
             {
                 if (i < count)
                 {
@@ -86,10 +91,10 @@ namespace MC
             Directory.CreateDirectory(path);
 
             Buffer[] filesBuffer = (buffer as FolderBuffer).FoldersBuffer;
-            List<List_sElement> DataList = getData();
+            List<ListSElement> DataList = getData();
             int count = DataList.Count;
             int i = 0;
-            foreach (List_sElement elem in DataList)
+            foreach (ListSElement elem in DataList)
             {
                 if (i < count)
                 {
@@ -99,10 +104,10 @@ namespace MC
             }
         }
 
-        private List<List_sElement> getData()
+        private List<ListSElement> getData()
         {
             //must be faster
-            List<List_sElement> DataList = new List<List_sElement>(500);
+            List<ListSElement> DataList = new List<ListSElement>(500);
             //enumerate folder's path
             foreach (var item in Directory.EnumerateDirectories(Path))
             {

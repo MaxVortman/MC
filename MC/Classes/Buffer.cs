@@ -1,37 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MC
+﻿namespace MC.Classes
 {
     public abstract class Buffer
     {
-        public Buffer(string name)
+        protected Buffer(string name)
         {
-            this.name = name;
+            this.Name = name;
 
         }
 
-        public string name { get; private set; }
+        private string Name { get; set; }
     }
 
     public class FileBuffer : Buffer
     {
         public FileBuffer(string name, string tempPath) : base(name)
         {
-            this.tempPath = tempPath;
+            this.TempPath = tempPath;
         }
 
-        public string tempPath { get; private set; }
+        public string TempPath { get; private set; }
     }
 
     public class FolderBuffer : Buffer
     {
-        public FolderBuffer(string name, Buffer[] FolderBuffer) : base(name)
+        public FolderBuffer(string name, Buffer[] folderBuffer) : base(name)
         {
-            FoldersBuffer = FolderBuffer;
+            FoldersBuffer = folderBuffer;
         }
 
         public Buffer[] FoldersBuffer { get; private set; }
