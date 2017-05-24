@@ -230,5 +230,11 @@ namespace MC.Windows
                 MessageBox.Show(ex.Message, "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
+        private void Download_Click(object sender, RoutedEventArgs e)
+        {
+            var Download = new DownloadLink((sender as MenuItem).Header.ToString(), PathOfListView2.Text);
+            Download.Show();
+        }        
     }
 }

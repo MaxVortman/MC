@@ -13,19 +13,21 @@ using MC.Abstract_and_Parent_Classes;
 using MC.Classes.Drives;
 using MC.Classes.Graphics;
 using Microsoft.Win32;
+using System.Threading.Tasks;
 
 namespace MC.Classes
 {
     public delegate void ActionWithThread(string pFile);
     public delegate void PackFiles(string sPath);
     public delegate void ThreadProcess(InThreadProcess process);
-    public delegate void InThreadProcess(object threads);
+    public delegate void InThreadProcess();
 
     internal static class LogicForUi
     {        
         //List for ListViewSource
         //it is really faster
         private static List<ListSElement> _dataList;
+
         private static void FillInList(string path)
         {
             //must be faster
@@ -258,25 +260,8 @@ namespace MC.Classes
                 var messageBoxResult = System.Windows.MessageBox.Show("Would you like to open the file after the search is complete?",
                         "Are you sure?", System.Windows.MessageBoxButton.YesNo);
                 var fileName = fileDialog.FileName;
-                StartThread((item)=>
-                {
-                    var threadsQueue = item as Classes.Threading.ThreadQueue[];
-
-                    for (; ; Thread.Sleep(3000))
-                    {
-                        var count = 0;
-                        for (var i = 0; i < threadsQueue.Length; i++)
-                        {
-                            if (threadsQueue[i].TheThread.ThreadState == System.Threading.ThreadState.Stopped)
-                            {
-                                count++;
-                            }
-                        }
-                        if (count == threadsQueue.Length)
-                        {
-                            break;
-                        }
-                    }
+                StartThread(()=>
+                {  
                     using (var writer = new StreamWriter(fileName))
                     {
                         writer.Write(WriteInStream().ToString());
@@ -594,8 +579,29 @@ namespace MC.Classes
                         threads[i] = new Classes.Threading.ThreadQueue(filesQueue[i], SearchAndSave);
                         threads[i].BeginProcessData();
                     }
-                    var processThread = new Thread(new ParameterizedThreadStart(process));
-                    processThread.Start(threads);
+
+                    var waitingThread = new Thread(() =>
+                    {
+                        for (; ; Thread.Sleep(3000))
+                        {
+                            var count = 0;
+                            for (var i = 0; i < threads.Length; i++)
+                            {
+                                if (threads[i].TheThread.ThreadState == System.Threading.ThreadState.Stopped)
+                                {
+                                    count++;
+                                }
+                            }
+                            if (count == threads.Length)
+                            {
+                                break;
+                            }
+                        }
+
+                        var processThread = new Thread(new ThreadStart(process));
+                        processThread.Start();
+                    });
+                    waitingThread.Start();
                 });
             }
             else
@@ -627,6 +633,7 @@ namespace MC.Classes
         private static readonly object LockToken = new object();
         private static void ArchiveElemInThread(string pElem)
         {
+            LogicForUi.pElem = pElem;
             IsFree = false;
             var filesQueue = CreateAndFillQueue(pElem, new PackFiles(GetFilesPathFromFolder));
             var pZip = GetPathOnDialog();
@@ -636,29 +643,31 @@ namespace MC.Classes
             Classes.Threading.ThreadQueue.ThreadingComplite += CompressComplite;
             for (int i = 0; i < filesQueue.Length; i++)
             {
-                Threads[i] = new Classes.Threading.ThreadQueue(filesQueue[i], (pFile) =>
-                {
-                    var BufferSize = 16384;
-                    var byteBuffer = new byte[BufferSize];
-                    ZipArchiveEntry fileEntry;
-                    lock (LockToken)
-                    {
-                        fileEntry = _archive.CreateEntry(pFile.Substring(pElem.Length + 1)); 
-                    }
-                    using (var inFileStream = System.IO.File.Open(pFile, FileMode.Open, FileAccess.Read, FileShare.Read))
-                    {
-                        using (var writer = fileEntry.Open())
-                        {
-                            var bytesRead = 0;
-                            do
-                            {
-                                bytesRead = inFileStream.Read(byteBuffer, 0, BufferSize);
-                                writer.Write(byteBuffer, 0, bytesRead);
-                            } while (bytesRead > 0);
-                        }
-                    }
-                });
+                Threads[i] = new Classes.Threading.ThreadQueue(filesQueue[i], new ActionWithThread(Archive));
                 Threads[i].BeginProcessData();
+            }
+        }
+        private static string pElem;
+        private static void Archive(string pFile)
+        {
+            var BufferSize = 16384;
+            var byteBuffer = new byte[BufferSize];
+            ZipArchiveEntry fileEntry;
+            lock (LockToken)
+            {
+                fileEntry = _archive.CreateEntry(pFile.Substring(pElem.Length + 1));
+            }
+            using (var inFileStream = System.IO.File.Open(pFile, FileMode.Open, FileAccess.Read, FileShare.Read))
+            {
+                using (var writer = fileEntry.Open())
+                {
+                    var bytesRead = 0;
+                    do
+                    {
+                        bytesRead = inFileStream.Read(byteBuffer, 0, BufferSize);
+                        writer.Write(byteBuffer, 0, bytesRead);
+                    } while (bytesRead > 0);
+                }
             }
         }
 
@@ -714,20 +723,91 @@ namespace MC.Classes
         {
             try
             {
-                foreach (var item in Directory.GetFiles(path))
+                Parallel.ForEach(Directory.GetFiles(path), item=>
                 {
                     _listOfPath.Add(item);
-                }
-                foreach (var item in Directory.GetDirectories(path))
+                });
+                Parallel.ForEach(Directory.GetDirectories(path), item =>
                 {
                     GetFilesPathFromFolder(item);
-                }
+                });
             }
             catch (UnauthorizedAccessException e)
             {
                 _exeptions.Append($"{path} is not read, because: {e.Message}\n");
             }
-        }        
+        }
+
+        internal static void ParallelOperation(object item)
+        {
+            if (item is string)
+            {
+                var path = item as string;
+                SearchInThread(path, (process) =>
+                {
+                    Task.Factory.StartNew(() =>
+                    {
+                        var filesQueue = CreateAndFillQueue(path, new PackFiles(GetFilesPathFromFolder));
+                        ParallelLoopResult result = Parallel.ForEach(filesQueue, currentQueue =>
+                        {
+                            for (int i = 0; i < currentQueue.Count; i++)
+                            {
+                                SearchAndSave(currentQueue.Dequeue());
+                            }
+                        });
+                        if (result.IsCompleted)
+                        {
+                            process();
+                        }
+                    });                    
+                });
+            }
+            else
+            {
+                var elem = item as ListSElement;
+                try
+                {
+                    if (Regex.IsMatch(System.IO.Path.GetExtension(elem.Path), @"\w*\.(RAR|ZIP|GZ|TAR)"))
+                    {
+                        UnarchiveElemInThread(elem);
+                    }
+                    else
+                    {
+                        ArchiveElemInParallel(elem.Path);
+                    }
+                }
+                catch (ArgumentException e)
+                {
+                    MessageBox.Show(e.Message, "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+
+            }
+        }
+
+        private static void ArchiveElemInParallel(string path)
+        {
+            pElem = path;
+            var filesQueue = CreateAndFillQueue(path, new PackFiles(GetFilesPathFromFolder));
+            var pZip = GetPathOnDialog();
+            var zipToOpen = new FileStream(pZip, FileMode.Create, FileAccess.ReadWrite, FileShare.Inheritable);
+            _archive = new ZipArchive(zipToOpen, ZipArchiveMode.Update);
+            Task.Factory.StartNew(() =>
+            {
+                var result = Parallel.ForEach(filesQueue, currentQueue =>
+                {
+                    for (int i = 0; i < currentQueue.Count; i++)
+                    {
+                        Archive(currentQueue.Dequeue());
+                    }
+                });
+                if (result.IsCompleted)
+                {
+                    _archive.Dispose();
+                    GC.Collect(2);
+                    GC.WaitForPendingFinalizers();
+                }
+            });            
+        }
     }
 }
 

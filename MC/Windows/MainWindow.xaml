@@ -35,6 +35,9 @@
                     <MenuItem Name="MenuItemLV1" Click="MenuItemLV_Click"></MenuItem>
                     <MenuItem Name="MenuItemLV2" Click="MenuItemLV_Click"></MenuItem>
                 </MenuItem>
+                <MenuItem Header="Download">
+                    <MenuItem Header="Parallel" Click="Download_Click"/>
+                </MenuItem>
             </MenuItem>
             <MenuItem Header="Tools" Background="{x:Null}"></MenuItem>
             <MenuItem Header="Settings" Background="{x:Null}" Click="Settings_Click">
