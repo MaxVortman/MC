@@ -44,6 +44,8 @@ namespace MC.Classes
             }
         }
 
+        
+
         private static void CreateDataList(string path)
         {
             _dataList = new List<ListSElement>(500);
@@ -807,6 +809,98 @@ namespace MC.Classes
                     GC.WaitForPendingFinalizers();
                 }
             });            
+        }
+
+        internal static void TasksOperation(object item)
+        {
+            if (item is string)
+            {
+                var path = item as string;
+                SearchInThread(path, process =>
+                {
+                    
+                    var filesQueue = CreateAndFillQueue(path, new PackFiles(GetFilesPathFromFolder));
+                    var tasks = new Task[filesQueue.Length];
+                    for (int i = 0; i < filesQueue.Length; i++)
+                    {
+                        var queue = filesQueue[i];
+                        tasks[i] = Task.Run(()=>
+                        {
+                            for (int j = 0; j < queue.Count; j++)
+                            {
+                                SearchAndSave(queue.Dequeue());
+                            }
+                        });                        
+                    }
+                    Task.Run(() =>
+                    {
+                        if (tasks.IsComplite())
+                        {
+                            process();
+                        }
+                    });
+                });
+            }
+            else
+            {
+                var elem = item as ListSElement;
+                try
+                {
+                    if (Regex.IsMatch(System.IO.Path.GetExtension(elem.Path), @"\w*\.(RAR|ZIP|GZ|TAR)"))
+                    {
+                        UnarchiveElemInThread(elem);
+                    }
+                    else
+                    {
+                        ArchiveElemInTasks(elem.Path);
+                    }
+                }
+                catch (ArgumentException e)
+                {
+                    MessageBox.Show(e.Message, "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+
+            }
+        }
+
+        private static void ArchiveElemInTasks(string path)
+        {
+            pElem = path;
+            var filesQueue = CreateAndFillQueue(path, new PackFiles(GetFilesPathFromFolder));
+            var pZip = GetPathOnDialog();
+            var zipToOpen = new FileStream(pZip, FileMode.Create, FileAccess.ReadWrite, FileShare.Inheritable);
+            _archive = new ZipArchive(zipToOpen, ZipArchiveMode.Update);
+            var tasks = new Task[filesQueue.Length];
+            for (int i = 0; i < filesQueue.Length; i++)
+            {
+                var queue = filesQueue[i];
+                tasks[i] = Task.Run(() =>
+                {
+                    for (int j = 0; j < queue.Count; j++)
+                    {
+                        Archive(queue.Dequeue());
+                    }
+                });
+            }
+            Task.Run(() =>
+            {
+                if (tasks.IsComplite())
+                {
+                    _archive.Dispose();
+                    GC.Collect(2);
+                    GC.WaitForPendingFinalizers();
+                }
+            });
+        }
+
+        private static bool IsComplite(this Task[] tasks)
+        {
+            for (int i = 0; i < tasks.Length; i++)
+            {
+                var awaiter = tasks[i].GetAwaiter();
+                awaiter.GetResult();
+            }
+            return true;
         }
     }
 }

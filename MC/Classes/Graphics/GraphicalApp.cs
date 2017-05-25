@@ -8,7 +8,7 @@ namespace MC.Classes.Graphics
     {
 
         private readonly ListViewCustom _list;
-        private readonly TextBlock _text;
+        private readonly TextBox _text;
 
         public string Path => _text.Text;
 
@@ -19,7 +19,7 @@ namespace MC.Classes.Graphics
         }
 
 
-        public GraphicalApp(ListViewCustom list, TextBlock text)
+        public GraphicalApp(ListViewCustom list, TextBox text)
         {
             _list = list;
             _text = text;

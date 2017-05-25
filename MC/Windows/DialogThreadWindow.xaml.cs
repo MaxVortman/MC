@@ -31,6 +31,7 @@ namespace MC.Windows
                     LogicForUi.ParallelOperation(item);
                     break;
                 case "Tasks":
+                    LogicForUi.TasksOperation(item);
                     break;
                 case "Async":
                     break;

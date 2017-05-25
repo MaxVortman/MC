@@ -8,6 +8,9 @@ using MahApps.Metro.Controls;
 using MC.Abstract_and_Parent_Classes;
 using MC.Classes;
 using MC.Classes.Graphics;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Threading;
 
 namespace MC.Windows
 {
@@ -235,6 +238,68 @@ namespace MC.Windows
         {
             var Download = new DownloadLink((sender as MenuItem).Header.ToString(), PathOfListView2.Text);
             Download.Show();
-        }        
+        }
+
+        private void PathOfListView_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key != Key.Enter) return;
+            var textbox = sender as TextBox;
+            if (!_searchFlag)
+            {
+                if (Directory.Exists(textbox.Text))
+                    LogicForUi.OpenElem(new Folder(textbox.Text), textbox.Name.EndsWith("1") ? _graphics1 : _graphics2, Dispatcher);
+                else
+                    MessageBox.Show("Folder not found.", "Error", MessageBoxButton.OK, MessageBoxImage.Error); 
+            }            
+        }
+
+        private bool _searchFlag = false;
+        private string _directory;
+        private void ListView_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.S && (Keyboard.Modifiers & (ModifierKeys.Control | ModifierKeys.Shift)) == (ModifierKeys.Control | ModifierKeys.Shift))
+            {
+                var textbox = (sender as ListView).Name.EndsWith("1") ? PathOfListView1 : PathOfListView2;
+                _directory = textbox.Text;
+                textbox.Focus();
+                textbox.SelectionStart = 0;
+                textbox.SelectionLength = textbox.Text.Length;
+                _searchFlag = true;
+            }
+        }
+
+        private CancellationTokenSource _tokenSource;
+        private void PathOfListView_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (!_searchFlag) return;
+            if (_tokenSource != null) _tokenSource.Cancel();
+            var textbox = sender as TextBox;
+            var currentGraphics = textbox.Name.EndsWith("1") ? _graphics1 : _graphics2;
+            var searchText = textbox.Text;
+            _tokenSource = new CancellationTokenSource();
+            var ct = _tokenSource.Token;
+            Task.Run(() =>
+            {
+
+                // Were we already canceled?
+                ct.ThrowIfCancellationRequested();
+
+                var result = Search.Files(_directory, searchText);
+                var dataList = new List<ListSElement>(result.Count);
+                foreach (var item in result)
+                {
+                    dataList.Add(new Classes.File(item));
+                }
+                Dispatcher.Invoke(() => currentGraphics.DataSource = new System.Collections.ObjectModel.ObservableCollection<ListSElement>(dataList));
+                _tokenSource = null;
+            }, ct);
+            
+        }
+
+        private void PathOfListView_LostFocus(object sender, RoutedEventArgs e)
+        {
+            _searchFlag = false;
+            if (_tokenSource != null) _tokenSource.Cancel();
+        }
     }
 }

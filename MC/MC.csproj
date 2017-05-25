@@ -92,6 +92,7 @@
     <Compile Include="Windows\DownloadLink.xaml.cs">
       <DependentUpon>DownloadLink.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Classes\Search.cs" />
     <Compile Include="Windows\Settings.xaml.cs">
       <DependentUpon>Settings.xaml</DependentUpon>
     </Compile>
