@@ -34,6 +34,7 @@ namespace MC.Windows
                     LogicForUi.TasksOperation(item);
                     break;
                 case "Async":
+                    LogicForUi.AsyncOperation(item);
                     break;
                 default:
                     throw new ArgumentException();

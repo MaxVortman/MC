@@ -23,7 +23,7 @@ namespace MC.Classes
     public delegate void InThreadProcess();
 
     internal static class LogicForUi
-    {        
+    {
         //List for ListViewSource
         //it is really faster
         private static List<ListSElement> _dataList;
@@ -44,8 +44,6 @@ namespace MC.Classes
             }
         }
 
-        
-
         private static void CreateDataList(string path)
         {
             _dataList = new List<ListSElement>(500);
@@ -55,7 +53,7 @@ namespace MC.Classes
                 var parentPath = Directory.GetParent(path).FullName;
                 _dataList.Add(new Folder(parentPath) { Name = "...", Date = "", Size = "" });
             }
-        }       
+        }
 
         private static Dispatcher _dispatcher;
         public static void OpenElem(object o, GraphicalApp graphics, Dispatcher disp)
@@ -262,8 +260,8 @@ namespace MC.Classes
                 var messageBoxResult = System.Windows.MessageBox.Show("Would you like to open the file after the search is complete?",
                         "Are you sure?", System.Windows.MessageBoxButton.YesNo);
                 var fileName = fileDialog.FileName;
-                StartThread(()=>
-                {  
+                StartThread(() =>
+                {
                     using (var writer = new StreamWriter(fileName))
                     {
                         writer.Write(WriteInStream().ToString());
@@ -281,11 +279,11 @@ namespace MC.Classes
                             MessageBox.Show(e.Message, "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
                         }
                     }
-                });                
+                });
             }
         }
 
-        
+
         public static bool IsFree = false;
         internal static void Closing()
         {
@@ -570,9 +568,9 @@ namespace MC.Classes
         internal static void ThreadOperation(object item)
         {
             if (item is string)
-            {                    
+            {
                 var path = item as string;
-                SearchInThread(path, (process)=>
+                SearchInThread(path, (process) =>
                 {
                     var filesQueue = CreateAndFillQueue(path, new PackFiles(GetFilesPathFromFolder));
                     var threads = new Classes.Threading.ThreadQueue[filesQueue.Length];
@@ -613,7 +611,7 @@ namespace MC.Classes
         }
         public static int CountOfCompliteThread = 0;
         public static Classes.Threading.ThreadQueue[] Threads { get; private set; }
-        private static ZipArchive _archive;        
+        private static ZipArchive _archive;
         private static void ArchiveOrUnarchiveElemInThread(ListSElement elem)
         {
             try
@@ -682,7 +680,7 @@ namespace MC.Classes
             GC.WaitForPendingFinalizers();
         }
 
-        private const string  Archiveextension = "RAR";
+        private const string Archiveextension = "RAR";
         private static string GetPathOnDialog()
         {
             var fileDialog = new SaveFileDialog
@@ -718,14 +716,14 @@ namespace MC.Classes
                 }
             }
             return filesQueue;
-        }        
-                
+        }
+
         private static List<string> _listOfPath;
         private static void GetFilesPathFromFolder(string path)
         {
             try
             {
-                Parallel.ForEach(Directory.GetFiles(path), item=>
+                Parallel.ForEach(Directory.GetFiles(path), item =>
                 {
                     _listOfPath.Add(item);
                 });
@@ -761,7 +759,7 @@ namespace MC.Classes
                         {
                             process();
                         }
-                    });                    
+                    });
                 });
             }
             else
@@ -808,7 +806,7 @@ namespace MC.Classes
                     GC.Collect(2);
                     GC.WaitForPendingFinalizers();
                 }
-            });            
+            });
         }
 
         internal static void TasksOperation(object item)
@@ -818,19 +816,18 @@ namespace MC.Classes
                 var path = item as string;
                 SearchInThread(path, process =>
                 {
-                    
                     var filesQueue = CreateAndFillQueue(path, new PackFiles(GetFilesPathFromFolder));
                     var tasks = new Task[filesQueue.Length];
                     for (int i = 0; i < filesQueue.Length; i++)
                     {
                         var queue = filesQueue[i];
-                        tasks[i] = Task.Run(()=>
+                        tasks[i] = Task.Run(() =>
                         {
                             for (int j = 0; j < queue.Count; j++)
                             {
                                 SearchAndSave(queue.Dequeue());
                             }
-                        });                        
+                        });
                     }
                     Task.Run(() =>
                     {
@@ -902,6 +899,136 @@ namespace MC.Classes
             }
             return true;
         }
+
+        private static object _searchLock = new object();
+        private static CancellationTokenSource seachCTS;
+        internal static void AsyncOperation(object item)
+        {
+            if (item is string)
+            {
+                var path = item as string;
+                SearchInThread(path, async (process) =>
+                {
+                    seachCTS = new CancellationTokenSource();
+                    var seachTC = seachCTS.Token;
+                    var filesQueue = CreateAndFillQueue(path, new PackFiles(GetFilesPathFromFolder));
+                    var totalCount = _listOfPath.Count;
+                    var ProgressLayout = new Windows.ProgressWindow("Search") { CTS = seachCTS };
+                    var progress = new Progress<double>(ProgressLayout.ReportProgress);
+                    var realProgres = progress as IProgress<double>;
+                    ProgressLayout.Show();
+                    await Task.Run(() =>
+                                {
+
+                                    var tasks = new Task[filesQueue.Length];
+                                    var tempCount = 0;
+                                    for (int i = 0; i < filesQueue.Length; i++)
+                                    {
+                                        var queue = filesQueue[i];
+                                        tasks[i] = Task.Run(() =>
+                                        {
+                                            try
+                                            {
+                                                for (int j = 0; j < queue.Count; j++)
+                                                {
+                                                    seachTC.ThrowIfCancellationRequested();
+                                                    SearchAndSave(queue.Dequeue());
+                                                    //Interlocked.Increment(ref tempCount);
+                                                    lock (_searchLock)
+                                                        realProgres.Report(++tempCount * 100 / (double)totalCount);
+                                                }
+                                            }
+                                            catch (OperationCanceledException)
+                                            {
+                                                GC.Collect(2);
+                                                GC.WaitForPendingFinalizers();
+                                            }
+                                        }, seachTC);
+                                    }
+                                    tasks.IsComplite();
+                                });
+                    ProgressLayout.Close();
+                    process();
+                });
+            }
+            else
+            {
+                var elem = item as ListSElement;
+                try
+                {
+                    if (Regex.IsMatch(System.IO.Path.GetExtension(elem.Path), @"\w*\.(RAR|ZIP|GZ|TAR)"))
+                    {
+                        UnarchiveElemInThread(elem);
+                    }
+                    else
+                    {
+                        ArchiveElemAsync(elem.Path);
+                    }
+                }
+                catch (ArgumentException e)
+                {
+                    MessageBox.Show(e.Message, "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+
+            }
+        }
+
+        private static object _archiveLock = new object();
+        private static CancellationTokenSource archiveCTS;
+        private static int tempCount;
+        private static void ArchiveElemAsync(string path)
+        {
+            archiveCTS = new CancellationTokenSource();
+            var archiveCT = archiveCTS.Token;
+            var ProgressLayout = new Windows.ProgressWindow("Archive") { CTS = archiveCTS };
+            var progress = new Progress<double>(ProgressLayout.ReportProgress);
+            var realProgres = progress as IProgress<double>;
+            ProgressLayout.Show();
+            Task.Run(async () =>
+            {
+                pElem = path;
+                var filesQueue = CreateAndFillQueue(path, new PackFiles(GetFilesPathFromFolder));
+                var totalCount = _listOfPath.Count;
+                tempCount = 0;
+                var pZip = GetPathOnDialog();
+                var zipToOpen = new FileStream(pZip, FileMode.Create, FileAccess.ReadWrite, FileShare.Inheritable);
+                _archive = new ZipArchive(zipToOpen, ZipArchiveMode.Update);
+                var tasks = new Task[filesQueue.Length];                
+                await Task.Run(() =>
+                {
+                    for (int i = 0; i < filesQueue.Length; i++)
+                    {
+                        var queue = filesQueue[i];
+                        tasks[i] = Task.Run(() =>
+                        {
+                            try
+                            {
+                                for (int j = 0; j < queue.Count; j++)
+                                {
+                                    archiveCT.ThrowIfCancellationRequested();
+                                    Archive(queue.Dequeue());
+                                    lock (_archiveLock)
+                                        realProgres.Report(++tempCount * 100 / (double)totalCount);
+                                }
+                            }
+                            catch (OperationCanceledException)
+                            {
+                                MessageBox.Show("Archive canceled.");                                
+                                GC.Collect(2);
+                                GC.WaitForPendingFinalizers();
+                            }
+                        }, archiveCT);
+                    }
+                    tasks.IsComplite();
+                });
+                ProgressLayout.Close();
+                _archive.Dispose();
+                _archive.Dispose();
+                GC.Collect(2);
+                GC.WaitForPendingFinalizers();
+            });            
+        }
     }
 }
+
 

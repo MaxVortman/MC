@@ -2,18 +2,22 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Threading;
 
 namespace MC.Classes
 {
     internal static class Search
     {
-        internal static List<string> Files(string directory, string mask)
+        internal static List<string> Files(string directory, string mask, CancellationToken ct)
         {
             _allPath = new List<string>();
             FillList(directory);
             mask = mask.ReplaceAll("*", ".", "?");
             var result = _allPath.FindAll((s) =>
             {
+                
+                // Were we already canceled?
+                ct.ThrowIfCancellationRequested();
                 if (s == null) return false;
                 return Regex.IsMatch(s, @mask);
             });

@@ -272,7 +272,8 @@ namespace MC.Windows
         private void PathOfListView_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (!_searchFlag) return;
-            if (_tokenSource != null) _tokenSource.Cancel();
+            if (_tokenSource != null)
+                _tokenSource.Cancel();
             var textbox = sender as TextBox;
             var currentGraphics = textbox.Name.EndsWith("1") ? _graphics1 : _graphics2;
             var searchText = textbox.Text;
@@ -280,20 +281,24 @@ namespace MC.Windows
             var ct = _tokenSource.Token;
             Task.Run(() =>
             {
-
-                // Were we already canceled?
-                ct.ThrowIfCancellationRequested();
-
-                var result = Search.Files(_directory, searchText);
-                var dataList = new List<ListSElement>(result.Count);
-                foreach (var item in result)
+                try
                 {
-                    dataList.Add(new Classes.File(item));
+                    var result = Search.Files(_directory, searchText, ct);
+
+                    var dataList = new List<ListSElement>(result.Count);
+                    foreach (var item in result)
+                    {
+                        dataList.Add(new Classes.File(item));
+                    }
+                    Dispatcher.Invoke(() => currentGraphics.DataSource = new System.Collections.ObjectModel.ObservableCollection<ListSElement>(dataList));
+                    _tokenSource = null;
                 }
-                Dispatcher.Invoke(() => currentGraphics.DataSource = new System.Collections.ObjectModel.ObservableCollection<ListSElement>(dataList));
-                _tokenSource = null;
+                catch (OperationCanceledException)
+                {
+                    _tokenSource = null;
+                }
             }, ct);
-            
+
         }
 
         private void PathOfListView_LostFocus(object sender, RoutedEventArgs e)

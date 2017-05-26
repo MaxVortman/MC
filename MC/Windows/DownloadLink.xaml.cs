@@ -29,11 +29,74 @@ namespace MC.Windows
             InitializeComponent();
             Title = $"{text} style downloading...";
             Path.Text = path;
-
+            switch (text)
+            {
+                case "Parallel":
+                    StartDownload.Click += StartDownloadParallel_Click;
+                    break;
+                case "Async":
+                    StartDownload.Click += StartDownloadAsync_Click;
+                    CB.Visibility = Visibility.Collapsed;
+                    PB.Visibility = Visibility.Collapsed;
+                    break;
+                default:
+                    break;
+            }
         }
+
+        private CancellationTokenSource _wcCTS;
+        private static Int64 tempCount;
+        private async void StartDownloadAsync_Click(object sender, RoutedEventArgs e)
+        {
+            if (Link.Text == default(string) || Path.Text == default(string))
+            {
+                MessageBox.Show("Please pick link, type and path.");
+                return;
+            }
+            var link = Link.Text;
+            var path = Path.Text;
+            var fileRequest = WebRequest.Create(link);
+            var fileResponse = fileRequest.GetResponse();
+            var BufferSize = 16384;
+            var byteBuffer = new byte[BufferSize];
+            _wcCTS = new CancellationTokenSource();
+            var wcCT = _wcCTS.Token;
+            var ProgressLayout = new Windows.ProgressWindow("Download") { CTS = _wcCTS };
+            var progress = new Progress<double>(ProgressLayout.ReportProgress);
+            var realProgres = progress as IProgress<double>;
+            ProgressLayout.Show();
+            await Task.Run(() =>
+            {
+                using (var fromStream = fileResponse.GetResponseStream())
+                {
+                    var totalCount = fileResponse.ContentLength;
+                    tempCount = 0;
+                    using (var inStream = System.IO.File.Open(System.IO.Path.Combine(path, System.IO.Path.GetFileName(link)), FileMode.Create, FileAccess.Write, FileShare.Read))
+                    {
+                        try
+                        {
+                            var bytesRead = 0;
+                            do
+                            {
+                                wcCT.ThrowIfCancellationRequested();
+                                bytesRead = fromStream.Read(byteBuffer, 0, BufferSize);
+                                inStream.Write(byteBuffer, 0, bytesRead);
+                                tempCount += bytesRead;
+                                realProgres.Report(tempCount * 100 / (double)totalCount);
+                            } while (bytesRead > 0);
+                        }
+                        catch (OperationCanceledException)
+                        {
+                            MessageBox.Show("Download canceled.");
+                        }
+                    }
+                }
+            }, wcCT); 
+        }
+
         private WebClient _wc = new WebClient();
         private CancellationTokenSource cancelToken;
-        private void StartDownload_Click(object sender, RoutedEventArgs e)
+        private void StartDownloadParallel_Click(object sender, RoutedEventArgs e)
         {
             if ((sender as Button).Content.ToString() == "Start")
             {
@@ -50,7 +113,7 @@ namespace MC.Windows
                 };
                 _wc.DownloadFileCompleted += (s, eArgs) =>
                 {
-                    MessageBox.Show("Download completed!");
+                    MessageBox.Show("Download completed!");                    
                     PB.Value = 0;
                     (sender as Button).Content = "Start";
                     CB.IsEnabled = true;
@@ -61,41 +124,43 @@ namespace MC.Windows
                 Directory.CreateDirectory(Path.Text);
                 if (CB.Text == "img")
                 {
-                    try
-                    {
-                        var link = Link.Text;
-                        var path = Path.Text;
-                       Task.Factory.StartNew(() =>
-                        {
-                            var result = Parallel.ForEach(GetAllImages(link, "img"), optPar, image =>
-                            {
-                                optPar.CancellationToken.ThrowIfCancellationRequested();
-                                var _wc = new WebClient();
-                                if (image != null && image.StartsWith("http"))
-                                    _wc.DownloadFile(new Uri(image), System.IO.Path.Combine(path, System.IO.Path.GetFileName(image)));
-                            });
-                            if (result.IsCompleted)
-                            {
-                                Dispatcher.Invoke(() =>
-                                {
-                                    CB.IsEnabled = true;
-                                    (sender as Button).Content = "Start";
-                                });
-                            }
-                        });
-                    }
-                    catch (OperationCanceledException)
-                    {
-                        MessageBox.Show("Download canceled.");
-                        return;
-                    }
+
+                    var link = Link.Text;
+                    var path = Path.Text;
+                    Task.Factory.StartNew(() =>
+                     {
+                         try
+                         {
+                             var result = Parallel.ForEach(GetAllImages(link, "img"), optPar, image =>
+                             {
+                                 optPar.CancellationToken.ThrowIfCancellationRequested();
+                                 var _wc = new WebClient();
+                                 if (image != null && image.StartsWith("http"))
+                                     _wc.DownloadFile(new Uri(image), System.IO.Path.Combine(path, System.IO.Path.GetFileName(image)));                                 
+                             });
+                             if (result.IsCompleted)
+                             {
+                                 Dispatcher.Invoke(() =>
+                                 {
+                                     CB.IsEnabled = true;
+                                     (sender as Button).Content = "Start";
+                                 });
+                             }
+                         }
+                         catch (OperationCanceledException)
+                         {
+                             MessageBox.Show("Download canceled.");
+                             return;
+                         }
+                     });
+
                 }
                 else
                 {
                     _wc.DownloadFileAsync(new Uri(Link.Text), System.IO.Path.Combine(Path.Text, System.IO.Path.GetFileName(Link.Text)));
                 }
-               
-                    
+
+
                 (sender as Button).Content = "Cancel";
             }
             else
@@ -104,7 +169,7 @@ namespace MC.Windows
                 {
                     cancelToken.Cancel();
                     PB.Value = 0;
-                    (sender as Button).Content = "Start"; 
+                    (sender as Button).Content = "Start";
                 }
                 else
                 {

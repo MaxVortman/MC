@@ -15,7 +15,7 @@
         </ComboBox>
         <DockPanel>
             <TextBox Name="Link" DockPanel.Dock="Left" Padding="10,0" Width="350" ></TextBox>
-            <Button Name="StartDownload" Click="StartDownload_Click" DockPanel.Dock="Right" Padding="20,0">Start</Button>
+            <Button Name="StartDownload" DockPanel.Dock="Right" Padding="20,0">Start</Button>
         </DockPanel>
         <DockPanel>
             <TextBox Name="Path" DockPanel.Dock="Left" FontStyle="Italic" Width="350"  VerticalAlignment="Stretch"></TextBox>
