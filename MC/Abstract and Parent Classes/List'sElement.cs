@@ -6,7 +6,7 @@ namespace MC.Abstract_and_Parent_Classes
 {
     internal abstract class ListSElement
     {
-        protected object Image { get; set; }
+        public object Image { get; set; }
 
         public string Name { get; set; }
         public string Size { get; set; }

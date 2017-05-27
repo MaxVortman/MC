@@ -49,21 +49,11 @@ namespace MC.Classes
         private FileInfo _info;
         protected sealed override void GetAndSetInfo()
         {
-            try
-            {
-                Image = IconFromFile(Path);
-                _info = new FileInfo(Path);
-                Name = _info.Name;
-                Size = FormatSize(_info.Length);
-                Date = Convert.ToString(_info.CreationTime);
-            }
-            catch (FileNotFoundException)
-            {
-                Image = null;
-                Name = null;
-                Size = null;
-                Date = null;
-            }
+            Image = IconFromFile(Path);
+            _info = new FileInfo(Path);
+            Name = _info.Name;
+            Size = FormatSize(_info.Length);
+            Date = Convert.ToString(_info.CreationTime);
         }
 
         public override void UpdateName(string newPath)
