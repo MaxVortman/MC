@@ -79,6 +79,7 @@
     <Compile Include="Classes\Graphics\ThemeManagerHelper.cs" />
     <Compile Include="Classes\Graphics\Themes\BlueTheme.cs" />
     <Compile Include="Classes\Graphics\Themes\DarkTheme.cs" />
+    <Compile Include="Classes\Statictics.cs" />
     <Compile Include="Classes\Threading\ThreadQueue.cs" />
     <Compile Include="Classes\UserPrefs.cs" />
     <Compile Include="Windows\AccentStyleWindow.xaml.cs">

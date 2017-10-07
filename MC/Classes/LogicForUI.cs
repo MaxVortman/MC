@@ -154,6 +154,12 @@ namespace MC.Classes
             return watcher;
         }
 
+        internal static string ReadStatistic(object selectedItem)
+        {
+           var stat = new Statictics((selectedItem as ListSElement).Path);
+            return stat.GetStatistic();
+        }
+
         private static void Watcher_Renamed(object sender, RenamedEventArgs e)
         {
             var Data = _currentGraphics.DataSource;

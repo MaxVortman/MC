@@ -125,6 +125,9 @@ namespace MC.Windows
                     _myTextBox.SelectionLength = _myTextBox.Text.Length;
                     KeyDown += Rename_KeyDown;                    
                     break;
+                case "Statistic":
+                    MessageBox.Show(LogicForUi.ReadStatistic(_selectedItem));
+                    break;
             }
         }
 
@@ -172,28 +175,20 @@ namespace MC.Windows
         private object _selectedItem;
         private void ContextMenu1_Opened(object sender, RoutedEventArgs e)
         {
-            var menu = sender as ContextMenu;
+            var menu = sender as ContextMenu;            
             _selectedItem = menu != null && menu.Name == "ContextMenu1" ? ListView1.SelectedItem : ListView2.SelectedItem;
+            var statisticItem = menu.Items[6] as MenuItem;
+            if ((_selectedItem as ListSElement).Name.EndsWith(".txt"))
+                statisticItem.IsEnabled = true;
+            else
+                statisticItem.IsEnabled = false;
         }
 
 
-        //private MetroWindow accentThemeTestWindow;
         private void Settings_Click(object sender, RoutedEventArgs e)
         {
             var settings = new Settings();
             settings.Show();
-            //if (accentThemeTestWindow != null)
-            //{
-            //    accentThemeTestWindow.Activate();
-            //    return;
-            //}
-
-            //accentThemeTestWindow = new AccentStyleWindow();
-            //accentThemeTestWindow.Owner = this;
-            //accentThemeTestWindow.Closed += (o, args) => accentThemeTestWindow = null;
-            //accentThemeTestWindow.Left = this.Left + this.ActualWidth / 2.0;
-            //accentThemeTestWindow.Top = this.Top + this.ActualHeight / 2.0;
-            //accentThemeTestWindow.Show();
         }
 
         private void Go_SubmenuOpened(object sender, RoutedEventArgs e)
