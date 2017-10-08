@@ -81,7 +81,7 @@ namespace MC.Windows
             }
         }
 
-        private void ContextMenu1_Click(object sender, RoutedEventArgs e)
+        private async void ContextMenu1_Click(object sender, RoutedEventArgs e)
         {
             var item = sender as MenuItem;
             if (item == null) return;
@@ -126,7 +126,8 @@ namespace MC.Windows
                     KeyDown += Rename_KeyDown;                    
                     break;
                 case "Statistic":
-                    MessageBox.Show(LogicForUi.ReadStatistic(_selectedItem));
+                    MessageBox.Show(await LogicForUi.ReadStatisticAsync(_selectedItem));
+                    
                     break;
             }
         }

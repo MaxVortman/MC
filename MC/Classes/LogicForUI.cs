@@ -154,10 +154,14 @@ namespace MC.Classes
             return watcher;
         }
 
-        internal static string ReadStatistic(object selectedItem)
+        public static async Task<string> ReadStatisticAsync(object selectedItem)
         {
-           var stat = new Statictics((selectedItem as ListSElement).Path);
-            return stat.GetStatistic();
+            var path = (selectedItem as ListSElement).Path;
+            Statistics stat = new NonParallelStatistics(path);
+            var result = await stat.GetStatisticsAsync();
+            stat = new ParallelStatistics(path);
+            result += await stat.GetStatisticsAsync();
+            return result;
         }
 
         private static void Watcher_Renamed(object sender, RenamedEventArgs e)
