@@ -77,6 +77,7 @@
     </ApplicationDefinition>
     <Compile Include="Abstract and Parent Classes\Statistics.cs" />
     <Compile Include="Abstract and Parent Classes\Theme.cs" />
+    <Compile Include="Classes\FileFiller.cs" />
     <Compile Include="Classes\Graphics\ThemeManagerHelper.cs" />
     <Compile Include="Classes\Graphics\Themes\BlueTheme.cs" />
     <Compile Include="Classes\Graphics\Themes\DarkTheme.cs" />
@@ -84,6 +85,7 @@
     <Compile Include="Classes\ParallelStatistics.cs" />
     <Compile Include="Classes\Threading\ThreadQueue.cs" />
     <Compile Include="Classes\UserPrefs.cs" />
+    <Compile Include="Classes\WatcherCreator.cs" />
     <Compile Include="Windows\AccentStyleWindow.xaml.cs">
       <DependentUpon>AccentStyleWindow.xaml</DependentUpon>
     </Compile>

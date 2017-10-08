@@ -14,7 +14,7 @@ using System.Threading;
 
 namespace MC.Windows
 {
-    /*
+    /*TO DO:
      * Нужно: изобрести watcher на изменение состояния дисков,
      *        добавить настройку цвета окна.
      * Можно: добавить визуализацию настроек,
@@ -35,11 +35,15 @@ namespace MC.Windows
         public static UserPrefs UserPrefs { get; private set; }
         public MainWindow(UserPrefs userPrefs)
         {
-            MainWindow.UserPrefs = userPrefs;
+            UserPrefs = userPrefs;
             InitializeComponent();
             _graphics1 = new GraphicalApp(this.ListView1, this.PathOfListView1);
             _graphics2 = new GraphicalApp(this.ListView2, this.PathOfListView2);
         }
+
+        
+        private FileFiller fileFiller1;
+        private FileFiller fileFiller2;
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
@@ -50,19 +54,22 @@ namespace MC.Windows
 
             var drives = DriveInfo.GetDrives();
             Places.ItemsSource = LogicForUi.FillTheListBoxWithDrives(drives);
-            LogicForUi.CreateWatchersAndSetGraphics(_graphics1, _graphics2);
-            LogicForUi.OpenElem(new Folder(drives[0].Name), _graphics1, Dispatcher);
-            LogicForUi.OpenElem(new Folder(drives[1].Name), _graphics2, Dispatcher);
+            var watcher1 = new WatcherCreator(_graphics1, Dispatcher).CreateWatcher();
+            var watcher2 = new WatcherCreator(_graphics2, Dispatcher).CreateWatcher();
+            fileFiller1 = new FileFiller(_graphics1, watcher1);
+            fileFiller2 = new FileFiller(_graphics2, watcher2);
+            fileFiller1.OpenElem(new Folder(drives[0].Name));
+            fileFiller2.OpenElem(new Folder(drives[1].Name));
         }
 
         private void ListView1_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            LogicForUi.OpenElem(ListView1.SelectedItem, _graphics1, Dispatcher);
+            fileFiller1.OpenElem(ListView1.SelectedItem);
         }
 
         private void ListView2_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            LogicForUi.OpenElem(ListView2.SelectedItem, _graphics2, Dispatcher);
+            fileFiller2.OpenElem(ListView2.SelectedItem);
         }
 
         private void Places_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -73,7 +80,14 @@ namespace MC.Windows
             var drive = item.DataContext as Drive;
             if (drive != null && drive.IsReady)
             {
-                LogicForUi.OpenElem(Places.SelectedItem, focus ? _graphics1 : _graphics2, Dispatcher);
+                if (focus)
+                {
+                    fileFiller1.OpenElem(Places.SelectedItem);
+                }
+                else
+                {
+                    fileFiller2.OpenElem(Places.SelectedItem);
+                }
             }
             else
             {
@@ -243,7 +257,12 @@ namespace MC.Windows
             if (!_searchFlag)
             {
                 if (Directory.Exists(textbox.Text))
-                    LogicForUi.OpenElem(new Folder(textbox.Text), textbox.Name.EndsWith("1") ? _graphics1 : _graphics2, Dispatcher);
+                {
+                    if (textbox.Name.EndsWith("1"))
+                        fileFiller1.OpenElem(new Folder(textbox.Text));
+                    else
+                        fileFiller2.OpenElem(new Folder(textbox.Text));
+                }                   
                 else
                     MessageBox.Show("Folder not found.", "Error", MessageBoxButton.OK, MessageBoxImage.Error); 
             }            
