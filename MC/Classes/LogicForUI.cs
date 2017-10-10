@@ -227,25 +227,7 @@ namespace MC.Classes
             return drivesElem;
         }
 
-        static Buffer _buffer;
-
-        private static ListSElement _dataToCopy;
-
-        internal static void CopyElem(object elem)
-        {
-            DeleteTemp(_buffer);
-
-            var item = elem as ListSElement;
-            try
-            {
-                _buffer = item.Copy();
-                _dataToCopy = item;
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(e.Message, "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
+    
 
         private static void UnarchiveElemInThread(ListSElement item)
         {
@@ -256,96 +238,9 @@ namespace MC.Classes
             }
         }
 
-        private static void DeleteTemp(Buffer buffer)
-        {
-            if (buffer == null) return;
-            if (buffer is FileBuffer)
-            {
-                var fileBuffer = buffer as FileBuffer;
-                System.IO.File.Delete(fileBuffer.TempPath);
-            }
-            else
-            {
-                var folderBuffer = buffer as FolderBuffer;
-                foreach (var item in folderBuffer.FoldersBuffer)
-                {
-                    DeleteTemp(item);
-                }
-            }
-        }
+        
 
-        internal static void RenameFile(object v, string text)
-        {
-            var elem = v as ListSElement;
-            var sourcePath = elem.Path;
-            var destinationPath = Path.Combine(sourcePath.Remove(sourcePath.LastIndexOf(@"\", StringComparison.Ordinal)), text);
-
-            try
-            {
-                if (elem is File)
-                {
-                    System.IO.File.Move(sourcePath, destinationPath);
-                }
-                else
-                       if (elem is Folder)
-                {
-                    System.IO.Directory.Move(sourcePath, destinationPath);
-                }
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(e.Message, "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
-
-        internal static void CutElem(object elem)
-        {
-            try
-            {
-                CopyElem(elem);
-                DeleteElem(elem);
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(e.Message, "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
-
-        internal static void PasteElem(GraphicalApp graphics)
-        {
-            if (_buffer == null) return;
-            var path = System.IO.Path.Combine(graphics.Path, _dataToCopy.Name);
-            try
-            {
-                _dataToCopy.Paste(path, _buffer);
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(e.Message, "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
-
-        internal static void DeleteElem(object elem)
-        {
-            try
-            {
-                var item = elem as ListSElement;
-                var path = item.Path;
-                if (item is File)
-                {
-                    System.IO.File.Delete(path);
-                }
-                else
-                {
-                    System.IO.Directory.Delete(path, true);
-                }
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(e.Message, "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
-
+       
         internal static void ThreadOperation(object item)
         {
             if (item is string)

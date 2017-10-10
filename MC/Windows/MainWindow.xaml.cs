@@ -103,16 +103,16 @@ namespace MC.Windows
             switch (item.Header.ToString())
             {
                 case "Copy":
-                    LogicForUi.CopyElem(_selectedItem);
+                    FileManipulator.CopyFile(_selectedItem);
                     break;
                 case "Paste":
-                    LogicForUi.PasteElem(ListView1.IsFocused ? _graphics1 : _graphics2);
+                    FileManipulator.PasteFileBy(ListView1.IsFocused ? _graphics1.Path : _graphics2.Path);
                     break;
                 case "Cut":
-                    LogicForUi.CutElem(_selectedItem);
+                    FileManipulator.CutFile(_selectedItem);
                     break;
                 case "Delete":
-                    LogicForUi.DeleteElem(_selectedItem);
+                    FileManipulator.DeleteFile(_selectedItem);
                     break;
                 case "Archive/Unarchive":
                     var dialog = new DialogThreadWindow(_selectedItem);
@@ -151,7 +151,7 @@ namespace MC.Windows
         {
             if (e.Key != Key.Enter || _myTextBox == null || _selectedItem == null) return;
             _myTextBox.IsReadOnly = true;
-            LogicForUi.RenameFile(_selectedItem, _myTextBox.Text);
+            FileManipulator.RenameFile(_selectedItem, _myTextBox.Text);
             KeyDown -= Rename_KeyDown;
         }
 

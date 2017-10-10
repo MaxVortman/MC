@@ -78,6 +78,7 @@
     <Compile Include="Abstract and Parent Classes\Statistics.cs" />
     <Compile Include="Abstract and Parent Classes\Theme.cs" />
     <Compile Include="Classes\FileFiller.cs" />
+    <Compile Include="Classes\FileManipulator.cs" />
     <Compile Include="Classes\Graphics\ThemeManagerHelper.cs" />
     <Compile Include="Classes\Graphics\Themes\BlueTheme.cs" />
     <Compile Include="Classes\Graphics\Themes\DarkTheme.cs" />
