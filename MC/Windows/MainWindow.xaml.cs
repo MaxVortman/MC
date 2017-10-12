@@ -11,6 +11,7 @@ using MC.Classes.Graphics;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Threading;
+using System.Text.RegularExpressions;
 
 namespace MC.Windows
 {
@@ -53,7 +54,7 @@ namespace MC.Windows
             Background = UserPrefs.Theme.BackColor;
 
             var drives = DriveInfo.GetDrives();
-            Places.ItemsSource = LogicForUi.FillTheListBoxWithDrives(drives);
+            Places.ItemsSource = DriveFiller.FillTheListBoxWithDrives(drives);
             var watcher1 = new WatcherCreator(_graphics1, Dispatcher).CreateWatcher();
             var watcher2 = new WatcherCreator(_graphics2, Dispatcher).CreateWatcher();
             fileFiller1 = new FileFiller(_graphics1, watcher1);
@@ -95,6 +96,8 @@ namespace MC.Windows
             }
         }
 
+
+        private DialogThreadWindow dialog;
         private async void ContextMenu1_Click(object sender, RoutedEventArgs e)
         {
             var item = sender as MenuItem;
@@ -103,20 +106,23 @@ namespace MC.Windows
             switch (item.Header.ToString())
             {
                 case "Copy":
-                    FileManipulator.CopyFile(_selectedItem);
+                    FileManipulator.CopyFile(selectedListItem);
                     break;
                 case "Paste":
                     FileManipulator.PasteFileBy(ListView1.IsFocused ? _graphics1.Path : _graphics2.Path);
                     break;
                 case "Cut":
-                    FileManipulator.CutFile(_selectedItem);
+                    FileManipulator.CutFile(selectedListItem);
                     break;
                 case "Delete":
-                    FileManipulator.DeleteFile(_selectedItem);
+                    FileManipulator.DeleteFile(selectedListItem);
                     break;
-                case "Archive/Unarchive":
-                    var dialog = new DialogThreadWindow(_selectedItem);
+                case "Archive":
+                    dialog = new DialogThreadWindow(selectedListItem.Path);
                     dialog.Show();
+                    break;
+                case "Unarchive":
+                    UnziperArchives.UnarchiveElemInThread(selectedListItem);
                     break;
                 case "Rename":
                     // Getting the currently selected ListBoxItem
@@ -124,7 +130,7 @@ namespace MC.Windows
                     // IsSynchronizedWithCurrentItem set to True for this to work
                     ListViewCustom myListBox = menu.Name == "ContextMenu1" ? ListView1 : ListView2;
                     ListViewItem myListBoxItem =
-                        (ListViewItem)(myListBox.ItemContainerGenerator.ContainerFromItem(_selectedItem));
+                        (ListViewItem)(myListBox.ItemContainerGenerator.ContainerFromItem(selectedListItem));
 
                     // Getting the ContentPresenter of myListBoxItem
                     ContentPresenter myContentPresenter = FindVisualChild<ContentPresenter>(myListBoxItem);
@@ -140,7 +146,7 @@ namespace MC.Windows
                     KeyDown += Rename_KeyDown;                    
                     break;
                 case "Statistic":
-                    MessageBox.Show(await LogicForUi.ReadStatisticAsync(_selectedItem));
+                    MessageBox.Show(await LogicForUi.ReadStatisticAsync(selectedListItem));
                     
                     break;
             }
@@ -149,9 +155,9 @@ namespace MC.Windows
         private TextBox _myTextBox;        
         private void Rename_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key != Key.Enter || _myTextBox == null || _selectedItem == null) return;
+            if (e.Key != Key.Enter || _myTextBox == null || selectedListItem == null) return;
             _myTextBox.IsReadOnly = true;
-            FileManipulator.RenameFile(_selectedItem, _myTextBox.Text);
+            FileManipulator.RenameFile(selectedListItem, _myTextBox.Text);
             KeyDown -= Rename_KeyDown;
         }
 
@@ -187,16 +193,32 @@ namespace MC.Windows
             return null;
         }
 
-        private object _selectedItem;
+        private ListSElement selectedListItem;
         private void ContextMenu1_Opened(object sender, RoutedEventArgs e)
         {
             var menu = sender as ContextMenu;            
-            _selectedItem = menu != null && menu.Name == "ContextMenu1" ? ListView1.SelectedItem : ListView2.SelectedItem;
-            var statisticItem = menu.Items[6] as MenuItem;
-            if ((_selectedItem as ListSElement).Name.EndsWith(".txt"))
+            selectedListItem = (menu.Name == "ContextMenu1" ? ListView1.SelectedItem : ListView2.SelectedItem) as ListSElement;
+
+            //TO DO: 6 - is bad
+            var statisticItem = menu.Items[7] as MenuItem;
+            if (selectedListItem.Name.EndsWith(".txt"))
                 statisticItem.IsEnabled = true;
             else
                 statisticItem.IsEnabled = false;
+
+            var unarchiveItem = menu.Items[6] as MenuItem;
+            var archiveItem = menu.Items[5] as MenuItem;
+            bool isZip = Regex.Match(selectedListItem.Path, @"\w*\.(RAR|ZIP|GZ|TAR)$").Success;
+            if (isZip)
+            {
+                unarchiveItem.IsEnabled = true;
+                archiveItem.IsEnabled = false;
+            }
+            else
+            {
+                unarchiveItem.IsEnabled = false;
+                archiveItem.IsEnabled = true;
+            }
         }
 
 
@@ -236,7 +258,7 @@ namespace MC.Windows
         {
             try
             {
-                LogicForUi.Closing();
+                dialog?.ClosingThread();
             }
             catch (Exception ex)
             {
@@ -298,7 +320,7 @@ namespace MC.Windows
             {
                 try
                 {
-                    var result = Search.Files(_directory, searchText, ct);
+                    var result = SearchEngineFiles.GetPathOfFilesBy(_directory, searchText, ct);
 
                     var dataList = new List<ListSElement>(result.Count);
                     foreach (var item in result)

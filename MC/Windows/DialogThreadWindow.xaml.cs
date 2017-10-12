@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using MahApps.Metro.Controls;
 using MC.Classes;
+using MC.Abstract_and_Parent_Classes;
 
 namespace MC.Windows
 {
@@ -11,34 +12,42 @@ namespace MC.Windows
     /// </summary>
     public partial class DialogThreadWindow : MetroWindow
     {
-        private object item;
+        private string pathOfFile;
 
-        public DialogThreadWindow(object item)
-        { 
-            this.item = item;
+        public DialogThreadWindow(string pathOfFile)
+        {
+            this.pathOfFile = pathOfFile;
             InitializeComponent();
         }
-        
+        private FileArchiver fileArchiver;
+
         private void TypeButton_Click(object sender, RoutedEventArgs e)
         {
             Button btn = sender as Button;
+            
             switch (btn.Content.ToString())
             {
                 case "Thread":
-                    LogicForUi.ThreadOperation(item);
+                    fileArchiver = new FileArchiverInThread(pathOfFile);                    
                     break;
                 case "Parralel":
-                    LogicForUi.ParallelOperation(item);
+                    fileArchiver = new FileArchiverParallel(pathOfFile);
                     break;
                 case "Tasks":
-                    LogicForUi.TasksOperation(item);
+                    fileArchiver = new FileArchiverInTask(pathOfFile);
                     break;
                 case "Async":
-                    LogicForUi.AsyncOperation(item);
+                    fileArchiver = new FileArchiverAsync(pathOfFile);
                     break;
                 default:
                     throw new ArgumentException();
             }
+            fileArchiver.Archive();
+        }
+
+        internal void ClosingThread()
+        {
+            fileArchiver?.Closing();
         }
     }
 }

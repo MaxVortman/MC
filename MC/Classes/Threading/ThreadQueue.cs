@@ -30,9 +30,7 @@ namespace MC.Classes.Threading
             {
                 _func(_queueOfFiles.Dequeue());
             }
-
-            if (++LogicForUi.CountOfCompliteThread != Environment.ProcessorCount || LogicForUi.Threads == null) return;
-            LogicForUi.IsFree = true;
+            
             ThreadingComplite?.Invoke(this, new EventArgs());
         }
 

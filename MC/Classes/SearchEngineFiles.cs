@@ -6,9 +6,9 @@ using System.Threading;
 
 namespace MC.Classes
 {
-    internal static class Search
+    internal static class SearchEngineFiles
     {
-        internal static List<string> Files(string directory, string mask, CancellationToken ct)
+        internal static List<string> GetPathOfFilesBy(string directory, string mask, CancellationToken ct)
         {
             _allPath = new List<string>();
             FillList(directory);

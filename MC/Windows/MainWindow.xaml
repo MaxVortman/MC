@@ -95,7 +95,8 @@
                         <MenuItem Header="Cut" Click="ContextMenu1_Click"></MenuItem>
                         <MenuItem Header="Delete" Click="ContextMenu1_Click"></MenuItem>
                         <MenuItem Header="Rename" Click="ContextMenu1_Click"></MenuItem>
-                        <MenuItem Header="Archive/Unarchive" Click="ContextMenu1_Click"></MenuItem>
+                        <MenuItem Header="Archive" Click="ContextMenu1_Click"></MenuItem>
+                        <MenuItem Header="Unarchive" Click="ContextMenu1_Click"></MenuItem>
                         <MenuItem Header="Statistic" Click="ContextMenu1_Click"></MenuItem>
                     </ContextMenu>
                 </ListView.ContextMenu>
@@ -150,7 +151,8 @@
                         <MenuItem Header="Cut" Click="ContextMenu1_Click"></MenuItem>
                         <MenuItem Header="Delete" Click="ContextMenu1_Click"></MenuItem>
                         <MenuItem Header="Rename" Click="ContextMenu1_Click"></MenuItem>
-                        <MenuItem Header="Archive/Unarchive" Click="ContextMenu1_Click"></MenuItem>
+                        <MenuItem Header="Archive" Click="ContextMenu1_Click"></MenuItem>
+                        <MenuItem Header="Unarchive" Click="ContextMenu1_Click"></MenuItem>
                         <MenuItem Header="Statistic" Click="ContextMenu1_Click"></MenuItem>
                     </ContextMenu>
                 </ListView.ContextMenu>

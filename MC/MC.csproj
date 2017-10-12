@@ -75,16 +75,31 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Abstract and Parent Classes\FileArchiver.cs" />
+    <Compile Include="Abstract and Parent Classes\SearchByPattern.cs" />
     <Compile Include="Abstract and Parent Classes\Statistics.cs" />
     <Compile Include="Abstract and Parent Classes\Theme.cs" />
+    <Compile Include="AnnouncerOfDelegates.cs" />
+    <Compile Include="Classes\DriveFiller.cs" />
+    <Compile Include="Classes\FileArchiverAsync.cs" />
+    <Compile Include="Classes\FileArchiverInTask.cs" />
+    <Compile Include="Classes\FileArchiverInThread.cs" />
+    <Compile Include="Classes\FileArchiverParallel.cs" />
     <Compile Include="Classes\FileFiller.cs" />
     <Compile Include="Classes\FileManipulator.cs" />
+    <Compile Include="Classes\FileQueue.cs" />
     <Compile Include="Classes\Graphics\ThemeManagerHelper.cs" />
     <Compile Include="Classes\Graphics\Themes\BlueTheme.cs" />
     <Compile Include="Classes\Graphics\Themes\DarkTheme.cs" />
+    <Compile Include="Classes\MyExtentions.cs" />
     <Compile Include="Classes\NonParallelStatistics.cs" />
     <Compile Include="Classes\ParallelStatistics.cs" />
+    <Compile Include="Classes\SearchByPatternAsync.cs" />
+    <Compile Include="Classes\SearchByPatternInTask.cs" />
+    <Compile Include="Classes\SearchByPatternInThread.cs" />
+    <Compile Include="Classes\SearchByPatternParallel.cs" />
     <Compile Include="Classes\Threading\ThreadQueue.cs" />
+    <Compile Include="Classes\UnziperArchives.cs" />
     <Compile Include="Classes\UserPrefs.cs" />
     <Compile Include="Classes\WatcherCreator.cs" />
     <Compile Include="Windows\AccentStyleWindow.xaml.cs">
@@ -99,7 +114,7 @@
     <Compile Include="Windows\DownloadLink.xaml.cs">
       <DependentUpon>DownloadLink.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Classes\Search.cs" />
+    <Compile Include="Classes\SearchEngineFiles.cs" />
     <Compile Include="Windows\ProgressWindow.xaml.cs">
       <DependentUpon>ProgressWindow.xaml</DependentUpon>
     </Compile>
