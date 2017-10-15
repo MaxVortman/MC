@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -7,7 +6,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace MC.Classes
+namespace MC.Classes.Threading.ParallelClasses
 {
     class ParallelStatistics : MC.Abstract_and_Parent_Classes.Statistics
     {
@@ -16,7 +15,7 @@ namespace MC.Classes
 
         public async override Task<string> GetStatisticsAsync()
         {
-           return await Task.Run(async () => {
+           return await System.Threading.Tasks.Task.Run(async () => {
                 var time = new Stopwatch();
                 time.Start();
                 using (var txtFile = System.IO.File.Open(path, FileMode.Open, FileAccess.Read))

@@ -1,12 +1,7 @@
-﻿using MC.Abstract_and_Parent_Classes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Threading;
+using MC.Abstract_and_Parent_Classes;
 
-namespace MC.Classes
+namespace MC.Classes.Threading.ThreadClasses
 {
     class SearchByPatternInThread : SearchByPattern
     {
@@ -18,16 +13,16 @@ namespace MC.Classes
         {            
             SearchInThread((process) =>
             {
-                var threads = new Classes.Threading.ThreadQueue[filesQueue.Length];
+                var threads = new ThreadQueue[filesQueue.Length];
                 for (int i = 0; i < filesQueue.Length; i++)
                 {
-                    threads[i] = new Classes.Threading.ThreadQueue(filesQueue[i], SearchAndSaveIn);
+                    threads[i] = new ThreadQueue(filesQueue[i], SearchAndSaveIn);
                     threads[i].BeginProcessData();
                 }
 
-                var waitingThread = new Thread(() =>
+                var waitingThread = new System.Threading.Thread(() =>
                 {
-                    for (; ; Thread.Sleep(3000))
+                    for (; ; System.Threading.Thread.Sleep(3000))
                     {
                         var count = 0;
                         for (var i = 0; i < threads.Length; i++)
@@ -43,7 +38,7 @@ namespace MC.Classes
                         }
                     }
 
-                    var processThread = new Thread(new ThreadStart(process));
+                    var processThread = new System.Threading.Thread(new ThreadStart(process));
                     processThread.Start();
                 });
                 waitingThread.Start();

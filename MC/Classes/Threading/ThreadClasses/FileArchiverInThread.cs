@@ -1,13 +1,7 @@
-﻿using MC.Abstract_and_Parent_Classes;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.IO.Compression;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
+using MC.Abstract_and_Parent_Classes;
 
-namespace MC.Classes
+namespace MC.Classes.Threading.ThreadClasses
 {
     class FileArchiverInThread : FileArchiver
     {
@@ -16,16 +10,16 @@ namespace MC.Classes
         }
 
         public int CountOfCompliteThread = 0;
-        public Classes.Threading.ThreadQueue[] Threads { get; private set; }
+        public ThreadQueue[] Threads { get; private set; }
 
         public override void Archive()
         {
             IsFree = false;
-            Threads = new Threading.ThreadQueue[filesQueue.Length];
-            Threading.ThreadQueue.ThreadingComplite += CompressComplite;
+            Threads = new ThreadQueue[filesQueue.Length];
+            ThreadQueue.ThreadingComplite += CompressComplite;
             for (int i = 0; i < filesQueue.Length; i++)
             {
-                Threads[i] = new Classes.Threading.ThreadQueue(filesQueue[i], new ActionWithThread(ArchiveFileInEntry));
+                Threads[i] = new ThreadQueue(filesQueue[i], new ActionWithThread(ArchiveFileInEntry));
                 Threads[i].BeginProcessData();
             }
         }

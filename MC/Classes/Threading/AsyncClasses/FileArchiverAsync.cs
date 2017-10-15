@@ -1,10 +1,10 @@
-﻿using MC.Abstract_and_Parent_Classes;
-using System;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using MC.Abstract_and_Parent_Classes;
 
-namespace MC.Classes
+namespace MC.Classes.Threading.AsyncClasses
 {
     class FileArchiverAsync : FileArchiver
     {
@@ -24,17 +24,17 @@ namespace MC.Classes
             var progress = new Progress<double>(ProgressLayout.ReportProgress);
             var realProgres = progress as IProgress<double>;
             ProgressLayout.Show();
-            Task.Run(async () =>
+            System.Threading.Tasks.Task.Run(async () =>
             {
                 var totalCount = fileQueueCreator.GetCountOfFilesInListOfPath();
                 tempCount = 0;
-                var tasks = new Task[filesQueue.Length];
-                await Task.Run(() =>
+                var tasks = new System.Threading.Tasks.Task[filesQueue.Length];
+                await System.Threading.Tasks.Task.Run(() =>
                 {
                     for (int i = 0; i < filesQueue.Length; i++)
                     {
                         var queue = filesQueue[i];
-                        tasks[i] = Task.Run(() =>
+                        tasks[i] = System.Threading.Tasks.Task.Run(() =>
                         {
                             try
                             {

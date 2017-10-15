@@ -1,16 +1,12 @@
-﻿using MC.Abstract_and_Parent_Classes;
-using MC.Classes.Drives;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using MC.Abstract_and_Parent_Classes;
+using MC.Classes.Drives;
 
-namespace MC.Classes
+namespace MC.Classes.Fillers
 {
-    class DriveFiller
+    static class DriveFiller
     {
         public static ObservableCollection<ListSElement> FillTheListBoxWithDrives(DriveInfo[] drives)
         {

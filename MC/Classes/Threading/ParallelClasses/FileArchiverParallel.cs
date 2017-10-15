@@ -1,11 +1,8 @@
-﻿using MC.Abstract_and_Parent_Classes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System;
 using System.Threading.Tasks;
+using MC.Abstract_and_Parent_Classes;
 
-namespace MC.Classes
+namespace MC.Classes.Threading.ParallelClasses
 {
     class FileArchiverParallel : FileArchiver
     {
@@ -14,10 +11,10 @@ namespace MC.Classes
         }
 
         public override void Archive()
-        {            
-            Task.Factory.StartNew(() =>
+        {
+            System.Threading.Tasks.Task.Factory.StartNew(() =>
             {
-                var result = Parallel.ForEach(filesQueue, currentQueue =>
+                var result = System.Threading.Tasks.Parallel.ForEach(filesQueue, currentQueue =>
                 {
                     for (int i = 0; i < currentQueue.Count; i++)
                     {

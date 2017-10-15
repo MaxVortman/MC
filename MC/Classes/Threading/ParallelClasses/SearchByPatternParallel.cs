@@ -1,11 +1,7 @@
-﻿using MC.Abstract_and_Parent_Classes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using MC.Abstract_and_Parent_Classes;
 
-namespace MC.Classes
+namespace MC.Classes.Threading.ParallelClasses
 {
     class SearchByPatternParallel : SearchByPattern
     {
@@ -17,9 +13,9 @@ namespace MC.Classes
         {
             SearchInThread((process) =>
             {
-                Task.Factory.StartNew(() =>
+                System.Threading.Tasks.Task.Factory.StartNew(() =>
                 {
-                    ParallelLoopResult result = Parallel.ForEach(filesQueue, currentQueue =>
+                    ParallelLoopResult result = System.Threading.Tasks.Parallel.ForEach(filesQueue, currentQueue =>
                     {
                         for (int i = 0; i < currentQueue.Count; i++)
                         {

@@ -1,14 +1,12 @@
-﻿using MC.Abstract_and_Parent_Classes;
-using MC.Classes.Graphics;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Threading;
-using System.Windows;
-using System.Windows.Threading;
 using System.Collections.ObjectModel;
+using System.IO;
+using System.Windows;
+using MC.Abstract_and_Parent_Classes;
+using MC.Classes.Graphics;
 
-namespace MC.Classes
+namespace MC.Classes.Fillers
 {
     class FileFiller
     {

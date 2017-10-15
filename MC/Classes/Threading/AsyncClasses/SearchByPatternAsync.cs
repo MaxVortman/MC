@@ -1,12 +1,9 @@
-﻿using MC.Abstract_and_Parent_Classes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using MC.Abstract_and_Parent_Classes;
 
-namespace MC.Classes
+namespace MC.Classes.Threading.AsyncClasses
 {
     class SearchByPatternAsync : SearchByPattern
     {
@@ -27,7 +24,7 @@ namespace MC.Classes
                 var progress = new Progress<double>(ProgressLayout.ReportProgress);
                 var realProgres = progress as IProgress<double>;
                 ProgressLayout.Show();
-                await Task.Run(() =>
+                await System.Threading.Tasks.Task.Run(() =>
                 {
 
                     var tasks = new Task[filesQueue.Length];
@@ -35,7 +32,7 @@ namespace MC.Classes
                     for (int i = 0; i < filesQueue.Length; i++)
                     {
                         var queue = filesQueue[i];
-                        tasks[i] = Task.Run(() =>
+                        tasks[i] = System.Threading.Tasks.Task.Run(() =>
                         {
                             try
                             {

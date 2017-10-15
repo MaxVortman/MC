@@ -80,25 +80,25 @@
     <Compile Include="Abstract and Parent Classes\Statistics.cs" />
     <Compile Include="Abstract and Parent Classes\Theme.cs" />
     <Compile Include="AnnouncerOfDelegates.cs" />
-    <Compile Include="Classes\DriveFiller.cs" />
-    <Compile Include="Classes\FileArchiverAsync.cs" />
-    <Compile Include="Classes\FileArchiverInTask.cs" />
-    <Compile Include="Classes\FileArchiverInThread.cs" />
-    <Compile Include="Classes\FileArchiverParallel.cs" />
-    <Compile Include="Classes\FileFiller.cs" />
     <Compile Include="Classes\FileManipulator.cs" />
     <Compile Include="Classes\FileQueue.cs" />
+    <Compile Include="Classes\Fillers\DriveFiller.cs" />
+    <Compile Include="Classes\Fillers\FileFiller.cs" />
     <Compile Include="Classes\Graphics\ThemeManagerHelper.cs" />
     <Compile Include="Classes\Graphics\Themes\BlueTheme.cs" />
     <Compile Include="Classes\Graphics\Themes\DarkTheme.cs" />
     <Compile Include="Classes\MyExtentions.cs" />
     <Compile Include="Classes\NonParallelStatistics.cs" />
-    <Compile Include="Classes\ParallelStatistics.cs" />
-    <Compile Include="Classes\SearchByPatternAsync.cs" />
-    <Compile Include="Classes\SearchByPatternInTask.cs" />
-    <Compile Include="Classes\SearchByPatternInThread.cs" />
-    <Compile Include="Classes\SearchByPatternParallel.cs" />
-    <Compile Include="Classes\Threading\ThreadQueue.cs" />
+    <Compile Include="Classes\Threading\AsyncClasses\FileArchiverAsync.cs" />
+    <Compile Include="Classes\Threading\AsyncClasses\SearchByPatternAsync.cs" />
+    <Compile Include="Classes\Threading\ParallelClasses\FileArchiverParallel.cs" />
+    <Compile Include="Classes\Threading\ParallelClasses\ParallelStatistics.cs" />
+    <Compile Include="Classes\Threading\ParallelClasses\SearchByPatternParallel.cs" />
+    <Compile Include="Classes\Threading\TaskClasses\FileArchiverInTask.cs" />
+    <Compile Include="Classes\Threading\TaskClasses\SearchByPatternInTask.cs" />
+    <Compile Include="Classes\Threading\ThreadClasses\FileArchiverInThread.cs" />
+    <Compile Include="Classes\Threading\ThreadClasses\SearchByPatternInThread.cs" />
+    <Compile Include="Classes\Threading\ThreadClasses\ThreadQueue.cs" />
     <Compile Include="Classes\UnziperArchives.cs" />
     <Compile Include="Classes\UserPrefs.cs" />
     <Compile Include="Classes\WatcherCreator.cs" />
@@ -236,7 +236,6 @@
     <Resource Include="Images\Icons\Cd-ROM-icon.png" />
     <Content Include="Images\Icons\USB.svg" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
