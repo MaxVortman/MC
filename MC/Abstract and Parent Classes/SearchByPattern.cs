@@ -12,22 +12,26 @@ using System.Windows;
 
 namespace MC.Abstract_and_Parent_Classes
 {
-    abstract class SearchByPattern
+    public class SearchByPattern
     {
-        protected Queue<string>[] filesQueue;
+        private Queue<string>[] filesQueue;
 
-        protected FileQueueCreator fileQueueCreator;
+        private FileQueueCreator fileQueueCreator;
 
-        public SearchByPattern(string sourceFilePath)
+        public SearchByPattern(string sourceFilePath, ISearcher searcher)
         {
             this.sourceFilePath = sourceFilePath;
+            this.searcher = searcher;
             fileQueueCreator = new FileQueueCreator(sourceFilePath);
             filesQueue = fileQueueCreator.GetFilledQueueOfFilesPath();
         }
 
-        public abstract void Search();
+        public void Search()
+        {
+            SearchInThread(searcher.Search(filesQueue, SearchAndSaveIn));
+        }
 
-        protected void SearchInThread(ThreadProcess StartThread)
+        private void SearchInThread(ThreadProcess StartThread)
         {
             var fileDialog = new SaveFileDialog
             {
@@ -116,8 +120,9 @@ namespace MC.Abstract_and_Parent_Classes
         private List<Group> _vk = new List<Group>();
         private StringBuilder _exeptions = new StringBuilder();
         protected readonly string sourceFilePath;
+        private readonly ISearcher searcher;
 
-        protected void SearchAndSaveIn(string filePath)
+        private void SearchAndSaveIn(string filePath)
         {
             try
             {

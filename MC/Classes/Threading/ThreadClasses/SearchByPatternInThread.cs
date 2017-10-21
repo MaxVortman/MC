@@ -1,33 +1,32 @@
 ﻿using System.Threading;
 using MC.Abstract_and_Parent_Classes;
+using System;
+using System.Collections.Generic;
 
 namespace MC.Classes.Threading.ThreadClasses
 {
-    class SearchByPatternInThread : SearchByPattern
+    class SearchByPatternInThread : ISearcher
     {
-        public SearchByPatternInThread(string path) : base(path)
-        {
-        }
 
-        public override void Search()
+        public ThreadProcess Search(Queue<string>[] filesQueue, ActionWithThread searchAndSaveIn)
         {            
-            SearchInThread((process) =>
+            return ((process) =>
             {
                 var threads = new ThreadQueue[filesQueue.Length];
                 for (int i = 0; i < filesQueue.Length; i++)
                 {
-                    threads[i] = new ThreadQueue(filesQueue[i], SearchAndSaveIn);
+                    threads[i] = new ThreadQueue(filesQueue[i], searchAndSaveIn);
                     threads[i].BeginProcessData();
                 }
 
-                var waitingThread = new System.Threading.Thread(() =>
+                var waitingThread = new Thread(() =>
                 {
-                    for (; ; System.Threading.Thread.Sleep(3000))
+                    for (; ; Thread.Sleep(3000))
                     {
                         var count = 0;
                         for (var i = 0; i < threads.Length; i++)
                         {
-                            if (threads[i].TheThread.ThreadState == System.Threading.ThreadState.Stopped)
+                            if (threads[i].TheThread.ThreadState == ThreadState.Stopped)
                             {
                                 count++;
                             }
@@ -38,7 +37,7 @@ namespace MC.Classes.Threading.ThreadClasses
                         }
                     }
 
-                    var processThread = new System.Threading.Thread(new ThreadStart(process));
+                    var processThread = new Thread(new ThreadStart(process));
                     processThread.Start();
                 });
                 waitingThread.Start();

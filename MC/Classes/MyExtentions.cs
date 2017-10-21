@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace MC.Classes
@@ -16,6 +13,17 @@ namespace MC.Classes
                 awaiter.GetResult();
             }
             return true;
+        }
+
+        public static long Count(this Queue<string>[] filesQueue)
+        {
+            long count = 0;
+            for (int i = 0; i < filesQueue.Length; i++)
+            {
+                count += filesQueue[i].Count;
+            }
+
+            return count;
         }
     }
 }

@@ -40,11 +40,6 @@ namespace MC.Classes
         private List<string> _listOfPath;
         private readonly string soursePath;
 
-        public long GetCountOfFilesInListOfPath()
-        {
-            return _listOfPath.Count;
-        }
-
         public void GetFilesPathFromFolder(string path)
         {
             Parallel.ForEach(Directory.GetFiles(path), item =>

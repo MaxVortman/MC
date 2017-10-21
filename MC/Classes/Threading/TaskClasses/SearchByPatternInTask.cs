@@ -1,16 +1,15 @@
 ﻿using MC.Abstract_and_Parent_Classes;
+using System;
+using System.Collections.Generic;
 
 namespace MC.Classes.Threading.TaskClasses
 {
-    class SearchByPatternInTask : SearchByPattern
+    class SearchByPatternInTask : ISearcher
     {
-        public SearchByPatternInTask(string path) : base(path)
-        {
-        }
 
-        public override void Search()
+        public ThreadProcess Search(Queue<string>[] filesQueue, ActionWithThread searchAndSaveIn)
         {
-            SearchInThread(process =>
+            return (process =>
             {                
                 var tasks = new System.Threading.Tasks.Task[filesQueue.Length];
                 for (int i = 0; i < filesQueue.Length; i++)
@@ -20,7 +19,7 @@ namespace MC.Classes.Threading.TaskClasses
                     {
                         for (int j = 0; j < queue.Count; j++)
                         {
-                            SearchAndSaveIn(queue.Dequeue());
+                            searchAndSaveIn(queue.Dequeue());
                         }
                     });
                 }

@@ -2,24 +2,23 @@
 using System.Threading;
 using System.Threading.Tasks;
 using MC.Abstract_and_Parent_Classes;
+using System.Collections.Generic;
 
 namespace MC.Classes.Threading.AsyncClasses
 {
-    class SearchByPatternAsync : SearchByPattern
+    class SearchByPatternAsync : ISearcher
     {
-        public SearchByPatternAsync(string path) : base(path)
-        {
-        }
+        
         private static object _searchLock = new object();
         private static CancellationTokenSource seachCTS;
 
-        public override void Search()
+        public ThreadProcess Search(Queue<string>[] filesQueue, ActionWithThread searchAndSaveIn)
         {
-            SearchInThread(async (process) =>
+            return (async (process) =>
             {
                 seachCTS = new CancellationTokenSource();
                 var seachTC = seachCTS.Token;
-                var totalCount = fileQueueCreator.GetCountOfFilesInListOfPath();
+                var totalCount = filesQueue.Count();
                 var ProgressLayout = new Windows.ProgressWindow("Search") { CTS = seachCTS };
                 var progress = new Progress<double>(ProgressLayout.ReportProgress);
                 var realProgres = progress as IProgress<double>;
@@ -32,14 +31,14 @@ namespace MC.Classes.Threading.AsyncClasses
                     for (int i = 0; i < filesQueue.Length; i++)
                     {
                         var queue = filesQueue[i];
-                        tasks[i] = System.Threading.Tasks.Task.Run(() =>
+                        tasks[i] = Task.Run(() =>
                         {
                             try
                             {
                                 for (int j = 0; j < queue.Count; j++)
                                 {
                                     seachTC.ThrowIfCancellationRequested();
-                                    SearchAndSaveIn(queue.Dequeue());
+                                    searchAndSaveIn(queue.Dequeue());
                                     //Interlocked.Increment(ref tempCount);
                                     lock (_searchLock)
                                         realProgres.Report(++tempCount * 100 / (double)totalCount);

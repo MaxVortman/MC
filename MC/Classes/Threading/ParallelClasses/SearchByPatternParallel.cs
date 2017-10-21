@@ -1,25 +1,23 @@
 ﻿using System.Threading.Tasks;
 using MC.Abstract_and_Parent_Classes;
+using System.Collections.Generic;
+using System;
 
 namespace MC.Classes.Threading.ParallelClasses
 {
-    class SearchByPatternParallel : SearchByPattern
+    class SearchByPatternParallel : ISearcher
     {
-        public SearchByPatternParallel(string path) : base(path)
+        public ThreadProcess Search(Queue<string>[] filesQueue, ActionWithThread searchAndSaveIn)
         {
-        }
-
-        public override void Search()
-        {
-            SearchInThread((process) =>
+            return (process) =>
             {
-                System.Threading.Tasks.Task.Factory.StartNew(() =>
+                Task.Factory.StartNew(() =>
                 {
-                    ParallelLoopResult result = System.Threading.Tasks.Parallel.ForEach(filesQueue, currentQueue =>
+                    ParallelLoopResult result = Parallel.ForEach(filesQueue, currentQueue =>
                     {
                         for (int i = 0; i < currentQueue.Count; i++)
                         {
-                            SearchAndSaveIn(currentQueue.Dequeue());
+                            searchAndSaveIn(currentQueue.Dequeue());
                         }
                     });
                     if (result.IsCompleted)
@@ -27,7 +25,7 @@ namespace MC.Classes.Threading.ParallelClasses
                         process();
                     }
                 });
-            });
+            };
         }
     }
 }
