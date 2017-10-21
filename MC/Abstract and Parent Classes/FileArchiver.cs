@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace MC.Abstract_and_Parent_Classes
 {
-    abstract class FileArchiver
+    abstract class FileArchiver : IThreder
     {
         private readonly object LockToken = new object();
         protected readonly string sourcePathOfFile;
@@ -19,9 +19,7 @@ namespace MC.Abstract_and_Parent_Classes
         protected Queue<string>[] filesQueue;
         protected FileQueueCreator fileQueueCreator;
 
-
-        internal abstract void Closing();
-        public abstract void Archive();
+        public abstract void DoThread();
 
         public FileArchiver(string sourcePathOfFile)
         {

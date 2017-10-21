@@ -75,9 +75,13 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Abstract and Parent Classes\ArchiveFactory.cs" />
     <Compile Include="Abstract and Parent Classes\FileArchiver.cs" />
     <Compile Include="Abstract and Parent Classes\ISearcher.cs" />
+    <Compile Include="Abstract and Parent Classes\IThreadFactory.cs" />
+    <Compile Include="Abstract and Parent Classes\IThreder.cs" />
     <Compile Include="Abstract and Parent Classes\SearchByPattern.cs" />
+    <Compile Include="Abstract and Parent Classes\SearchFactory.cs" />
     <Compile Include="Abstract and Parent Classes\Statistics.cs" />
     <Compile Include="Abstract and Parent Classes\Theme.cs" />
     <Compile Include="AnnouncerOfDelegates.cs" />

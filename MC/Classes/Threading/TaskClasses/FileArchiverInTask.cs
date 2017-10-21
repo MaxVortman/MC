@@ -9,7 +9,7 @@ namespace MC.Classes.Threading.TaskClasses
         {
         }
 
-        public override void Archive()
+        public override void DoThread()
         {
             var tasks = new System.Threading.Tasks.Task[filesQueue.Length];
             for (int i = 0; i < filesQueue.Length; i++)
@@ -32,11 +32,6 @@ namespace MC.Classes.Threading.TaskClasses
                     GC.WaitForPendingFinalizers();
                 }
             });
-        }
-
-        internal override void Closing()
-        {
-            //TO DO: 
         }
     }
 }

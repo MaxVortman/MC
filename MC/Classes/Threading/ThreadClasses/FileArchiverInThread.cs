@@ -12,9 +12,8 @@ namespace MC.Classes.Threading.ThreadClasses
         public int CountOfCompliteThread = 0;
         public ThreadQueue[] Threads { get; private set; }
 
-        public override void Archive()
+        public override void DoThread()
         {
-            IsFree = false;
             Threads = new ThreadQueue[filesQueue.Length];
             ThreadQueue.ThreadingComplite += CompressComplite;
             for (int i = 0; i < filesQueue.Length; i++)
@@ -40,14 +39,6 @@ namespace MC.Classes.Threading.ThreadClasses
             }            
         }
 
-        public static bool IsFree = false;
-
-        internal override void Closing()
-        {
-            if (Threads != null && !IsFree)
-            {
-                throw new Exception("The action is not finished. Close the program is impossible.");
-            }
-        }
+  
     }
 }

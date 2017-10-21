@@ -119,7 +119,7 @@ namespace MC.Windows
                     FileManipulator.DeleteFile(selectedListItem);
                     break;
                 case "Archive":
-                    dialog = new DialogThreadWindow(selectedListItem.Path);
+                    dialog = new DialogThreadWindow(selectedListItem.Path, new ArchiveFactory());
                     dialog.Show();
                     break;
                 case "Unarchive":
@@ -238,7 +238,7 @@ namespace MC.Windows
         private void MenuItemLV_Click(object sender, RoutedEventArgs e)
         {
             var item = sender as MenuItem;
-            var dialog = new DialogThreadWindow(item.Header.ToString());
+            var dialog = new DialogThreadWindow(item.Header.ToString(), new SearchFactory());
             dialog.Show();
         }
 
@@ -254,19 +254,7 @@ namespace MC.Windows
             }
             else return;            
         }
-
-        private void MetroWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            try
-            {
-                dialog?.ClosingThread();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
-
+        
         private void Download_Click(object sender, RoutedEventArgs e)
         {
             var Download = new DownloadLink((sender as MenuItem).Header.ToString(), PathOfListView2.Text);

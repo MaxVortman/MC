@@ -10,7 +10,7 @@ namespace MC.Classes.Threading.ParallelClasses
         {
         }
 
-        public override void Archive()
+        public override void DoThread()
         {
             System.Threading.Tasks.Task.Factory.StartNew(() =>
             {
@@ -28,11 +28,6 @@ namespace MC.Classes.Threading.ParallelClasses
                     GC.WaitForPendingFinalizers();
                 }
             });
-        }
-
-        internal override void Closing()
-        {
-            //TO DO: 
         }
     }
 }

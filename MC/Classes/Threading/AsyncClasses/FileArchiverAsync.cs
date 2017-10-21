@@ -16,7 +16,7 @@ namespace MC.Classes.Threading.AsyncClasses
         private static CancellationTokenSource archiveCTS;
         private static int tempCount;
 
-        public override void Archive()
+        public override void DoThread()
         {
             archiveCTS = new CancellationTokenSource();
             var archiveCT = archiveCTS.Token;
@@ -26,7 +26,7 @@ namespace MC.Classes.Threading.AsyncClasses
             ProgressLayout.Show();
             System.Threading.Tasks.Task.Run(async () =>
             {
-                var totalCount = fileQueueCreator.GetCountOfFilesInListOfPath();
+                var totalCount = filesQueue.Count();
                 tempCount = 0;
                 var tasks = new System.Threading.Tasks.Task[filesQueue.Length];
                 await System.Threading.Tasks.Task.Run(() =>
@@ -61,11 +61,6 @@ namespace MC.Classes.Threading.AsyncClasses
                 GC.Collect(2);
                 GC.WaitForPendingFinalizers();
             });
-        }
-
-        internal override void Closing()
-        {
-            //TO DO: 
         }
     }
 

@@ -12,7 +12,7 @@ using System.Windows;
 
 namespace MC.Abstract_and_Parent_Classes
 {
-    public class SearchByPattern
+    public class SearchByPattern : IThreder
     {
         private Queue<string>[] filesQueue;
 
@@ -26,7 +26,7 @@ namespace MC.Abstract_and_Parent_Classes
             filesQueue = fileQueueCreator.GetFilledQueueOfFilesPath();
         }
 
-        public void Search()
+        public void DoThread()
         {
             SearchInThread(searcher.Search(filesQueue, SearchAndSaveIn));
         }

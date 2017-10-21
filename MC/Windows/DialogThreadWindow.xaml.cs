@@ -17,41 +17,20 @@ namespace MC.Windows
     public partial class DialogThreadWindow : MetroWindow
     {
         private string pathOfFile;
+        private readonly IThreadFactory threadFactory;
 
-        public DialogThreadWindow(string pathOfFile)
+        public DialogThreadWindow(string pathOfFile, IThreadFactory threadFactory)
         {
             this.pathOfFile = pathOfFile;
+            this.threadFactory = threadFactory;
             InitializeComponent();
         }
-        private FileArchiver fileArchiver;
 
         private void TypeButton_Click(object sender, RoutedEventArgs e)
         {
             Button btn = sender as Button;
-            
-            switch (btn.Content.ToString())
-            {
-                case "Thread":
-                    fileArchiver = new FileArchiverInThread(pathOfFile);                    
-                    break;
-                case "Parralel":
-                    fileArchiver = new FileArchiverParallel(pathOfFile);
-                    break;
-                case "Tasks":
-                    fileArchiver = new FileArchiverInTask(pathOfFile);
-                    break;
-                case "Async":
-                    fileArchiver = new FileArchiverAsync(pathOfFile);
-                    break;
-                default:
-                    throw new ArgumentException();
-            }
-            fileArchiver.Archive();
-        }
 
-        internal void ClosingThread()
-        {
-            fileArchiver?.Closing();
+            threadFactory.CreateObject(btn.Content.ToString(), pathOfFile).DoThread();
         }
     }
 }
