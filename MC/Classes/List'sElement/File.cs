@@ -127,23 +127,6 @@ namespace MC.Classes
             }
         }
 
-        public override void Archive(string pathZip)
-        {
-            const int bufferSize = 16384;
-            var buffer = new byte[bufferSize];
-
-            using (Stream inFileStream = System.IO.File.Open(Path, FileMode.Open, FileAccess.Read, FileShare.Read))
-            {
-                using (var writer = new GZipStream(System.IO.File.Open(pathZip, FileMode.Append, FileAccess.Write, FileShare.None), CompressionMode.Compress))
-                {
-                    int bytesRead = 0;
-                    do
-                    {
-                        bytesRead = inFileStream.Read(buffer, 0, bufferSize);
-                        writer.Write(buffer, 0, bytesRead);
-                    } while (bytesRead > 0);
-                }
-            }
-        }
+       
     }
 }

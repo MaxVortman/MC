@@ -23,7 +23,7 @@ namespace MC.Classes.Fillers
 
         public void OpenElem(object o)
         {
-            var elem = o as ListSElement;
+            var elem = o as Entity;
             try
             {
                 if (elem is Folder || elem is Drive)
@@ -38,7 +38,7 @@ namespace MC.Classes.Fillers
                 }
                 else
                 {
-                    elem?.Open();
+                    (elem as File)?.Open();
                 }
             }
             catch (UnauthorizedAccessException e)

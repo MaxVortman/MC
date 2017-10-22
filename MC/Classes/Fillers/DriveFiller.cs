@@ -8,9 +8,9 @@ namespace MC.Classes.Fillers
 {
     static class DriveFiller
     {
-        public static ObservableCollection<ListSElement> FillTheListBoxWithDrives(DriveInfo[] drives)
+        public static ObservableCollection<Drive> FillTheListBoxWithDrives(DriveInfo[] drives)
         {
-            var drivesElem = new ObservableCollection<ListSElement>();
+            var drivesElem = new ObservableCollection<Drive>();
             foreach (var info in drives)
             {
                 switch (info.DriveType.ToString())

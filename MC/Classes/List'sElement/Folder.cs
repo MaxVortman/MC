@@ -122,44 +122,6 @@ namespace MC
             }
 
             return DataList;
-        }
-
-        public override void Archive(string pathZip)
-        {
-            using (FileStream zipToOpen = new FileStream(pathZip, FileMode.Create, FileAccess.Write, FileShare.None))
-            {
-                using (ZipArchive archive = new ZipArchive(zipToOpen, ZipArchiveMode.Create))
-                {
-                    ArchiveFilesInDirectory(archive, Path);
-                }
-            }
-        }
-
-        private void ArchiveFilesInDirectory(ZipArchive archive, string path)
-        {
-            foreach (var item in Directory.GetFiles(path))
-            {
-                int BufferSize = 16384;
-                byte[] buffer = new byte[BufferSize];
-                ZipArchiveEntry fileEntry = archive.CreateEntry(item.Substring(item.LastIndexOf(Path) + Path.Length + 1));
-                using (Stream inFileStream = System.IO.File.Open(item, FileMode.Open, FileAccess.Read, FileShare.Read))
-                {
-                    using (Stream writer = fileEntry.Open())
-                    {
-                        int bytesRead = 0;
-                        do
-                        {
-                            bytesRead = inFileStream.Read(buffer, 0, BufferSize);
-                            writer.Write(buffer, 0, bytesRead);
-                        } while (bytesRead > 0);
-                    } 
-                }
-
-            }
-            foreach (var item in Directory.GetDirectories(path))
-            {
-                ArchiveFilesInDirectory(archive, item);
-            }
         }        
     }
 }

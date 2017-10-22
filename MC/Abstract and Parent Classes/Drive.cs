@@ -4,7 +4,7 @@ using Buffer = MC.Classes.Buffer;
 
 namespace MC.Abstract_and_Parent_Classes
 {
-    internal abstract class Drive : ListSElement
+    internal abstract class Drive : Entity
     {
         public bool IsReady { private set; get; }
         public string TotalSize { set; get; }
@@ -15,10 +15,6 @@ namespace MC.Abstract_and_Parent_Classes
             IsReady = driveInfo.IsReady;
             _driveInfo = driveInfo;
             GetAndSetInfo();
-        }
-
-        public override void Open()
-        {
         }
 
         protected sealed override void GetAndSetInfo()
@@ -32,36 +28,6 @@ namespace MC.Abstract_and_Parent_Classes
                 TotalSize = "Total Size: " + FormatSize(_driveInfo.TotalSize * 8);
             }
             Image = "/Images/Icons/Drive.png";
-        }
-
-        public override Buffer Copy()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void Paste(string path, Buffer buffer)
-        {
-            throw new NotImplementedException();
-        }
-
-        public new void Unarchive(string pathZip)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void UpdateSize()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void UpdateName(string newPath)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void Archive(string pathZip)
-        {
-            throw new NotImplementedException();
         }
     }
 }
