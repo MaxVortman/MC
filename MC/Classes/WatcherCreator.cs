@@ -42,7 +42,7 @@ namespace MC.Classes
         private void Watcher_Renamed(object sender, RenamedEventArgs e)
         {
             var Data = graphicalApp.DataSource;
-            ListSElement elem = null;
+            Entity elem = null;
             for (var i = 0; i < Data.Count; i++)
             {
                 var item = Data[i];
@@ -64,7 +64,7 @@ namespace MC.Classes
         {
             //For the dynamics
             var Data = graphicalApp.DataSource;
-            ListSElement elem = null;
+            Entity elem = null;
             for (var i = 0; i < Data.Count; i++)
             {
                 var item = Data[i];
@@ -87,8 +87,8 @@ namespace MC.Classes
         {
             //For the dynamics
             var Data = graphicalApp.DataSource;
-            ListSElement elem = null;
-            if (Directory.Exists(e.FullPath))
+            Entity elem = null;
+            if (Abstract_and_Parent_Classes.Directory.Exists(e.FullPath))
             {
                 elem = new Folder(e.FullPath);
             }
@@ -107,7 +107,7 @@ namespace MC.Classes
         private void Watcher_Deleted(object sender, FileSystemEventArgs e)
         {
             var Data = graphicalApp.DataSource;
-            ListSElement elem = null;
+            Entity elem = null;
             foreach (var item in Data)
             {
                 if (item.Path != e.FullPath) continue;

@@ -12,10 +12,10 @@ namespace MC.Classes.Graphics
 
         public string Path => _text.Text;
 
-        public ObservableCollection<ListSElement> DataSource
+        public ObservableCollection<Entity> DataSource
         {
             set => _list.ItemsSource = value;
-            get => (ObservableCollection<ListSElement>)_list.ItemsSource;
+            get => (ObservableCollection<Entity>)_list.ItemsSource;
         }
 
 
@@ -25,7 +25,7 @@ namespace MC.Classes.Graphics
             _text = text;
         }
 
-        public void AddLine(ListSElement elem)
+        public void AddLine(Entity elem)
         {
             _list.Items.Add(elem);
         }

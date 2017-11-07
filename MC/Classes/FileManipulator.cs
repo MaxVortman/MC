@@ -12,13 +12,13 @@ namespace MC.Classes
     class FileManipulator
     {
         static Buffer _buffer;
-        private static ListSElement _dataToCopy;
+        private static Entity _dataToCopy;
 
         internal static void CopyFile(object elem)
         {
             DeleteTemp(_buffer);
 
-            var item = elem as ListSElement;
+            var item = elem as Entity;
             try
             {
                 _buffer = item.Copy();
@@ -50,7 +50,7 @@ namespace MC.Classes
 
         internal static void RenameFile(object v, string text)
         {
-            var elem = v as ListSElement;
+            var elem = v as Entity;
             var sourcePath = elem.Path;
             var destinationPath = Path.Combine(sourcePath.Remove(sourcePath.LastIndexOf(@"\", StringComparison.Ordinal)), text);
 
@@ -103,7 +103,7 @@ namespace MC.Classes
         {
             try
             {
-                var item = elem as ListSElement;
+                var item = elem as Entity;
                 var path = item.Path;
                 if (item is File)
                 {

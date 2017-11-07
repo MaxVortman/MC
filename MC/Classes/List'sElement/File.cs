@@ -10,12 +10,12 @@ using MC.Abstract_and_Parent_Classes;
 
 namespace MC.Classes
 {
-    internal class File : ListSElement
+    internal class File : Entity
     {
 
         [DllImport("gdi32")]
         private static extern int DeleteObject(IntPtr o);
-        private static BitmapSource loadBitmap(System.Drawing.Bitmap source)
+        private static BitmapSource LoadBitmap(System.Drawing.Bitmap source)
         {
             var ip = source.GetHbitmap();
             BitmapSource bs;
@@ -37,7 +37,7 @@ namespace MC.Classes
         {
             var icon = System.Drawing.Icon.ExtractAssociatedIcon(fileName);
             var bmp = icon.ToBitmap();
-            return loadBitmap(bmp);
+            return LoadBitmap(bmp);
         }
 
         public File(string Path)
@@ -69,7 +69,7 @@ namespace MC.Classes
             Size = FormatSize(_info.Length);
         }
 
-        public override void Open()
+        public void Open()
         {
             try
             {

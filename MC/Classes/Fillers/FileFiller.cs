@@ -17,28 +17,27 @@ namespace MC.Classes.Fillers
             this.systemWatcher = systemWatcher;
         }
 
-        private List<ListSElement> _dataList;
         private readonly GraphicalApp graphicalApp;
         private FileSystemWatcher systemWatcher;
 
-        public void OpenElem(object o)
+        public void OpenEntry(Entity entry)
         {
-            var elem = o as Entity;
             try
             {
-                if (elem is Folder || elem is Drive)
+                if (entry is Abstract_and_Parent_Classes.Directory)
                 {
-                    systemWatcher.Path = elem.Path;
+                    var dir = entry as Abstract_and_Parent_Classes.Directory;
+                    systemWatcher.Path = dir.Path;
                     systemWatcher.EnableRaisingEvents = true;
                     //start fill            
 
-                    graphicalApp.SetCaptionOfPath(elem.Path);                    
-                    FillInList(elem.Path);
-                    graphicalApp.DataSource = new ObservableCollection<ListSElement>(_dataList);
+                    graphicalApp.SetCaptionOfPath(dir.Path);
+                    var dataList = dir.GetEntry();
+                    graphicalApp.DataSource = new ObservableCollection<Entity>(dataList);
                 }
                 else
                 {
-                    (elem as File)?.Open();
+                    (entry as File)?.Open();
                 }
             }
             catch (UnauthorizedAccessException e)
@@ -48,35 +47,11 @@ namespace MC.Classes.Fillers
             catch (FileNotFoundException e)
             {
                 MessageBox.Show(e.Message, "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
-                CreateDataList(elem?.Path);
+                var dataList = (entry as Abstract_and_Parent_Classes.Directory).CreateDataList();
+                graphicalApp.DataSource = new ObservableCollection<Entity>(dataList);
             }
         }
 
-        private void FillInList(string path)
-        {
-            //must be faster
-            CreateDataList(path);
-            //enumerate folder's path
-            foreach (var item in Directory.EnumerateDirectories(path))
-            {
-                _dataList.Add(new Folder(item));
-            }
-            //enumerate file's path
-            foreach (var item in Directory.EnumerateFiles(path))
-            {
-                _dataList.Add(new File(item));
-            }
-        }
 
-        private void CreateDataList(string path)
-        {
-            _dataList = new List<ListSElement>(500);
-            // ... folder
-            if (path.Length > 3)
-            {
-                var parentPath = Directory.GetParent(path).FullName;
-                _dataList.Add(new Folder(parentPath) { Name = "...", Date = "", Size = "" });
-            }
-        }
     }
 }

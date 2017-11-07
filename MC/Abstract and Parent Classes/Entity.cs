@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace MC.Abstract_and_Parent_Classes
 {
-    public abstract class Entity
+    internal abstract class Entity
     {
         public object Image { get; set; }
         public string Name { get; set; }
@@ -15,6 +16,7 @@ namespace MC.Abstract_and_Parent_Classes
         public string Path { get; protected set; }
 
         protected abstract void GetAndSetInfo();
+
 
         protected static string FormatSize(long size)
         {
@@ -40,6 +42,20 @@ namespace MC.Abstract_and_Parent_Classes
                 stringSize = $"{size} B";
 
             return stringSize;
+        }
+
+        public abstract void UpdateSize();
+
+        public abstract void UpdateName(string newPath);
+
+        public abstract Classes.Buffer Copy();
+
+        public abstract void Paste(string path, Classes.Buffer buffer);
+
+
+        public void Unarchive(string extractPath)
+        {
+            ZipFile.ExtractToDirectory(Path, extractPath);
         }
     }
 }

@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="MC.Classes.File" Collapsed="true">
+    <Position X="7.75" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABAAAAAAAIAAAAAICAAQAAgAAggAAAAAgAAAAAAQ=</HashCode>
+      <FileName>Classes\List'sElement\File.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MC.Folder" Collapsed="true">
+    <Position X="2.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAAAAACAAAAAAAAgAAAAAAAAAAAAAQ=</HashCode>
+      <FileName>Classes\List'sElement\Folder.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MC.Classes.Drives.CdRom" Collapsed="true">
+    <Position X="4" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Classes\List'sElement\Drives\CDRom.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MC.Classes.Drives.Fixed" Collapsed="true">
+    <Position X="8.75" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Classes\List'sElement\Drives\Fixed.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MC.Classes.Drives.Removable" Collapsed="true">
+    <Position X="6.5" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Classes\List'sElement\Drives\Removable.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MC.Abstract_and_Parent_Classes.Drive" Collapsed="true">
+    <Position X="6.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAIAACAAAAAAAAgAAACEAAAAAAAAQ=</HashCode>
+      <FileName>Abstract and Parent Classes\Drive.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MC.Abstract_and_Parent_Classes.Entity" Collapsed="true">
+    <Position X="5.75" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABAQAAAAAgAIAAAACAAQAAgAAgBABAAAAgAAAAAQ=</HashCode>
+      <FileName>Abstract and Parent Classes\Entity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MC.Abstract_and_Parent_Classes.Directory" Collapsed="true">
+    <Position X="4" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABAAAEAAAAQAAAAAAAAAAAgAAAAgAAAAAAAEAAAA=</HashCode>
+      <FileName>Abstract and Parent Classes\Directory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

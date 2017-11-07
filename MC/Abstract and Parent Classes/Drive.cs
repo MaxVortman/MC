@@ -4,11 +4,11 @@ using Buffer = MC.Classes.Buffer;
 
 namespace MC.Abstract_and_Parent_Classes
 {
-    internal abstract class Drive : Entity
+    internal abstract class Drive : Directory
     {
         public bool IsReady { private set; get; }
         public string TotalSize { set; get; }
-        private readonly DriveInfo _driveInfo;
+        private DriveInfo _driveInfo;
 
         protected Drive(DriveInfo driveInfo)
         {
@@ -28,6 +28,22 @@ namespace MC.Abstract_and_Parent_Classes
                 TotalSize = "Total Size: " + FormatSize(_driveInfo.TotalSize * 8);
             }
             Image = "/Images/Icons/Drive.png";
+        }
+
+        public override void UpdateSize()
+        {
+            IsReady = _driveInfo.IsReady;
+            if (IsReady)
+            {
+                Size = "Free Size: " + FormatSize(_driveInfo.TotalFreeSpace * 8);
+                TotalSize = "Total Size: " + FormatSize(_driveInfo.TotalSize * 8);
+            }
+        }
+
+        public override void UpdateName(string newPath)
+        {
+            Path = newPath;
+            Name = _driveInfo.Name;
         }
     }
 }

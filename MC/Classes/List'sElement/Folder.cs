@@ -13,13 +13,14 @@ using File = MC.Classes.File;
 
 namespace MC
 {
-    class Folder : ListSElement
+    class Folder : MC.Abstract_and_Parent_Classes.Directory
     {
         public Folder(string Path)
         {
             this.Path = Path;
             GetAndSetInfo();
         }
+
         DirectoryInfo dir;
         protected override void GetAndSetInfo()
         {
@@ -60,68 +61,6 @@ namespace MC
             Path = newPath;
             dir = new DirectoryInfo(Path);
             Name = dir.Name;
-        }
-
-        public override void Open()
-        {
-        }
-
-        public override Buffer Copy()
-        {
-
-            List<ListSElement> DataList = getData();
-            int count = DataList.Count;
-            Buffer[] buffer = new Buffer[count];
-            int i = 0;
-            foreach (ListSElement elem in DataList)
-            {
-                if (i < count)
-                {
-                    buffer[i] = elem.Copy();
-                    i++;
-                }
-            }
-
-            return new FolderBuffer(Name, buffer);
-        }
-
-        public override void Paste(string path, Buffer buffer)
-        {
-
-            Directory.CreateDirectory(path);
-
-            Buffer[] filesBuffer = (buffer as FolderBuffer).FoldersBuffer;
-            List<ListSElement> DataList = getData();
-            int count = DataList.Count;
-            int i = 0;
-            foreach (ListSElement elem in DataList)
-            {
-                if (i < count)
-                {
-                    elem.Paste(System.IO.Path.Combine(path, elem.Name), filesBuffer[i]);
-                    i++;
-                }
-            }
-        }
-
-        private List<ListSElement> getData()
-        {
-            //must be faster
-            List<ListSElement> DataList = new List<ListSElement>(500);
-            //enumerate folder's path
-            foreach (var item in Directory.EnumerateDirectories(Path))
-            {
-                DataList.Add(new Folder(item));
-                //graphics.AddLine(new Folder(item));
-            }
-            //enumerate file's path
-            foreach (var item in Directory.EnumerateFiles(Path))
-            {
-                DataList.Add(new File(item));
-                //graphics.AddLine(new File(item));
-            }
-
-            return DataList;
-        }        
+        }       
     }
 }

@@ -76,6 +76,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Abstract and Parent Classes\ArchiveFactory.cs" />
+    <Compile Include="Abstract and Parent Classes\Directory.cs" />
     <Compile Include="Abstract and Parent Classes\Entity.cs" />
     <Compile Include="Abstract and Parent Classes\FileArchiver.cs" />
     <Compile Include="Abstract and Parent Classes\ISearcher.cs" />
@@ -171,7 +172,6 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Abstract and Parent Classes\List%27sElement.cs" />
     <Compile Include="Classes\Buffer.cs" />
     <Compile Include="Classes\Graphics\GraphicalApp.cs" />
     <Compile Include="Classes\Graphics\ListViewCustom.cs" />
@@ -222,6 +222,7 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
+    <None Include="UML\EntityDiagram.cd" />
     <None Include="UML\SimpleArcForMC.cd" />
   </ItemGroup>
   <ItemGroup>

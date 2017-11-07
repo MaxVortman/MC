@@ -60,18 +60,18 @@ namespace MC.Windows
             var watcher2 = new WatcherCreator(_graphics2, Dispatcher).CreateWatcher();
             fileFiller1 = new FileFiller(_graphics1, watcher1);
             fileFiller2 = new FileFiller(_graphics2, watcher2);
-            fileFiller1.OpenElem(new Folder(drives[0].Name));
-            fileFiller2.OpenElem(new Folder(drives[1].Name));
+            fileFiller1.OpenEntry(new Folder(drives[0].Name));
+            fileFiller2.OpenEntry(new Folder(drives[1].Name));
         }
 
         private void ListView1_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            fileFiller1.OpenElem(ListView1.SelectedItem);
+            fileFiller1.OpenEntry(ListView1.SelectedItem as Entity);
         }
 
         private void ListView2_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            fileFiller2.OpenElem(ListView2.SelectedItem);
+            fileFiller2.OpenEntry(ListView2.SelectedItem as Entity);
         }
 
         private void Places_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -84,11 +84,11 @@ namespace MC.Windows
             {
                 if (focus)
                 {
-                    fileFiller1.OpenElem(Places.SelectedItem);
+                    fileFiller1.OpenEntry(Places.SelectedItem as Entity);
                 }
                 else
                 {
-                    fileFiller2.OpenElem(Places.SelectedItem);
+                    fileFiller2.OpenEntry(Places.SelectedItem as Entity);
                 }
             }
             else
@@ -194,11 +194,11 @@ namespace MC.Windows
             return null;
         }
 
-        private ListSElement selectedListItem;
+        private Entity selectedListItem;
         private void ContextMenu1_Opened(object sender, RoutedEventArgs e)
         {
             var menu = sender as ContextMenu;            
-            selectedListItem = (menu.Name == "ContextMenu1" ? ListView1.SelectedItem : ListView2.SelectedItem) as ListSElement;
+            selectedListItem = (menu.Name == "ContextMenu1" ? ListView1.SelectedItem : ListView2.SelectedItem) as Entity;
 
             //TO DO: 6 - is bad
             var statisticItem = menu.Items[7] as MenuItem;
@@ -267,12 +267,12 @@ namespace MC.Windows
             var textbox = sender as TextBox;
             if (!_searchFlag)
             {
-                if (Directory.Exists(textbox.Text))
+                if (Abstract_and_Parent_Classes.Directory.Exists(textbox.Text))
                 {
                     if (textbox.Name.EndsWith("1"))
-                        fileFiller1.OpenElem(new Folder(textbox.Text));
+                        fileFiller1.OpenEntry(new Folder(textbox.Text));
                     else
-                        fileFiller2.OpenElem(new Folder(textbox.Text));
+                        fileFiller2.OpenEntry(new Folder(textbox.Text));
                 }                   
                 else
                     MessageBox.Show("Folder not found.", "Error", MessageBoxButton.OK, MessageBoxImage.Error); 
@@ -311,12 +311,12 @@ namespace MC.Windows
                 {
                     var result = SearchEngineFiles.GetPathOfFilesBy(_directory, searchText, ct);
 
-                    var dataList = new List<ListSElement>(result.Count);
+                    var dataList = new List<Entity>(result.Count);
                     foreach (var item in result)
                     {
                         dataList.Add(new Classes.File(item));
                     }
-                    Dispatcher.Invoke(() => currentGraphics.DataSource = new System.Collections.ObjectModel.ObservableCollection<ListSElement>(dataList));
+                    Dispatcher.Invoke(() => currentGraphics.DataSource = new System.Collections.ObjectModel.ObservableCollection<Entity>(dataList));
                     _tokenSource = null;
                 }
                 catch (OperationCanceledException)

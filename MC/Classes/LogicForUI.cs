@@ -25,7 +25,7 @@ namespace MC.Classes
 
         public static async Task<string> ReadStatisticAsync(object selectedItem)
         {
-            var path = (selectedItem as ListSElement).Path;
+            var path = (selectedItem as Entity).Path;
             Statistics stat = new NonParallelStatistics(path);
             var result = await stat.GetStatisticsAsync();
             stat = new ParallelStatistics(path);
