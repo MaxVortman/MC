@@ -14,7 +14,10 @@ namespace MC.Classes
         {
             this.soursePath = soursePath;
             _listOfPath = new List<string>();
-            GetFilesPathFromFolder(soursePath);
+            if (Directory.Exists(soursePath))
+                GetFilesPathFromFolder(soursePath);
+            else
+                _listOfPath.Add(soursePath);
         }
 
         public Queue<string>[] GetFilledQueueOfFilesPath()

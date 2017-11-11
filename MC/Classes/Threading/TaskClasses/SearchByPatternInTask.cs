@@ -25,7 +25,7 @@ namespace MC.Classes.Threading.TaskClasses
                 }
                 System.Threading.Tasks.Task.Run(() =>
                 {
-                    if (tasks.IsComplite())
+                    if (tasks.Wait())
                     {
                         process();
                     }

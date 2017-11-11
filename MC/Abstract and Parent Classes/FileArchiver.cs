@@ -16,6 +16,7 @@ namespace MC.Abstract_and_Parent_Classes
         protected readonly string sourcePathOfFile;
         protected ZipArchive archive;
         private string pZip;
+        private FileStream zipToOpen;
         protected Queue<string>[] filesQueue;
         protected FileQueueCreator fileQueueCreator;
 
@@ -25,7 +26,7 @@ namespace MC.Abstract_and_Parent_Classes
         {
             this.sourcePathOfFile = sourcePathOfFile;
             pZip = GetPathOnDialog();
-            var zipToOpen = new FileStream(pZip, FileMode.Create, FileAccess.ReadWrite, FileShare.Inheritable);
+            zipToOpen = new FileStream(pZip, FileMode.Create, FileAccess.ReadWrite, FileShare.Inheritable);
             archive = new ZipArchive(zipToOpen, ZipArchiveMode.Update);
             fileQueueCreator = new FileQueueCreator(sourcePathOfFile);
             filesQueue = fileQueueCreator.GetFilledQueueOfFilesPath();
@@ -38,16 +39,16 @@ namespace MC.Abstract_and_Parent_Classes
             ZipArchiveEntry fileEntry;
             lock (LockToken)
             {
-                fileEntry = archive.CreateEntry(pZip.Substring(filePath.Length + 1));
+                fileEntry = archive.CreateEntry(filePath.Substring(sourcePathOfFile.Length + 1));
             }
-            using (var inFileStream = System.IO.File.Open(pZip, FileMode.Open, FileAccess.Read, FileShare.Read))
+            using (var InFileStream = System.IO.File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
                 using (var writer = fileEntry.Open())
                 {
                     var bytesRead = 0;
                     do
                     {
-                        bytesRead = inFileStream.Read(byteBuffer, 0, BufferSize);
+                        bytesRead = InFileStream.Read(byteBuffer, 0, BufferSize);
                         writer.Write(byteBuffer, 0, bytesRead);
                     } while (bytesRead > 0);
                 }
@@ -55,7 +56,7 @@ namespace MC.Abstract_and_Parent_Classes
         }
 
 
-        private const string Archiveextension = "RAR";
+        private const string Archiveextension = "rar";
         protected string GetPathOnDialog()
         {
             var fileDialog = new SaveFileDialog
@@ -72,5 +73,11 @@ namespace MC.Abstract_and_Parent_Classes
             throw new ArgumentException("Pick folder pls.");
         }
 
+
+        protected void Dispose()
+        {
+            archive.Dispose();
+            zipToOpen.Dispose();
+        }
     }
 }

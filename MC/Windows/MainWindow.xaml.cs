@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using System.Text.RegularExpressions;
 using MC.Classes.Fillers;
+using System.Windows.Navigation;
 
 namespace MC.Windows
 {
@@ -23,6 +24,9 @@ namespace MC.Windows
      *        загрузку изображений по URL для иконок,
      *        drag and drop lvitem.   
     */
+
+    public enum Action {Archive, Search }
+
     public partial class MainWindow : MetroWindow
     {
         public MainWindow()
@@ -97,8 +101,7 @@ namespace MC.Windows
             }
         }
 
-
-        private DialogThreadWindow dialog;
+        
         private async void ContextMenu1_Click(object sender, RoutedEventArgs e)
         {
             var item = sender as MenuItem;
@@ -119,8 +122,7 @@ namespace MC.Windows
                     FileManipulator.DeleteFile(selectedListItem);
                     break;
                 case "Archive":
-                    dialog = new DialogThreadWindow(selectedListItem.Path, new ArchiveFactory());
-                    dialog.Show();
+                    ShowChooseDialog(selectedListItem);
                     break;
                 case "Unarchive":
                     UnziperArchives.UnarchiveElemInThread(selectedListItem);
@@ -151,6 +153,13 @@ namespace MC.Windows
                     
                     break;
             }
+        }
+
+        private void ShowChooseDialog(Entity selectedItem)
+        {
+            var dialog = new DialogThreadPage(Action.Archive, selectedItem);
+            var win = new NavigationWindow() { Content = dialog, Width = 300, Height = 200 };
+            win.Show();
         }
 
         private TextBox _myTextBox;        
@@ -238,8 +247,7 @@ namespace MC.Windows
         private void MenuItemLV_Click(object sender, RoutedEventArgs e)
         {
             var item = sender as MenuItem;
-            var dialog = new DialogThreadWindow(item.Header.ToString(), new SearchFactory());
-            dialog.Show();
+            ShowChooseDialog(new Folder(item.Header.ToString()));
         }
 
         private void HelloBtn_Click(object sender, RoutedEventArgs e)

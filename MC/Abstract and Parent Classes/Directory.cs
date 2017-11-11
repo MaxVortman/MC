@@ -1,4 +1,5 @@
 ﻿using MC.Classes;
+using MC.Classes.Visitors;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MC.Abstract_and_Parent_Classes
 {
-    abstract class Directory : Entity
+    public abstract class Directory : Entity
     {
         
         public List<Entity> GetEntry()
@@ -86,6 +87,16 @@ namespace MC.Abstract_and_Parent_Classes
         public static bool Exists(string path)
         {
             return System.IO.Directory.Exists(path);
+        }
+
+        public override void AcceptArchive(IVisitor visitor)
+        {
+            visitor.Archive(this);
+        }
+
+        public override void AcceptSearch(IVisitor visitor)
+        {
+            visitor.Search(this);
         }
     }
 }

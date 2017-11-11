@@ -24,26 +24,30 @@ namespace MC.Classes.Threading.AsyncClasses
             var progress = new Progress<double>(ProgressLayout.ReportProgress);
             var realProgres = progress as IProgress<double>;
             ProgressLayout.Show();
-            System.Threading.Tasks.Task.Run(async () =>
+            Task.Run(async () =>
             {
                 var totalCount = filesQueue.Count();
                 tempCount = 0;
-                var tasks = new System.Threading.Tasks.Task[filesQueue.Length];
-                await System.Threading.Tasks.Task.Run(() =>
+                var tasks = new Task[filesQueue.Length];
+                await Task.Run(() =>
                 {
                     for (int i = 0; i < filesQueue.Length; i++)
                     {
                         var queue = filesQueue[i];
-                        tasks[i] = System.Threading.Tasks.Task.Run(() =>
+                        var queueLength = queue.Count;
+                        tasks[i] = Task.Run(() =>
                         {
                             try
                             {
-                                for (int j = 0; j < queue.Count; j++)
+                                for (int j = 0; j < queueLength; j++)
                                 {
                                     archiveCT.ThrowIfCancellationRequested();
                                     ArchiveFileInEntry(queue.Dequeue());
+                                    Interlocked.Increment(ref tempCount);
                                     lock (_archiveLock)
-                                        realProgres.Report(++tempCount * 100 / (double)totalCount);
+                                    {                                        
+                                        realProgres.Report(tempCount * 100 / (double)totalCount);
+                                    }
                                 }
                             }
                             catch (OperationCanceledException)
@@ -54,10 +58,10 @@ namespace MC.Classes.Threading.AsyncClasses
                             }
                         }, archiveCT);
                     }
-                    tasks.IsComplite();
+                    tasks.Wait();
                 });
                 ProgressLayout.Close();
-                archive.Dispose();
+                Dispose();
                 GC.Collect(2);
                 GC.WaitForPendingFinalizers();
             });

@@ -1,0 +1,125 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="MC.Classes.Threading.AsyncClasses.FileArchiverAsync" Collapsed="true">
+    <Position X="1" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AFAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAIAAA=</HashCode>
+      <FileName>Classes\Threading\AsyncClasses\FileArchiverAsync.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MC.Classes.Threading.AsyncClasses.SearchByPatternAsync" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="10.25" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAEAAAAgAAA=</HashCode>
+      <FileName>Classes\Threading\AsyncClasses\SearchByPatternAsync.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="MC.Classes.Threading.ParallelClasses.FileArchiverParallel" Collapsed="true">
+    <Position X="7.75" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Classes\Threading\ParallelClasses\FileArchiverParallel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MC.Classes.Threading.ParallelClasses.SearchByPatternParallel" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="10.25" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAA=</HashCode>
+      <FileName>Classes\Threading\ParallelClasses\SearchByPatternParallel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.1" Collapsed="true" />
+  </Class>
+  <Class Name="MC.Classes.Threading.TaskClasses.FileArchiverInTask" Collapsed="true">
+    <Position X="3.25" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Classes\Threading\TaskClasses\FileArchiverInTask.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MC.Classes.Threading.TaskClasses.SearchByPatternInTask" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="12" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAA=</HashCode>
+      <FileName>Classes\Threading\TaskClasses\SearchByPatternInTask.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="MC.Classes.Threading.ThreadClasses.FileArchiverInThread" Collapsed="true">
+    <Position X="5.5" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAgAAAAAQAIAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Classes\Threading\ThreadClasses\FileArchiverInThread.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MC.Classes.Threading.ThreadClasses.SearchByPatternInThread" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="13.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAA=</HashCode>
+      <FileName>Classes\Threading\ThreadClasses\SearchByPatternInThread.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="MC.Abstract_and_Parent_Classes.FileArchiver" Collapsed="true">
+    <Position X="4.25" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAACAhAAAAAAGAAQAABIAAAgAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Abstract and Parent Classes\FileArchiver.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="MC.Abstract_and_Parent_Classes.ArchiveFactory" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="10.25" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAA=</HashCode>
+      <FileName>Abstract and Parent Classes\ArchiveFactory.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="MC.Abstract_and_Parent_Classes.SearchByPattern" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="13.75" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABQAAAABoAAABAAgAAQAAIAAABABACAAgAAAAABQAAE=</HashCode>
+      <FileName>Abstract and Parent Classes\SearchByPattern.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="MC.Abstract_and_Parent_Classes.SearchFactory" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="12" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAA=</HashCode>
+      <FileName>Abstract and Parent Classes\SearchFactory.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="MC.Windows.DialogThreadWindow" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="12" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAA=</HashCode>
+      <FileName>Windows\DialogThreadWindow.xaml.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Interface Name="MC.Abstract_and_Parent_Classes.IThreadFactory" Collapsed="true">
+    <Position X="12" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAA=</HashCode>
+      <FileName>Abstract and Parent Classes\IThreadFactory.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="MC.Abstract_and_Parent_Classes.IThreder" Collapsed="true">
+    <Position X="13.75" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Abstract and Parent Classes\IThreder.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="MC.Abstract_and_Parent_Classes.ISearcher" Collapsed="true">
+    <Position X="10.25" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAA=</HashCode>
+      <FileName>Abstract and Parent Classes\ISearcher.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

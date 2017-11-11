@@ -1,0 +1,21 @@
+﻿<Page x:Class="MC.Windows.DialogPatternPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:MC.Windows"
+      mc:Ignorable="d" 
+      d:DesignHeight="150" d:DesignWidth="200"
+      Title="DialogPatternPage">
+
+        <GroupBox Header="Type of pattern" >
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+                <Button Grid.Column="0" Margin="2,20" Click="TypeButton_Click">Strategy</Button>
+            <Button Grid.Column="1" Margin="2,20" Click="TypeButton_Click">Visitor</Button>
+        </Grid>
+        </GroupBox>
+</Page>

@@ -51,7 +51,7 @@ namespace MC.Classes.Threading.AsyncClasses
                             }
                         }, seachTC);
                     }
-                    tasks.IsComplite();
+                    tasks.Wait();
                 });
                 ProgressLayout.Close();
                 process();

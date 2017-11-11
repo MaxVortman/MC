@@ -7,10 +7,11 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using MC.Abstract_and_Parent_Classes;
+using MC.Classes.Visitors;
 
 namespace MC.Classes
 {
-    internal class File : Entity
+    public class File : Entity
     {
 
         [DllImport("gdi32")]
@@ -127,6 +128,14 @@ namespace MC.Classes
             }
         }
 
-       
+        public override void AcceptArchive(IVisitor visitor)
+        {
+            visitor.Archive(this);
+        }
+
+        public override void AcceptSearch(IVisitor visitor)
+        {
+            visitor.Search(this);
+        }
     }
 }

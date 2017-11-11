@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MC.Classes.Visitors;
+using System;
 using System.Collections.Generic;
 using System.IO.Compression;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MC.Abstract_and_Parent_Classes
 {
-    internal abstract class Entity
+    public abstract class Entity
     {
         public object Image { get; set; }
         public string Name { get; set; }
@@ -57,5 +58,9 @@ namespace MC.Abstract_and_Parent_Classes
         {
             ZipFile.ExtractToDirectory(Path, extractPath);
         }
+
+        public abstract void AcceptArchive(IVisitor visitor);
+        public abstract void AcceptSearch(IVisitor visitor);
+
     }
 }

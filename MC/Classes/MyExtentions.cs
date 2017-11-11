@@ -5,7 +5,7 @@ namespace MC.Classes
 {
     static class MyExtentions
     {
-        public static bool IsComplite(this Task[] tasks)
+        public static bool Wait(this Task[] tasks)
         {
             for (int i = 0; i < tasks.Length; i++)
             {

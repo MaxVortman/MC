@@ -82,6 +82,8 @@
     <Compile Include="Abstract and Parent Classes\ISearcher.cs" />
     <Compile Include="Abstract and Parent Classes\IThreadFactory.cs" />
     <Compile Include="Abstract and Parent Classes\IThreder.cs" />
+    <Compile Include="Classes\Visitors\AsyncVisitor.cs" />
+    <Compile Include="Classes\Visitors\IVisitor.cs" />
     <Compile Include="Abstract and Parent Classes\SearchByPattern.cs" />
     <Compile Include="Abstract and Parent Classes\SearchFactory.cs" />
     <Compile Include="Abstract and Parent Classes\Statistics.cs" />
@@ -108,12 +110,22 @@
     <Compile Include="Classes\Threading\ThreadClasses\ThreadQueue.cs" />
     <Compile Include="Classes\UnziperArchives.cs" />
     <Compile Include="Classes\UserPrefs.cs" />
+    <Compile Include="Classes\Visitors\ParallelVisitor.cs" />
+    <Compile Include="Classes\Visitors\TaskVisitor.cs" />
+    <Compile Include="Classes\Visitors\ThreadVisitor.cs" />
+    <Compile Include="Classes\Visitors\VisitorFactory.cs" />
     <Compile Include="Classes\WatcherCreator.cs" />
     <Compile Include="Windows\AccentStyleWindow.xaml.cs">
       <DependentUpon>AccentStyleWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\AddTheme.xaml.cs">
       <DependentUpon>AddTheme.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\DialogPatternPage.xaml.cs">
+      <DependentUpon>DialogPatternPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\DialogThreadPage.xaml.cs">
+      <DependentUpon>DialogThreadPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\DialogThreadWindow.xaml.cs">
       <DependentUpon>DialogThreadWindow.xaml</DependentUpon>
@@ -152,6 +164,14 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Windows\AddTheme.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\DialogPatternPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\DialogThreadPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -222,6 +242,7 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
+    <None Include="UML\ArchiveDiagram.cd" />
     <None Include="UML\EntityDiagram.cd" />
     <None Include="UML\SimpleArcForMC.cd" />
   </ItemGroup>
@@ -243,6 +264,7 @@
     <Resource Include="Images\Icons\Cd-ROM-icon.png" />
     <Content Include="Images\Icons\USB.svg" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
