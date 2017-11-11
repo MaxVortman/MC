@@ -6,10 +6,9 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using MahApps.Metro;
 using MahApps.Metro.Controls;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.IO;
+using MC.Source.Graphics;
 
-namespace MahAppsMetroThemesSample
+namespace MC.Windows
 {
     /// <summary>
     /// Interaction logic for AccentStyleWindow.xaml

@@ -75,46 +75,46 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Abstract and Parent Classes\ArchiveFactory.cs" />
-    <Compile Include="Abstract and Parent Classes\Directory.cs" />
-    <Compile Include="Abstract and Parent Classes\Entity.cs" />
-    <Compile Include="Abstract and Parent Classes\FileArchiver.cs" />
-    <Compile Include="Abstract and Parent Classes\ISearcher.cs" />
-    <Compile Include="Abstract and Parent Classes\IThreadFactory.cs" />
-    <Compile Include="Abstract and Parent Classes\IThreder.cs" />
-    <Compile Include="Classes\Visitors\AsyncVisitor.cs" />
-    <Compile Include="Classes\Visitors\IVisitor.cs" />
-    <Compile Include="Abstract and Parent Classes\SearchByPattern.cs" />
-    <Compile Include="Abstract and Parent Classes\SearchFactory.cs" />
-    <Compile Include="Abstract and Parent Classes\Statistics.cs" />
-    <Compile Include="Abstract and Parent Classes\Theme.cs" />
+    <Compile Include="Source\Archivers\ArchiveFactory.cs" />
+    <Compile Include="Source\Entries\Directory.cs" />
+    <Compile Include="Source\Entries\Entity.cs" />
+    <Compile Include="Source\Archivers\FileArchiver.cs" />
+    <Compile Include="Source\Searchers\ISearcher.cs" />
+    <Compile Include="Source\Threading\IThreadFactory.cs" />
+    <Compile Include="Source\Threading\IThreder.cs" />
+    <Compile Include="Source\Visitors\AsyncVisitor.cs" />
+    <Compile Include="Source\Visitors\IVisitor.cs" />
+    <Compile Include="Source\Searchers\SearchByPattern.cs" />
+    <Compile Include="Source\Searchers\SearchFactory.cs" />
+    <Compile Include="Source\Statistics\Statistics.cs" />
+    <Compile Include="Source\Graphics\Themes\Theme.cs" />
     <Compile Include="AnnouncerOfDelegates.cs" />
-    <Compile Include="Classes\FileManipulator.cs" />
-    <Compile Include="Classes\FileQueue.cs" />
-    <Compile Include="Classes\Fillers\DriveFiller.cs" />
-    <Compile Include="Classes\Fillers\FileFiller.cs" />
-    <Compile Include="Classes\Graphics\ThemeManagerHelper.cs" />
-    <Compile Include="Classes\Graphics\Themes\BlueTheme.cs" />
-    <Compile Include="Classes\Graphics\Themes\DarkTheme.cs" />
-    <Compile Include="Classes\MyExtentions.cs" />
-    <Compile Include="Classes\NonParallelStatistics.cs" />
-    <Compile Include="Classes\Threading\AsyncClasses\FileArchiverAsync.cs" />
-    <Compile Include="Classes\Threading\AsyncClasses\SearchByPatternAsync.cs" />
-    <Compile Include="Classes\Threading\ParallelClasses\FileArchiverParallel.cs" />
-    <Compile Include="Classes\Threading\ParallelClasses\ParallelStatistics.cs" />
-    <Compile Include="Classes\Threading\ParallelClasses\SearchByPatternParallel.cs" />
-    <Compile Include="Classes\Threading\TaskClasses\FileArchiverInTask.cs" />
-    <Compile Include="Classes\Threading\TaskClasses\SearchByPatternInTask.cs" />
-    <Compile Include="Classes\Threading\ThreadClasses\FileArchiverInThread.cs" />
-    <Compile Include="Classes\Threading\ThreadClasses\SearchByPatternInThread.cs" />
-    <Compile Include="Classes\Threading\ThreadClasses\ThreadQueue.cs" />
-    <Compile Include="Classes\UnziperArchives.cs" />
-    <Compile Include="Classes\UserPrefs.cs" />
-    <Compile Include="Classes\Visitors\ParallelVisitor.cs" />
-    <Compile Include="Classes\Visitors\TaskVisitor.cs" />
-    <Compile Include="Classes\Visitors\ThreadVisitor.cs" />
-    <Compile Include="Classes\Visitors\VisitorFactory.cs" />
-    <Compile Include="Classes\WatcherCreator.cs" />
+    <Compile Include="Source\FileManipulator.cs" />
+    <Compile Include="Source\FileQueue.cs" />
+    <Compile Include="Source\Fillers\DriveFiller.cs" />
+    <Compile Include="Source\Fillers\FileFiller.cs" />
+    <Compile Include="Source\Graphics\ThemeManagerHelper.cs" />
+    <Compile Include="Source\Graphics\Themes\BlueTheme.cs" />
+    <Compile Include="Source\Graphics\Themes\DarkTheme.cs" />
+    <Compile Include="Source\MyExtentions.cs" />
+    <Compile Include="Source\Statistics\NonParallelStatistics.cs" />
+    <Compile Include="Source\Archivers\FileArchiverAsync.cs" />
+    <Compile Include="Source\Searchers\SearchByPatternAsync.cs" />
+    <Compile Include="Source\Archivers\FileArchiverParallel.cs" />
+    <Compile Include="Source\Statistics\ParallelStatistics.cs" />
+    <Compile Include="Source\Searchers\SearchByPatternParallel.cs" />
+    <Compile Include="Source\Archivers\FileArchiverInTask.cs" />
+    <Compile Include="Source\Searchers\SearchByPatternInTask.cs" />
+    <Compile Include="Source\Archivers\FileArchiverInThread.cs" />
+    <Compile Include="Source\Searchers\SearchByPatternInThread.cs" />
+    <Compile Include="Source\Threading\ThreadQueue.cs" />
+    <Compile Include="Source\UnziperArchives.cs" />
+    <Compile Include="Source\UserPrefs.cs" />
+    <Compile Include="Source\Visitors\ParallelVisitor.cs" />
+    <Compile Include="Source\Visitors\TaskVisitor.cs" />
+    <Compile Include="Source\Visitors\ThreadVisitor.cs" />
+    <Compile Include="Source\Visitors\VisitorFactory.cs" />
+    <Compile Include="Source\WatcherCreator.cs" />
     <Compile Include="Windows\AccentStyleWindow.xaml.cs">
       <DependentUpon>AccentStyleWindow.xaml</DependentUpon>
     </Compile>
@@ -133,7 +133,7 @@
     <Compile Include="Windows\DownloadLink.xaml.cs">
       <DependentUpon>DownloadLink.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Classes\SearchEngineFiles.cs" />
+    <Compile Include="Source\SearchEngineFiles.cs" />
     <Compile Include="Windows\ProgressWindow.xaml.cs">
       <DependentUpon>ProgressWindow.xaml</DependentUpon>
     </Compile>
@@ -143,15 +143,15 @@
     <Compile Include="Windows\WelcomeScreen.xaml.cs">
       <DependentUpon>WelcomeScreen.xaml</DependentUpon>
     </Compile>
-    <Page Include="Classes\Graphics\CustomAccent1.xaml">
+    <Page Include="Source\Graphics\CustomAccent1.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Classes\Graphics\CustomAccent2.xaml">
+    <Page Include="Source\Graphics\CustomAccent2.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Classes\Graphics\CustomTheme.xaml">
+    <Page Include="Source\Graphics\CustomTheme.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -187,20 +187,20 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="Abstract and Parent Classes\Drive.cs" />
+    <Compile Include="Source\Entries\Drives\Drive.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Classes\Buffer.cs" />
-    <Compile Include="Classes\Graphics\GraphicalApp.cs" />
-    <Compile Include="Classes\Graphics\ListViewCustom.cs" />
-    <Compile Include="Classes\List%27sElement\Drives\CDRom.cs" />
-    <Compile Include="Classes\List%27sElement\Drives\Fixed.cs" />
-    <Compile Include="Classes\List%27sElement\File.cs" />
-    <Compile Include="Classes\List%27sElement\Folder.cs" />
-    <Compile Include="Classes\List%27sElement\Drives\Removable.cs" />
-    <Compile Include="Classes\LogicForUI.cs" />
+    <Compile Include="Source\Buffer.cs" />
+    <Compile Include="Source\Graphics\GraphicalApp.cs" />
+    <Compile Include="Source\Graphics\ListViewCustom.cs" />
+    <Compile Include="Source\Entries\Drives\CDRom.cs" />
+    <Compile Include="Source\Entries\Drives\Fixed.cs" />
+    <Compile Include="Source\Entries\File.cs" />
+    <Compile Include="Source\Entries\Folder.cs" />
+    <Compile Include="Source\Entries\Drives\Removable.cs" />
+    <Compile Include="Source\LogicForUI.cs" />
     <Compile Include="Windows\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

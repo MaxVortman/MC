@@ -2,12 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using MahApps.Metro.Controls;
-using MC.Classes;
-using MC.Abstract_and_Parent_Classes;
-using MC.Classes.Threading.AsyncClasses;
-using MC.Classes.Threading.ParallelClasses;
-using MC.Classes.Threading.TaskClasses;
-using MC.Classes.Threading.ThreadClasses;
+using MC.Source.Threading;
 
 namespace MC.Windows
 {

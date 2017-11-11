@@ -1,6 +1,4 @@
-﻿using MC.Abstract_and_Parent_Classes;
-using MC.Classes.Visitors;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,6 +12,10 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using MC.Source.Archivers;
+using MC.Source.Entries;
+using MC.Source.Searchers;
+using MC.Source.Visitors;
 
 namespace MC.Windows
 {

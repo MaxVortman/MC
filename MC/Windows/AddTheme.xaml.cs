@@ -9,6 +9,7 @@ using System.Windows.Data;
 using System.Windows.Media;
 using MahApps.Metro.Controls;
 using Microsoft.Win32;
+using Theme = MC.Source.Graphics.Themes.Theme;
 
 namespace MC.Windows
 {

@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Media;
 using MahApps.Metro;
-using MahAppsMetroThemesSample;
+using MC.Source.Graphics;
 
 namespace MC
 {

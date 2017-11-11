@@ -6,7 +6,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using MahApps.Metro.Controls;
 using MC.Classes;
-using MC.Classes.Graphics.Themes;
+using MC.Source;
+using MC.Source.Graphics.Themes;
 
 namespace MC.Windows
 {

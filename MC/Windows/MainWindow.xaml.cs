@@ -5,15 +5,18 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using MahApps.Metro.Controls;
-using MC.Abstract_and_Parent_Classes;
-using MC.Classes;
-using MC.Classes.Graphics;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Threading;
 using System.Text.RegularExpressions;
-using MC.Classes.Fillers;
 using System.Windows.Navigation;
+using MC.Source;
+using MC.Source.Entries;
+using MC.Source.Entries.Drives;
+using MC.Source.Fillers;
+using MC.Source.Graphics;
+using Directory = MC.Source.Entries.Directory;
+using File = MC.Source.Entries.File;
 
 namespace MC.Windows
 {
@@ -275,7 +278,7 @@ namespace MC.Windows
             var textbox = sender as TextBox;
             if (!_searchFlag)
             {
-                if (Abstract_and_Parent_Classes.Directory.Exists(textbox.Text))
+                if (Directory.Exists(textbox.Text))
                 {
                     if (textbox.Name.EndsWith("1"))
                         fileFiller1.OpenEntry(new Folder(textbox.Text));
@@ -322,7 +325,7 @@ namespace MC.Windows
                     var dataList = new List<Entity>(result.Count);
                     foreach (var item in result)
                     {
-                        dataList.Add(new Classes.File(item));
+                        dataList.Add(new File(item));
                     }
                     Dispatcher.Invoke(() => currentGraphics.DataSource = new System.Collections.ObjectModel.ObservableCollection<Entity>(dataList));
                     _tokenSource = null;
