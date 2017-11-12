@@ -7,6 +7,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using MC.Source.Visitors;
 using MC.Source.Visitors.EncryptVisitors;
+using MC.Source.Visitors.ThreadVisitors;
 
 namespace MC.Source.Entries
 {

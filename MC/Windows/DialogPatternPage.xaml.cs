@@ -16,6 +16,7 @@ using MC.Source.Archivers;
 using MC.Source.Entries;
 using MC.Source.Searchers;
 using MC.Source.Visitors;
+using MC.Source.Visitors.ThreadVisitors;
 
 namespace MC.Windows
 {

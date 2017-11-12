@@ -1,6 +1,6 @@
 ﻿using MC.Source.Entries;
 
-namespace MC.Source.Visitors
+namespace MC.Source.Visitors.ThreadVisitors
 {
     public interface IThreadsVisitor
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MC.Source.Visitors
+namespace MC.Source.Visitors.ThreadVisitors
 {
     static class ThreadsVisitorFactory
     {

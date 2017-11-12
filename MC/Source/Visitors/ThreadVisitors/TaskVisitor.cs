@@ -2,7 +2,7 @@
 using MC.Source.Entries;
 using MC.Source.Searchers;
 
-namespace MC.Source.Visitors
+namespace MC.Source.Visitors.ThreadVisitors
 {
     class TaskVisitor : IThreadsVisitor
     {

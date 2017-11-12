@@ -2,6 +2,7 @@
 using System.IO.Compression;
 using MC.Source.Visitors;
 using MC.Source.Visitors.EncryptVisitors;
+using MC.Source.Visitors.ThreadVisitors;
 
 namespace MC.Source.Entries
 {
