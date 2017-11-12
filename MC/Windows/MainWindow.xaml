@@ -98,6 +98,8 @@
                         <MenuItem Header="Archive" Click="ContextMenu1_Click"></MenuItem>
                         <MenuItem Header="Unarchive" Click="ContextMenu1_Click"></MenuItem>
                         <MenuItem Header="Statistic" Click="ContextMenu1_Click"></MenuItem>
+                        <MenuItem Header="Encode" Click="ContextMenu1_Click"></MenuItem>
+                        <MenuItem Header="Decode" Click="ContextMenu1_Click"></MenuItem>
                     </ContextMenu>
                 </ListView.ContextMenu>
             </graphics1:ListViewCustom>
@@ -154,6 +156,8 @@
                         <MenuItem Header="Archive" Click="ContextMenu1_Click"></MenuItem>
                         <MenuItem Header="Unarchive" Click="ContextMenu1_Click"></MenuItem>
                         <MenuItem Header="Statistic" Click="ContextMenu1_Click"></MenuItem>
+                        <MenuItem Header="Encode" Click="ContextMenu1_Click"></MenuItem>
+                        <MenuItem Header="Decode" Click="ContextMenu1_Click"></MenuItem>
                     </ContextMenu>
                 </ListView.ContextMenu>
             </graphics1:ListViewCustom>

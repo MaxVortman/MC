@@ -17,6 +17,7 @@ using MC.Source.Fillers;
 using MC.Source.Graphics;
 using Directory = MC.Source.Entries.Directory;
 using File = MC.Source.Entries.File;
+using MC.Source.Visitors.EncryptVisitors;
 
 namespace MC.Windows
 {
@@ -153,7 +154,12 @@ namespace MC.Windows
                     break;
                 case "Statistic":
                     MessageBox.Show(await LogicForUi.ReadStatisticAsync(selectedListItem));
-                    
+                    break;
+                case "Decode":
+                    selectedListItem.AcceptDecode(new AesVisitor());
+                    break;
+                case "Encode":
+                    selectedListItem.AcceptEncode(new AesVisitor());
                     break;
             }
         }

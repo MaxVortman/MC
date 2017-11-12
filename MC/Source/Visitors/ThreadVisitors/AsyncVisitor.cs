@@ -4,7 +4,7 @@ using MC.Source.Searchers;
 
 namespace MC.Source.Visitors
 {
-    class AsyncVisitor : IVisitor
+    class AsyncVisitor : IThreadsVisitor
     {
         public void Archive(File file)
         {

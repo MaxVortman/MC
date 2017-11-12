@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using MC.Source.Visitors;
+using MC.Source.Visitors.EncryptVisitors;
 
 namespace MC.Source.Entries
 {
@@ -84,14 +85,24 @@ namespace MC.Source.Entries
             return System.IO.Directory.Exists(path);
         }
 
-        public override void AcceptArchive(IVisitor visitor)
+        public override void AcceptArchive(IThreadsVisitor visitor)
         {
             visitor.Archive(this);
         }
 
-        public override void AcceptSearch(IVisitor visitor)
+        public override void AcceptSearch(IThreadsVisitor visitor)
         {
             visitor.Search(this);
+        }
+
+        public override void AcceptDecode(IEncryptVisitor visitor)
+        {
+            visitor.Decode(this);
+        }
+
+        public override void AcceptEncode(IEncryptVisitor visitor)
+        {
+            visitor.Encode(this);
         }
     }
 }

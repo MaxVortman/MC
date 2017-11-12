@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO.Compression;
 using MC.Source.Visitors;
+using MC.Source.Visitors.EncryptVisitors;
 
 namespace MC.Source.Entries
 {
@@ -55,8 +56,9 @@ namespace MC.Source.Entries
             ZipFile.ExtractToDirectory(Path, extractPath);
         }
 
-        public abstract void AcceptArchive(IVisitor visitor);
-        public abstract void AcceptSearch(IVisitor visitor);
-
+        public abstract void AcceptArchive(IThreadsVisitor visitor);
+        public abstract void AcceptSearch(IThreadsVisitor visitor);
+        public abstract void AcceptDecode(IEncryptVisitor visitor);
+        public abstract void AcceptEncode(IEncryptVisitor visitor);
     }
 }

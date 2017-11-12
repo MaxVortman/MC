@@ -1,0 +1,13 @@
+﻿<Window x:Class="MC.Windows.KeyDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MC.Windows"
+        mc:Ignorable="d"
+        Title="KeyDialog" Height="125" Width="300"
+        KeyDown="Window_KeyDown">
+    <GroupBox Header="Enter a encryption Key">
+        <TextBox Name="KeyTextBox"></TextBox>
+    </GroupBox>
+</Window>

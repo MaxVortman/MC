@@ -57,10 +57,10 @@ namespace MC.Windows
             switch (action)
             {
                 case Action.Archive:
-                    entity.AcceptArchive(VisitorFactory.CreateVisitor(typeOfThread));
+                    entity.AcceptArchive(ThreadsVisitorFactory.CreateVisitor(typeOfThread));
                     break;
                 case Action.Search:
-                    entity.AcceptSearch(VisitorFactory.CreateVisitor(typeOfThread));
+                    entity.AcceptSearch(ThreadsVisitorFactory.CreateVisitor(typeOfThread));
                     break;
                 default:
                     break;

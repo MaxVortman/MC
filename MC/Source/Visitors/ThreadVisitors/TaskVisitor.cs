@@ -1,11 +1,10 @@
-﻿using MC.Classes;
-using MC.Source.Archivers;
+﻿using MC.Source.Archivers;
 using MC.Source.Entries;
 using MC.Source.Searchers;
 
 namespace MC.Source.Visitors
 {
-    class TaskVisitor : IVisitor
+    class TaskVisitor : IThreadsVisitor
     {
         public void Archive(File file)
         {

@@ -2,9 +2,9 @@
 
 namespace MC.Source.Visitors
 {
-    static class VisitorFactory
+    static class ThreadsVisitorFactory
     {
-        public static IVisitor CreateVisitor(string typeOfThread)
+        public static IThreadsVisitor CreateVisitor(string typeOfThread)
         {
             switch (typeOfThread)
             {

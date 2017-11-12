@@ -1,9 +1,8 @@
-﻿using MC.Classes;
-using MC.Source.Entries;
+﻿using MC.Source.Entries;
 
 namespace MC.Source.Visitors
 {
-    public interface IVisitor
+    public interface IThreadsVisitor
     {
         void Archive(File file);
         void Archive(Directory directory);

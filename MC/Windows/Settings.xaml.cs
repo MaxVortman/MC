@@ -8,7 +8,6 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
 using MahApps.Metro.Controls;
-using MC.Classes;
 using MC.Source;
 using MC.Source.Graphics.Themes;
 using Theme = MC.Source.Graphics.Themes.Theme;

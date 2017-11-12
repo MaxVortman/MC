@@ -14,9 +14,9 @@ namespace MC
         protected override void OnStartup(StartupEventArgs e)
         {
             // add custom accent and theme resource dictionaries
-            ThemeManager.AddAccent("CustomAccent1", new Uri("pack://application:,,,/MC;component/Classes/Graphics/CustomAccent1.xaml"));
-            ThemeManager.AddAccent("CustomAccent2", new Uri("pack://application:,,,/MC;component/Classes/Graphics/CustomAccent2.xaml"));
-            ThemeManager.AddAppTheme("CustomTheme", new Uri("pack://application:,,,/MC;component/Classes/Graphics/CustomTheme.xaml"));
+            ThemeManager.AddAccent("CustomAccent1", new Uri("pack://application:,,,/MC;component/Source/Graphics/CustomAccent1.xaml"));
+            ThemeManager.AddAccent("CustomAccent2", new Uri("pack://application:,,,/MC;component/Source/Graphics/CustomAccent2.xaml"));
+            ThemeManager.AddAppTheme("CustomTheme", new Uri("pack://application:,,,/MC;component/Source/Graphics/CustomTheme.xaml"));
 
             // create custom accents
             ThemeManagerHelper.CreateAppStyleBy(Colors.Red);

@@ -39,9 +39,15 @@ namespace MC.Source
         }
 
         private List<string> _listOfPath;
+
+        public List<string> ListOfFilesInDirectory
+        {
+            get { return _listOfPath; }
+        }
+
         private readonly string soursePath;
 
-        public void GetFilesPathFromFolder(string path)
+        private void GetFilesPathFromFolder(string path)
         {
             Parallel.ForEach(Directory.GetFiles(path), item =>
             {
