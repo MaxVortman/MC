@@ -21,7 +21,7 @@ namespace MC.Source.Archivers
                 });
                 if (result.IsCompleted)
                 {
-                    archive.Dispose();
+                    Dispose();
                     GC.Collect(2);
                     GC.WaitForPendingFinalizers();
                 }

@@ -36,7 +36,7 @@ namespace MC.Source.Statistics
                               orderby d.Value descending
                               select d).Take(10);
                 time.Stop();
-                var result = new StringBuilder($"Count of words: {countOfWords}\nCount of lines: {countOfLines}\nTOP TEN:\n");
+                var result = new StringBuilder($"Count of words: {countOfWordsInText}\nCount of lines: {countOfLines}\nTOP TEN:\n");
                 foreach (var item in topTen)
                 {
                     result.AppendLine($"Word \"{item.Key}\" has met a number of time \"{item.Value}\"");
@@ -49,7 +49,7 @@ namespace MC.Source.Statistics
         private void CountingStatistics(string line)
         {
             var words = SearchWordsIn(line);
-            countOfWords += words.LongLength;
+            countOfWordsInText += words.LongLength;
             foreach (var word in words)
             {
                 if (allUniqueWordsByTheirCountingInText.Keys.Contains(word))
@@ -65,7 +65,6 @@ namespace MC.Source.Statistics
 
         private string[] SearchWordsIn(string line)
         {
-            var regex = new Regex($@"\b\w+\b");
             var matchesOfWords = regex.Matches(line);
             var arrayOfWords = new string[matchesOfWords.Count];
             int i = 0;

@@ -6,6 +6,7 @@ using MC.Source.Graphics;
 using MC.Source.Entries;
 using Directory = MC.Source.Entries.Directory;
 using File = MC.Source.Entries.File;
+using System.Collections.Generic;
 
 namespace MC.Source.Fillers
 {
@@ -21,15 +22,22 @@ namespace MC.Source.Fillers
         private readonly GraphicalApp graphicalApp;
         private FileSystemWatcher systemWatcher;
 
-        public void OpenEntry(Entity entry)
+        public void OpenEntry(Entity entity)
         {
             try
             {
-                if (entry is Directory)
+                if (entity.IsArchive())
                 {
-                    var dir = entry as Directory;
-                    systemWatcher.Path = dir.Path;
-                    systemWatcher.EnableRaisingEvents = true;
+                    var baseEntity = new List<Entity>();
+                    baseEntity.Add(new Folder(Path.GetDirectoryName(entity.Path)) { Name = "...", Date = "", Size = "" });
+                    graphicalApp.DataSource = new ObservableCollection<Entity>(new Zip(entity.Path).GetEntity(baseEntity));
+                }
+                else
+                if (entity is Directory)
+                {
+                    var dir = entity as Directory;
+                    //systemWatcher.Path = dir.Path;
+                    //systemWatcher.EnableRaisingEvents = true;
                     //start fill            
 
                     graphicalApp.SetCaptionOfPath(dir.Path);
@@ -38,7 +46,7 @@ namespace MC.Source.Fillers
                 }
                 else
                 {
-                    (entry as File)?.Open();
+                    (entity as File)?.Open();
                 }
             }
             catch (UnauthorizedAccessException e)
@@ -48,7 +56,7 @@ namespace MC.Source.Fillers
             catch (FileNotFoundException e)
             {
                 MessageBox.Show(e.Message, "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
-                var dataList = (entry as Directory).CreateDataList();
+                var dataList = (entity as Directory).CreateDataList();
                 graphicalApp.DataSource = new ObservableCollection<Entity>(dataList);
             }
         }

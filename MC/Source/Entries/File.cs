@@ -48,7 +48,7 @@ namespace MC.Source.Entries
         }
 
         private FileInfo _info;
-        protected sealed override void GetAndSetInfo()
+        private void GetAndSetInfo()
         {
             Image = IconFromFile(Path);
             _info = new FileInfo(Path);

@@ -30,7 +30,7 @@ namespace MC.Source.Archivers
             {
                 if (++CountOfCompliteThread == Environment.ProcessorCount)
                 {
-                    archive.Dispose();
+                    Dispose();
                     Threads = null;
                     CountOfCompliteThread = 0;
                     GC.Collect(2);

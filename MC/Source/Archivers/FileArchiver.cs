@@ -7,7 +7,7 @@ using Microsoft.Win32;
 
 namespace MC.Source.Archivers
 {
-    abstract class FileArchiver : IThreder
+    abstract class FileArchiver : IThreder, IDisposable
     {
         private readonly object LockToken = new object();
         protected readonly string sourcePathOfFile;
@@ -24,7 +24,7 @@ namespace MC.Source.Archivers
             this.sourcePathOfFile = sourcePathOfFile;
             pZip = GetPathOnDialog();
             zipToOpen = new FileStream(pZip, FileMode.Create, FileAccess.ReadWrite, FileShare.Inheritable);
-            archive = new ZipArchive(zipToOpen, ZipArchiveMode.Update);
+            archive = new ZipArchive(zipToOpen, ZipArchiveMode.Update, false);
             fileQueueCreator = new FileQueueCreator(sourcePathOfFile);
             filesQueue = fileQueueCreator.GetFilledQueueOfFilesPath();
         }
@@ -53,7 +53,7 @@ namespace MC.Source.Archivers
         }
 
 
-        private const string Archiveextension = "rar";
+        private const string Archiveextension = "zip";
         protected string GetPathOnDialog()
         {
             var fileDialog = new SaveFileDialog
@@ -71,10 +71,11 @@ namespace MC.Source.Archivers
         }
 
 
-        protected void Dispose()
+        public void Dispose()
         {
             archive.Dispose();
             zipToOpen.Dispose();
+            GC.SuppressFinalize(this);
         }
     }
 }

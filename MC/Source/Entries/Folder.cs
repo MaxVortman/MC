@@ -14,8 +14,10 @@ namespace MC.Source.Entries
         }
 
         DirectoryInfo dir;
-        protected override void GetAndSetInfo()
+        private void GetAndSetInfo()
         {
+            if (!Path.Contains(":"))
+                return;
             Image = MainWindow.UserPrefs?.Theme.FolderIconPath;
             dir = new DirectoryInfo(Path);
             Name = dir.Name;

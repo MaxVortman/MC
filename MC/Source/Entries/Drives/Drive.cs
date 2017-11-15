@@ -15,7 +15,7 @@ namespace MC.Source.Entries.Drives
             GetAndSetInfo();
         }
 
-        protected sealed override void GetAndSetInfo()
+        private void GetAndSetInfo()
         {
             Path = _driveInfo.RootDirectory.ToString();
             Name = _driveInfo.Name;

@@ -26,7 +26,7 @@ namespace MC.Source.Archivers
             {
                 if (tasks.Wait())
                 {
-                    archive.Dispose();
+                    Dispose();
                     GC.Collect(2);
                     GC.WaitForPendingFinalizers();
                 }

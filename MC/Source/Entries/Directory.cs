@@ -15,19 +15,21 @@ namespace MC.Source.Entries
             return GetData(dataList);
         }
 
-        public List<Entity> CreateDataList()
+        public virtual List<Entity> CreateDataList()
         {
-            var dataList = new List<Entity>(500);
+            var dataList = new List<Entity>(50);
             // ... folder
             if (Path.Length > 3)
             {
-                var parentPath = System.IO.Directory.GetParent(Path).FullName;
+                var parentPath = System.IO.Path.GetDirectoryName(Path);
                 dataList.Add(new Folder(parentPath) { Name = "...", Date = "", Size = "" });
             }
             return dataList;
         }
 
-        protected List<Entity> GetData(List<Entity> dataList)
+
+        //TO DO: абстрагировать, добавить zipped
+        protected virtual List<Entity> GetData(List<Entity> dataList)
         {
             //enumerate folder's path
             foreach (var item in System.IO.Directory.EnumerateDirectories(Path))

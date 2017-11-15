@@ -14,8 +14,6 @@ namespace MC.Source.Entries
         public string Date { get; set; }
         public string Path { get; protected set; }
 
-        protected abstract void GetAndSetInfo();
-
 
         protected static string FormatSize(long size)
         {

@@ -15,28 +15,35 @@ namespace MC.Source.Statistics
 
         public async override Task<string> GetStatisticsAsync()
         {
-           return await System.Threading.Tasks.Task.Run(async () => {
+            return await System.Threading.Tasks.Task.Run(async () =>
+            {
                 var time = new Stopwatch();
+                var line = String.Empty;
                 time.Start();
                 using (var txtFile = System.IO.File.Open(path, FileMode.Open, FileAccess.Read))
                 {
                     using (var reader = new StreamReader(txtFile))
                     {
-                        var text = await reader.ReadToEndAsync();
-                        CountingStatistics(text);
+                        while (!reader.EndOfStream)
+                        {
+                            line = await reader.ReadLineAsync();
+                            countOfLines++;
+                            if (!string.IsNullOrEmpty(line))
+                                CountingStatistics(line);
+                        }
                     }
                 }
-               allUniqueWordsByTheirCountingInText = (from kv in allUniqueWordsByTheirCountingInText
-                                                      orderby kv.Value descending
-                                                      select kv).Take(10).ToDictionary((a) => a.Key, (a) => a.Value);
+                allUniqueWordsByTheirCountingInText = (from kv in allUniqueWordsByTheirCountingInText.AsParallel()
+                                                       orderby kv.Value descending
+                                                       select kv).Take(10).ToDictionary((a) => a.Key, (a) => a.Value);
                 time.Stop();
                 return WriteReplay(time.Elapsed);
-            });            
+            });
         }
 
         private string WriteReplay(TimeSpan time)
         {
-            var replayStringBuilder = new StringBuilder($"Count of words: {countOfWords}\nCount of lines: {countOfLines}\nTOP TEN:\n");
+            var replayStringBuilder = new StringBuilder($"Count of words: {countOfWordsInText}\nCount of lines: {countOfLines}\nTOP TEN:\n");
             foreach (var item in allUniqueWordsByTheirCountingInText)
             {
                 replayStringBuilder.AppendLine($"Word \"{item.Key}\" has met a number of time \"{item.Value}\"");
@@ -47,26 +54,16 @@ namespace MC.Source.Statistics
 
         private void CountingStatistics(string text)
         {
-            CountingLinesInText(text);
-            CountingAndCreateTopOfWords(text);
-        }
-
-        private void CountingLinesInText(string text)
-        {
-            countOfLines = text.Count((c) => { return c == '\n'; });
-        }
-
-        private void CountingAndCreateTopOfWords(string text)
-        {
             string[] words = SeparateAndCountingWords(text);
             CreateTopTenMostPopular(words);
         }
 
         private string[] SeparateAndCountingWords(string text)
         {
-            var matchesOfWords = Regex.Matches(text, $@"\b\w+\b");
-            countOfWords = matchesOfWords.Count;
-            var words = new string[countOfWords];
+            var matchesOfWords = regex.Matches(text);
+            var countOfWorldsInLine = matchesOfWords.Count;
+            countOfWordsInText += countOfWorldsInLine;
+            var words = new string[countOfWorldsInLine];
             var i = 0;
             foreach (Match match in matchesOfWords)
             {
@@ -77,11 +74,10 @@ namespace MC.Source.Statistics
         }
 
         private void CreateTopTenMostPopular(string[] words)
-        {
-            var uniqueWords = words.Distinct().ToArray();
-            allUniqueWordsByTheirCountingInText = (from w in uniqueWords.AsParallel()
-                                                   let keyValuePair = new { Key = w, Value = (long)words.Count((word) => word == w) }                                                   
-                                                   select keyValuePair).ToDictionary((a) => a.Key, (a) => a.Value);
+        {        
+            allUniqueWordsByTheirCountingInText.Add((from w in words.Distinct().AsParallel()
+                                                   let keyValuePair = new { Key = w, Value = (long)words.Count((c) => c == w) }                                                   
+                                                   select keyValuePair).ToDictionary((a) => a.Key, (a) => a.Value));
         }               
     }
 }
