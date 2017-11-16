@@ -12,7 +12,7 @@ namespace MC.Source.Entries
         public string Name { get; set; }
         public string Size { get; set; }
         public string Date { get; set; }
-        public string Path { get; protected set; }
+        public string FullPath { get; protected set; }
 
 
         protected static string FormatSize(long size)
@@ -52,7 +52,7 @@ namespace MC.Source.Entries
 
         public void Unarchive(string extractPath)
         {
-            ZipFile.ExtractToDirectory(Path, extractPath);
+            ZipFile.ExtractToDirectory(FullPath, extractPath);
         }
 
         public abstract void AcceptArchive(IThreadsVisitor visitor);

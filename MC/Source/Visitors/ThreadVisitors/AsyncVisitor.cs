@@ -8,25 +8,25 @@ namespace MC.Source.Visitors.ThreadVisitors
     {
         public void Archive(File file)
         {
-            var archiver = new FileArchiverAsync(file.Path);
+            var archiver = new FileArchiverAsync(file.FullPath);
             archiver.DoThread();
         }
 
         public void Archive(Directory directory)
         {
-            var archiver = new FileArchiverAsync(directory.Path);
+            var archiver = new FileArchiverAsync(directory.FullPath);
             archiver.DoThread();
         }
 
         public void Search(File file)
         {
-            var searcherBase = new SearchByPattern(file.Path, new SearchByPatternAsync());
+            var searcherBase = new SearchByPattern(file.FullPath, new SearchByPatternAsync());
             searcherBase.DoThread();
         }
 
         public void Search(Directory directory)
         {
-            var searcherBase = new SearchByPattern(directory.Path, new SearchByPatternAsync());
+            var searcherBase = new SearchByPattern(directory.FullPath, new SearchByPatternAsync());
             searcherBase.DoThread();
         }
     }

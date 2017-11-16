@@ -15,11 +15,14 @@ namespace MC.Source.Entries.Zipped
     {
         private readonly Zip zip;
 
-        public ZippedFolder(Zip zip, string path, string name)
+        public string FolderPath { get; }
+
+        public ZippedFolder(Zip zip, string fullPath, string folderPath, string name)
         {
             this.zip = zip;
+            this.FolderPath = folderPath;
             this.Name = name;
-            this.Path = path;
+            this.FullPath = fullPath;
             this.Image = MainWindow.UserPrefs?.Theme.FolderIconPath;
         }
 
@@ -27,17 +30,18 @@ namespace MC.Source.Entries.Zipped
         {
             var dataList = new List<Entity>(50);
             // ... folder
-            if (Path.Length > 3)
+            if (FullPath.Length > 3)
             {
-                var parentPath = System.IO.Path.GetDirectoryName(Path);
-                dataList.Add(new ZippedFolder(zip, parentPath, "..."));
+                var parentPath = System.IO.Path.GetDirectoryName(FolderPath);
+                var fullParentPath = System.IO.Path.GetDirectoryName(FullPath);
+                dataList.Add(new ZippedFolder(zip, fullParentPath, parentPath, "..."));
             }
             return dataList;
         }
 
         protected override List<Entity> GetData(List<Entity> dataList)
         {
-            return zip.GetEntity(dataList, Path);
+            return zip.GetEntity(dataList, FolderPath);
         }
 
         public override void AcceptArchive(IThreadsVisitor visitor)

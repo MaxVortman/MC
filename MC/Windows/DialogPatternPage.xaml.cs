@@ -73,10 +73,10 @@ namespace MC.Windows
             switch (action)
             {
                 case Action.Archive:
-                    new ArchiveFactory().CreateObject(typeOfThread, entity.Path).DoThread();
+                    new ArchiveFactory().CreateObject(typeOfThread, entity.FullPath).DoThread();
                     break;
                 case Action.Search:
-                    new SearchFactory().CreateObject(typeOfThread, entity.Path).DoThread();
+                    new SearchFactory().CreateObject(typeOfThread, entity.FullPath).DoThread();
                     break;
                 default:
                     break;

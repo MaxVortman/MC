@@ -17,7 +17,7 @@ namespace MC.Source.Entries.Drives
 
         private void GetAndSetInfo()
         {
-            Path = _driveInfo.RootDirectory.ToString();
+            FullPath = _driveInfo.RootDirectory.ToString();
             Name = _driveInfo.Name;
 
             if (IsReady)
@@ -40,7 +40,7 @@ namespace MC.Source.Entries.Drives
 
         public override void UpdateName(string newPath)
         {
-            Path = newPath;
+            FullPath = newPath;
             Name = _driveInfo.Name;
         }
     }

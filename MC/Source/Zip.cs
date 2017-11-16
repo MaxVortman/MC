@@ -16,6 +16,7 @@ namespace MC.Source
     {
         private ZipArchive archive;
         private readonly string path;
+        private IReadOnlyCollection<ZipArchiveEntry> zipArchiveEntry;
 
         public string Path => path;
 
@@ -23,6 +24,7 @@ namespace MC.Source
         {
             this.path = path;
             CreateArchive();
+            zipArchiveEntry = archive.Entries;
         }
 
         private void CreateArchive()
@@ -39,22 +41,24 @@ namespace MC.Source
 
         public List<Entity> GetEntity(List<Entity> baseEntity, string baseFolderPath = "")
         {
+            var baseFileEntity = new List<Entity>();
             var baseFolderPathForRegexp = baseFolderPath.Replace("\\", "\\\\");
-            var entries = archive.Entries;
-            foreach (var entry in entries)
+            foreach (var entry in zipArchiveEntry)
             {
                 if (!entry.FullName.Contains(baseFolderPath))
                     continue;
 
                 if (IsFile(entry.FullName, baseFolderPathForRegexp))
-                    baseEntity.Add(new ZippedFile(this, new Entry(entry)));
+                    baseFileEntity.Add(new ZippedFile(this, new Entry(entry, Path)));
                 else
                 {
                     var folderPath = GetFolderPath(entry.FullName, baseFolderPathForRegexp);
-                    if (!baseEntity.Contains(e => e.Path == folderPath))
-                        baseEntity.Add(new ZippedFolder(this, folderPath, GetFolderName(folderPath)));
+                    var fullFolderPath = System.IO.Path.Combine(Path, folderPath);
+                    if (!baseEntity.Contains(e => e.FullPath == fullFolderPath))
+                        baseEntity.Add(new ZippedFolder(this, fullFolderPath, folderPath, GetFolderName(folderPath)));
                 }
             }
+            baseEntity.AddRange(baseFileEntity);
             return baseEntity;
         }
 

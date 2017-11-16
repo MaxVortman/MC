@@ -32,7 +32,7 @@ namespace MC.Source
 
         public static bool IsArchive(this Entity entity)
         {
-            if (Path.GetExtension(entity.Path).Equals(".zip"))
+            if (Path.GetExtension(entity.FullPath).Equals(".zip"))
             {
                 return true;
             }

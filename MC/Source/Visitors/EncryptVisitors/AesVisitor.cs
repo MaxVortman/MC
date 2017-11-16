@@ -17,36 +17,36 @@ namespace MC.Source.Visitors.EncryptVisitors
         public void Decode(File file)
         {
             var aes = new AesEncryptor();
-            aes.Decode(file.Path, GetDestinationFilePath(System.IO.Path.GetExtension(file.Path)), GetKeyFromDialog());
+            aes.Decode(file.FullPath, GetDestinationFilePath(System.IO.Path.GetExtension(file.FullPath)), GetKeyFromDialog());
         }
 
         public void Decode(Directory directory)
         {
             var aes = new AesEncryptor();
-            var entryList = (new FileQueueCreator(directory.Path)).ListOfFilesInDirectory;
+            var entryList = (new FileQueueCreator(directory.FullPath)).ListOfFilesInDirectory;
             var destinationPath = GetDestinationFolderPath();
             var key = GetKeyFromDialog();
             foreach (var entry in entryList)
             {
-                aes.Decode(entry, destinationPath + entry.Substring(directory.Path.Length), key);
+                aes.Decode(entry, destinationPath + entry.Substring(directory.FullPath.Length), key);
             }
         }
 
         public void Encode(File file)
         {
             var aes = new AesEncryptor();
-            aes.Encode(file.Path, GetDestinationFilePath(System.IO.Path.GetExtension(file.Path)), GetKeyFromDialog());
+            aes.Encode(file.FullPath, GetDestinationFilePath(System.IO.Path.GetExtension(file.FullPath)), GetKeyFromDialog());
         }
 
         public void Encode(Directory directory)
         {
             var aes = new AesEncryptor();
-            var entryList = (new FileQueueCreator(directory.Path)).ListOfFilesInDirectory;
+            var entryList = (new FileQueueCreator(directory.FullPath)).ListOfFilesInDirectory;
             var destinationPath = GetDestinationFolderPath();
             var key = GetKeyFromDialog();
             foreach (var entry in entryList)
             {
-                aes.Encode(entry, destinationPath + entry.Substring(directory.Path.Length), key);
+                aes.Encode(entry, destinationPath + entry.Substring(directory.FullPath.Length), key);
             }
         }
 

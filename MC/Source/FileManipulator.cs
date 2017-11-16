@@ -48,7 +48,7 @@ namespace MC.Source
         internal static void RenameFile(object v, string text)
         {
             var elem = v as Entity;
-            var sourcePath = elem.Path;
+            var sourcePath = elem.FullPath;
             var destinationPath = Path.Combine(sourcePath.Remove(sourcePath.LastIndexOf(@"\", StringComparison.Ordinal)), text);
 
             try
@@ -101,7 +101,7 @@ namespace MC.Source
             try
             {
                 var item = elem as Entity;
-                var path = item.Path;
+                var path = item.FullPath;
                 if (item is File)
                 {
                     System.IO.File.Delete(path);

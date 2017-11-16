@@ -43,7 +43,7 @@ namespace MC.Source
             for (var i = 0; i < Data.Count; i++)
             {
                 var item = Data[i];
-                if (item.Path != e.OldFullPath.Replace("/", "")) continue;
+                if (item.FullPath != e.OldFullPath.Replace("/", "")) continue;
                 elem = item;
                 break;
             }
@@ -65,7 +65,7 @@ namespace MC.Source
             for (var i = 0; i < Data.Count; i++)
             {
                 var item = Data[i];
-                if (item.Path != e.FullPath) continue;
+                if (item.FullPath != e.FullPath) continue;
                 elem = item;
                 break;
             }
@@ -107,7 +107,7 @@ namespace MC.Source
             Entity elem = null;
             foreach (var item in Data)
             {
-                if (item.Path != e.FullPath) continue;
+                if (item.FullPath != e.FullPath) continue;
                 elem = item;
                 break;
             }

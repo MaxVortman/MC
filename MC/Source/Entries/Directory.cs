@@ -19,9 +19,9 @@ namespace MC.Source.Entries
         {
             var dataList = new List<Entity>(50);
             // ... folder
-            if (Path.Length > 3)
+            if (FullPath.Length > 3)
             {
-                var parentPath = System.IO.Path.GetDirectoryName(Path);
+                var parentPath = System.IO.Path.GetDirectoryName(FullPath);
                 dataList.Add(new Folder(parentPath) { Name = "...", Date = "", Size = "" });
             }
             return dataList;
@@ -32,12 +32,12 @@ namespace MC.Source.Entries
         protected virtual List<Entity> GetData(List<Entity> dataList)
         {
             //enumerate folder's path
-            foreach (var item in System.IO.Directory.EnumerateDirectories(Path))
+            foreach (var item in System.IO.Directory.EnumerateDirectories(FullPath))
             {
                 dataList.Add(new Folder(item));
             }
             //enumerate file's path
-            foreach (var item in System.IO.Directory.EnumerateFiles(Path))
+            foreach (var item in System.IO.Directory.EnumerateFiles(FullPath))
             {
                 dataList.Add(new File(item));
             }

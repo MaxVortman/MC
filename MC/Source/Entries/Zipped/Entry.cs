@@ -19,9 +19,9 @@ namespace MC.Source.Entries.Zipped
         public Entry()
         { }
 
-        public Entry(ZipArchiveEntry entry)
+        public Entry(ZipArchiveEntry entry, string path)
         {
-            this.Path = entry.FullName;
+            this.Path = System.IO.Path.Combine(path, entry.FullName);
             this.Name = entry.Name;
             this.Date = entry.LastWriteTime.DateTime.ToString();
             this.Size = entry.Length;

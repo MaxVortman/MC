@@ -29,8 +29,9 @@ namespace MC.Source.Fillers
                 if (entity.IsArchive())
                 {
                     var baseEntity = new List<Entity>();
-                    baseEntity.Add(new Folder(Path.GetDirectoryName(entity.Path)) { Name = "...", Date = "", Size = "" });
-                    graphicalApp.DataSource = new ObservableCollection<Entity>(new Zip(entity.Path).GetEntity(baseEntity));
+                    baseEntity.Add(new Folder(Path.GetDirectoryName(entity.FullPath)) { Name = "...", Date = "", Size = "" });
+                    graphicalApp.SetCaptionOfPath(entity.FullPath);
+                    graphicalApp.DataSource = new ObservableCollection<Entity>(new Zip(entity.FullPath).GetEntity(baseEntity));
                 }
                 else
                 if (entity is Directory)
@@ -40,7 +41,7 @@ namespace MC.Source.Fillers
                     //systemWatcher.EnableRaisingEvents = true;
                     //start fill            
 
-                    graphicalApp.SetCaptionOfPath(dir.Path);
+                    graphicalApp.SetCaptionOfPath(dir.FullPath);
                     var dataList = dir.GetEntry();
                     graphicalApp.DataSource = new ObservableCollection<Entity>(dataList);
                 }

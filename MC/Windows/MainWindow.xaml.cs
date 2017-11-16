@@ -227,7 +227,7 @@ namespace MC.Windows
 
             var unarchiveItem = menu.Items[6] as MenuItem;
             var archiveItem = menu.Items[5] as MenuItem;
-            bool isZip = Regex.Match(selectedListItem.Path, @"\w*\.(RAR|ZIP|GZ|TAR)$").Success;
+            bool isZip = Regex.Match(selectedListItem.FullPath, @"\w*\.(RAR|ZIP|GZ|TAR)$").Success;
             if (isZip)
             {
                 unarchiveItem.IsEnabled = true;

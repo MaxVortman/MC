@@ -126,8 +126,9 @@ namespace Etier.IconHelper
 			return icon;
 		}
 
-
         /* -------- My code --------- */
+        #region My Code
+
 
         [DllImport("gdi32")]
         private static extern int DeleteObject(IntPtr o);
@@ -156,17 +157,18 @@ namespace Etier.IconHelper
             return LoadBitmap(bmp);
         }
 
+        #endregion
     }
 
-	/// <summary>
-	/// Wraps necessary Shell32.dll structures and functions required to retrieve Icon Handles using SHGetFileInfo. Code
-	/// courtesy of MSDN Cold Rooster Consulting case study.
-	/// </summary>
-	/// 
+    /// <summary>
+    /// Wraps necessary Shell32.dll structures and functions required to retrieve Icon Handles using SHGetFileInfo. Code
+    /// courtesy of MSDN Cold Rooster Consulting case study.
+    /// </summary>
+    /// 
 
-	// This code has been left largely untouched from that in the CRC example. The main changes have been moving
-	// the icon reading code over to the IconReader type.
-	public class Shell32  
+    // This code has been left largely untouched from that in the CRC example. The main changes have been moving
+    // the icon reading code over to the IconReader type.
+    public class Shell32  
 	{
 		
 		public const int 	MAX_PATH = 256;

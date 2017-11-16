@@ -9,7 +9,7 @@ namespace MC.Source.Entries
     {
         public Folder(string Path)
         {
-            this.Path = Path;
+            this.FullPath = Path;
             GetAndSetInfo();
         }
 
@@ -17,7 +17,7 @@ namespace MC.Source.Entries
         private void GetAndSetInfo()
         {
             Image = MainWindow.UserPrefs?.Theme.FolderIconPath;
-            dir = new DirectoryInfo(Path);
+            dir = new DirectoryInfo(FullPath);
             Name = dir.Name;
             try
             {
@@ -50,8 +50,8 @@ namespace MC.Source.Entries
 
         public override void UpdateName(string newPath)
         {
-            Path = newPath;
-            dir = new DirectoryInfo(Path);
+            FullPath = newPath;
+            dir = new DirectoryInfo(FullPath);
             Name = dir.Name;
         }       
     }

@@ -24,7 +24,7 @@ namespace MC.Source.Entries.Zipped
 
         private void GetAndSetInfo()
         {
-            Path = entry.Path;
+            FullPath = entry.Path;
             Name = entry.Name;
             Image = Etier.IconHelper.IconReader.IconFromFile(Name);
             Size = FormatSize(entry.Size);

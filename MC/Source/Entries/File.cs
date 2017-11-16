@@ -18,14 +18,14 @@ namespace MC.Source.Entries
 
         public File(string Path)
         {
-            this.Path = Path;
+            this.FullPath = Path;
             GetAndSetInfo();
         }
 
         private FileInfo _info;
         private void GetAndSetInfo()
         {            
-            _info = new FileInfo(Path);
+            _info = new FileInfo(FullPath);
             Name = _info.Name;
             Image = Etier.IconHelper.IconReader.IconFromFile(Name);
             Size = FormatSize(_info.Length);
@@ -34,14 +34,14 @@ namespace MC.Source.Entries
 
         public override void UpdateName(string newPath)
         {
-            Path = newPath;
-            _info = new FileInfo(Path);
+            FullPath = newPath;
+            _info = new FileInfo(FullPath);
             Name = _info.Name;
         }
 
         public override void UpdateSize()
         {
-            _info = new FileInfo(Path);
+            _info = new FileInfo(FullPath);
             Size = FormatSize(_info.Length);
         }
 
@@ -49,7 +49,7 @@ namespace MC.Source.Entries
         {
             try
             {
-                Process.Start(Path);
+                Process.Start(FullPath);
             }
             catch (Exception e)
             {
@@ -62,7 +62,7 @@ namespace MC.Source.Entries
             const int bytesToCopy = 16384;
             var partBufferFile = new byte[bytesToCopy];
             var tempPath = System.IO.Path.GetTempFileName();
-            using (var inStream = System.IO.File.Open(Path, FileMode.Open, FileAccess.Read, FileShare.Read))
+            using (var inStream = System.IO.File.Open(FullPath, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
                 using (var outStream = System.IO.File.Open(tempPath, FileMode.Append, FileAccess.Write, FileShare.None))
                 {
