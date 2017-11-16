@@ -17,6 +17,8 @@ namespace MC.Source
         private ZipArchive archive;
         private readonly string path;
 
+        public string Path => path;
+
         public Zip(string path)
         {
             this.path = path;
@@ -25,7 +27,7 @@ namespace MC.Source
 
         private void CreateArchive()
         {
-            var file = System.IO.File.Open(path, FileMode.Open, FileAccess.Read, FileShare.Read);
+            var file = System.IO.File.Open(Path, FileMode.Open, FileAccess.Read, FileShare.Read);
             archive = new ZipArchive(file, ZipArchiveMode.Read, false);
         }
 

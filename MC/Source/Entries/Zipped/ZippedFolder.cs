@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using MC.Source.Visitors.EncryptVisitors;
 using MC.Source.Visitors.ThreadVisitors;
 using System.IO;
+using MC.Windows;
 
 namespace MC.Source.Entries.Zipped
 {
@@ -17,8 +18,9 @@ namespace MC.Source.Entries.Zipped
         public ZippedFolder(Zip zip, string path, string name)
         {
             this.zip = zip;
-            this.Path = path;
             this.Name = name;
+            this.Path = path;
+            this.Image = MainWindow.UserPrefs?.Theme.FolderIconPath;
         }
 
         public override List<Entity> CreateDataList()

@@ -11,19 +11,22 @@ namespace MC.Source.Entries.Zipped
     class ZippedFile : Entity
     {
         private Zip zip;
+        private readonly Entry entry;
 
         public string CompressedLength { get; private set; }
 
         public ZippedFile(Zip zip, Entry entry)
         {
             this.zip = zip;
-            GetAndSetInfo(entry);
+            this.entry = entry;
+            GetAndSetInfo();
         }
 
-        private void GetAndSetInfo(Entry entry)
+        private void GetAndSetInfo()
         {
             Path = entry.Path;
             Name = entry.Name;
+            Image = Etier.IconHelper.IconReader.IconFromFile(Name);
             Size = FormatSize(entry.Size);
             CompressedLength = FormatSize(entry.CompressedLength);
             Date = entry.Date;

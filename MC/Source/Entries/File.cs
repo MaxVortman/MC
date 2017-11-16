@@ -14,32 +14,7 @@ namespace MC.Source.Entries
     public class File : Entity
     {
 
-        [DllImport("gdi32")]
-        private static extern int DeleteObject(IntPtr o);
-        private static BitmapSource LoadBitmap(System.Drawing.Bitmap source)
-        {
-            var ip = source.GetHbitmap();
-            BitmapSource bs;
-            try
-            {
-                bs = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(ip,
-                IntPtr.Zero, Int32Rect.Empty,
-                System.Windows.Media.Imaging.BitmapSizeOptions.FromEmptyOptions());
-            }
-            finally
-            {
-                DeleteObject(ip);
-            }
-
-            return bs;
-        }
-
-        private static ImageSource IconFromFile(string fileName)
-        {
-            var icon = System.Drawing.Icon.ExtractAssociatedIcon(fileName);
-            var bmp = icon.ToBitmap();
-            return LoadBitmap(bmp);
-        }
+        
 
         public File(string Path)
         {
@@ -49,10 +24,10 @@ namespace MC.Source.Entries
 
         private FileInfo _info;
         private void GetAndSetInfo()
-        {
-            Image = IconFromFile(Path);
+        {            
             _info = new FileInfo(Path);
             Name = _info.Name;
+            Image = Etier.IconHelper.IconReader.IconFromFile(Name);
             Size = FormatSize(_info.Length);
             Date = Convert.ToString(_info.CreationTime);
         }
