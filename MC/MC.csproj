@@ -85,6 +85,9 @@
     <Compile Include="Source\Entries\Zipped\Entry.cs" />
     <Compile Include="Source\Entries\Zipped\ZippedFile.cs" />
     <Compile Include="Source\Entries\Zipped\ZippedFolder.cs" />
+    <Compile Include="Source\QueueCreators\QueueCreator.cs" />
+    <Compile Include="Source\QueueCreators\SearchbleQueueCreator.cs" />
+    <Compile Include="Source\Searchers\ISearchble.cs" />
     <Compile Include="Source\Searchers\ISearcher.cs" />
     <Compile Include="Source\Threading\IThreadFactory.cs" />
     <Compile Include="Source\Threading\IThreder.cs" />
@@ -98,7 +101,7 @@
     <Compile Include="Source\Graphics\Themes\Theme.cs" />
     <Compile Include="Source\AnnouncerOfDelegates.cs" />
     <Compile Include="Source\FileManipulator.cs" />
-    <Compile Include="Source\FileQueue.cs" />
+    <Compile Include="Source\QueueCreators\FileQueueCreator.cs" />
     <Compile Include="Source\Fillers\DriveFiller.cs" />
     <Compile Include="Source\Fillers\FileFiller.cs" />
     <Compile Include="Source\Graphics\ThemeManagerHelper.cs" />

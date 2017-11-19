@@ -4,6 +4,6 @@ namespace MC.Source.Searchers
 {
     public interface ISearcher
     {
-        ThreadProcess Search(Queue<string>[] filesQueue, ActionWithThread searchAndSaveIn);
+        ThreadProcess Search(Queue<ISearchble>[] filesQueue, ActionWithThread<ISearchble> searchAndSaveIn);
     }
 }

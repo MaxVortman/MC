@@ -1,19 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MC.Source.Searchers;
 using MC.Source.Visitors.EncryptVisitors;
 using MC.Source.Visitors.ThreadVisitors;
 
 namespace MC.Source.Entries.Zipped
 {
-    class ZippedFile : Entity
+    class ZippedFile : Entity, ISearchble
     {
         private Zip zip;
         private readonly Entry entry;
 
         public string CompressedLength { get; private set; }
+        public string Path { get; private set; }
 
         public ZippedFile(Zip zip, Entry entry)
         {
@@ -24,7 +27,8 @@ namespace MC.Source.Entries.Zipped
 
         private void GetAndSetInfo()
         {
-            FullPath = entry.Path;
+            this.Path = entry.Path;
+            FullPath = entry.FullPath;
             Name = entry.Name;
             Image = Etier.IconHelper.IconReader.IconFromFile(Name);
             Size = FormatSize(entry.Size);
@@ -70,6 +74,14 @@ namespace MC.Source.Entries.Zipped
         public override void UpdateSize()
         {
             throw new NotImplementedException();
+        }
+
+        public string ReadStreamToEnd()
+        {
+            using (var reader = new StreamReader(zip.GetArchiveEntry(Path).Open()))
+            {
+                return reader.ReadToEnd();
+            }
         }
     }
 }

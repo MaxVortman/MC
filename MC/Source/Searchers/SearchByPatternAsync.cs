@@ -11,7 +11,7 @@ namespace MC.Source.Searchers
         private static object _searchLock = new object();
         private static CancellationTokenSource seachCTS;
 
-        public ThreadProcess Search(Queue<string>[] filesQueue, ActionWithThread searchAndSaveIn)
+        public ThreadProcess Search(Queue<ISearchble>[] filesQueue, ActionWithThread<ISearchble> searchAndSaveIn)
         {
             return (async (process) =>
             {

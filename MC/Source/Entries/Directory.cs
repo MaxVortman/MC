@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using MC.Source.Visitors;
 using MC.Source.Visitors.EncryptVisitors;
 using MC.Source.Visitors.ThreadVisitors;
@@ -106,6 +107,36 @@ namespace MC.Source.Entries
         public override void AcceptEncode(IEncryptVisitor visitor)
         {
             visitor.Encode(this);
+        }
+
+        public static IEnumerable<string> GetFiles(string path)
+        {
+            return System.IO.Directory.GetFiles(path);
+        }
+
+        public static IEnumerable<string> GetDirectories(string path)
+        {
+            return System.IO.Directory.GetDirectories(path);
+        }
+
+        public static IEnumerable<string> GetAllFiles(string path)
+        {
+            filesList = new List<string>();
+            FillFilesList(path);
+            return filesList;
+        }
+
+        private static List<string> filesList;
+        private static void FillFilesList(string path)
+        {
+            Parallel.ForEach(Entries.Directory.GetFiles(path), item =>
+            {
+                filesList.Add(item);
+            });
+            Parallel.ForEach(Entries.Directory.GetDirectories(path), item =>
+            {
+                FillFilesList(item);
+            });
         }
     }
 }

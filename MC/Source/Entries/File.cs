@@ -5,13 +5,14 @@ using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using MC.Source.Searchers;
 using MC.Source.Visitors;
 using MC.Source.Visitors.EncryptVisitors;
 using MC.Source.Visitors.ThreadVisitors;
 
 namespace MC.Source.Entries
 {
-    public class File : Entity
+    public class File : Entity, ISearchble
     {
 
         
@@ -121,6 +122,14 @@ namespace MC.Source.Entries
         public override void AcceptEncode(IEncryptVisitor visitor)
         {
             visitor.Encode(this);
+        }
+
+        public string ReadStreamToEnd()
+        {
+            using (var reader = new StreamReader(FullPath))
+            {
+                return reader.ReadToEnd();
+            }
         }
     }
 }

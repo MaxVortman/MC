@@ -4,14 +4,14 @@ using System.Threading;
 
 namespace MC.Source.Threading
 {
-    public class ThreadQueue
+    public class ThreadQueue<T> where T : class
     {
         public static event EventHandler<EventArgs> ThreadingComplite;
-        private readonly Queue<string> _queueOfFiles;
-        private readonly ActionWithThread _func;
+        private readonly Queue<T> _queueOfFiles;
+        private readonly ActionWithThread<T> _func;
         public System.Threading.Thread TheThread { get; }
 
-        public ThreadQueue(Queue<string> queueOfFiles, ActionWithThread func)
+        public ThreadQueue(Queue<T> queueOfFiles, ActionWithThread<T> func)
         {            
             this._func = func;
             this._queueOfFiles = queueOfFiles;

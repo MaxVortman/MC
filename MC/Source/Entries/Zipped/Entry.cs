@@ -10,18 +10,17 @@ namespace MC.Source.Entries.Zipped
     public class Entry
     {
 
-        public string Path { get; set; }
-        public string Name { get; set; }
-        public string Date { get; set; }
-        public long Size { get; set; }
-        public long CompressedLength { get; set; }
-
-        public Entry()
-        { }
+        public string FullPath { get; }
+        public string Path { get; }
+        public string Name { get; }
+        public string Date { get; }
+        public long Size { get; }
+        public long CompressedLength { get; }
 
         public Entry(ZipArchiveEntry entry, string path)
         {
-            this.Path = System.IO.Path.Combine(path, entry.FullName);
+            this.Path = entry.FullName;
+            this.FullPath = System.IO.Path.Combine(path, entry.FullName);
             this.Name = entry.Name;
             this.Date = entry.LastWriteTime.DateTime.ToString();
             this.Size = entry.Length;

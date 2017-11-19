@@ -16,15 +16,17 @@ namespace MC.Source
     {
         private ZipArchive archive;
         private readonly string path;
-        private IReadOnlyCollection<ZipArchiveEntry> zipArchiveEntry;
+        private IReadOnlyCollection<ZipArchiveEntry> zipArchiveEntries;
 
         public string Path => path;
+
+        public IReadOnlyCollection<ZipArchiveEntry> ZipArchiveEntries { get => zipArchiveEntries; private set => zipArchiveEntries = value; }
 
         public Zip(string path)
         {
             this.path = path;
             CreateArchive();
-            zipArchiveEntry = archive.Entries;
+            ZipArchiveEntries = archive.Entries;
         }
 
         private void CreateArchive()
@@ -43,7 +45,7 @@ namespace MC.Source
         {
             var baseFileEntity = new List<Entity>();
             var baseFolderPathForRegexp = baseFolderPath.Replace("\\", "\\\\");
-            foreach (var entry in zipArchiveEntry)
+            foreach (var entry in ZipArchiveEntries)
             {
                 if (!entry.FullName.Contains(baseFolderPath))
                     continue;
@@ -60,6 +62,11 @@ namespace MC.Source
             }
             baseEntity.AddRange(baseFileEntity);
             return baseEntity;
+        }
+
+        public ZipArchiveEntry GetArchiveEntry(string path)
+        {
+            return archive.GetEntry(path);
         }
 
         private static string GetFolderName(string folderPath)
@@ -81,6 +88,15 @@ namespace MC.Source
                 return false;
             }
             return true;
+        }
+
+        public static bool IsArchive(string path)
+        {
+            if (System.IO.Path.GetExtension(path).Equals(".zip"))
+            {
+                return true;
+            }
+            return false;
         }
     }
 }

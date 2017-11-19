@@ -5,7 +5,7 @@ namespace MC.Source.Searchers
 {
     class SearchByPatternParallel : ISearcher
     {
-        public ThreadProcess Search(Queue<string>[] filesQueue, ActionWithThread searchAndSaveIn)
+        public ThreadProcess Search(Queue<ISearchble>[] filesQueue, ActionWithThread<ISearchble> searchAndSaveIn)
         {
             return (process) =>
             {

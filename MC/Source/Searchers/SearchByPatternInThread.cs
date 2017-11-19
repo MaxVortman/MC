@@ -7,14 +7,14 @@ namespace MC.Source.Searchers
     class SearchByPatternInThread : ISearcher
     {
 
-        public ThreadProcess Search(Queue<string>[] filesQueue, ActionWithThread searchAndSaveIn)
+        public ThreadProcess Search(Queue<ISearchble>[] filesQueue, ActionWithThread<ISearchble> searchAndSaveIn)
         {            
             return ((process) =>
             {
-                var threads = new ThreadQueue[filesQueue.Length];
+                var threads = new ThreadQueue<ISearchble>[filesQueue.Length];
                 for (int i = 0; i < filesQueue.Length; i++)
                 {
-                    threads[i] = new ThreadQueue(filesQueue[i], searchAndSaveIn);
+                    threads[i] = new ThreadQueue<ISearchble>(filesQueue[i], searchAndSaveIn);
                     threads[i].BeginProcessData();
                 }
 

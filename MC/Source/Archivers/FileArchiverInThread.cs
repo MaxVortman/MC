@@ -10,15 +10,15 @@ namespace MC.Source.Archivers
         }
 
         public int CountOfCompliteThread = 0;
-        public ThreadQueue[] Threads { get; private set; }
+        public ThreadQueue<string>[] Threads { get; private set; }
 
         public override void DoThread()
         {
-            Threads = new ThreadQueue[filesQueue.Length];
-            ThreadQueue.ThreadingComplite += CompressComplite;
+            Threads = new ThreadQueue<string>[filesQueue.Length];
+            ThreadQueue<string>.ThreadingComplite += CompressComplite;
             for (int i = 0; i < filesQueue.Length; i++)
             {
-                Threads[i] = new ThreadQueue(filesQueue[i], new ActionWithThread(ArchiveFileInEntry));
+                Threads[i] = new ThreadQueue<string>(filesQueue[i], new ActionWithThread<string>(ArchiveFileInEntry));
                 Threads[i].BeginProcessData();
             }
         }

@@ -126,7 +126,7 @@ namespace MC.Windows
                     FileManipulator.DeleteFile(selectedListItem);
                     break;
                 case "Archive":
-                    ShowChooseDialog(selectedListItem);
+                    ShowChooseDialog(selectedListItem, Action.Archive);
                     break;
                 case "Unarchive":
                     UnziperArchives.UnarchiveElemInThread(selectedListItem);
@@ -164,9 +164,9 @@ namespace MC.Windows
             }
         }
 
-        private void ShowChooseDialog(Entity selectedItem)
+        private void ShowChooseDialog(Entity selectedItem, Action action)
         {
-            var dialog = new DialogThreadPage(Action.Archive, selectedItem);
+            var dialog = new DialogThreadPage(action, selectedItem);
             var win = new NavigationWindow() { Content = dialog, Width = 300, Height = 200 };
             win.Show();
         }
@@ -217,7 +217,8 @@ namespace MC.Windows
         {
             var menu = sender as ContextMenu;            
             selectedListItem = (menu.Name == "ContextMenu1" ? ListView1.SelectedItem : ListView2.SelectedItem) as Entity;
-
+            if (selectedListItem == null)
+                return;
             //TO DO: 6 - is bad
             var statisticItem = menu.Items[7] as MenuItem;
             if (selectedListItem.Name.EndsWith(".txt"))
@@ -256,7 +257,7 @@ namespace MC.Windows
         private void MenuItemLV_Click(object sender, RoutedEventArgs e)
         {
             var item = sender as MenuItem;
-            ShowChooseDialog(new Folder(item.Header.ToString()));
+            ShowChooseDialog(new Folder(item.Header.ToString()), Action.Search);
         }
 
         private void HelloBtn_Click(object sender, RoutedEventArgs e)

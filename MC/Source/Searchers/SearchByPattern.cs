@@ -5,6 +5,7 @@ using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows;
+using MC.Source.QueueCreators;
 using MC.Source.Threading;
 using Microsoft.Win32;
 
@@ -12,15 +13,15 @@ namespace MC.Source.Searchers
 {
     public class SearchByPattern : IThreder
     {
-        private Queue<string>[] filesQueue;
+        private Queue<ISearchble>[] filesQueue;
 
-        private FileQueueCreator fileQueueCreator;
+        private QueueCreator<ISearchble> fileQueueCreator;
 
         public SearchByPattern(string sourceFilePath, ISearcher searcher)
         {
             this.sourceFilePath = sourceFilePath;
             this.searcher = searcher;
-            fileQueueCreator = new FileQueueCreator(sourceFilePath);
+            fileQueueCreator = new SearchbleQueueCreator(sourceFilePath);
             filesQueue = fileQueueCreator.GetFilledQueueOfFilesPath();
         }
 
@@ -120,17 +121,15 @@ namespace MC.Source.Searchers
         protected readonly string sourceFilePath;
         private readonly ISearcher searcher;
 
-        private void SearchAndSaveIn(string filePath)
+        private void SearchAndSaveIn(ISearchble searchble)
         {
+            var filePath = searchble.FullPath;
             try
             {
                 var text = "";
                 try
                 {
-                    using (var reader = new StreamReader(filePath))
-                    {
-                        text = reader.ReadToEnd();
-                    }
+                    text = searchble.ReadStreamToEnd();
                 }
                 catch (Exception e)
                 {

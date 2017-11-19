@@ -19,7 +19,7 @@ namespace MC.Source
             return true;
         }
 
-        public static long Count(this Queue<string>[] filesQueue)
+        public static long Count<T>(this Queue<T>[] filesQueue)
         {
             long count = 0;
             for (int i = 0; i < filesQueue.Length; i++)
