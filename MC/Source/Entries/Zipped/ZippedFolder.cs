@@ -8,6 +8,7 @@ using MC.Source.Visitors.EncryptVisitors;
 using MC.Source.Visitors.ThreadVisitors;
 using System.IO;
 using MC.Windows;
+using System.Text.RegularExpressions;
 
 namespace MC.Source.Entries.Zipped
 {
@@ -32,9 +33,14 @@ namespace MC.Source.Entries.Zipped
             // ... folder
             if (FullPath.Length > 3)
             {
-                var parentPath = System.IO.Path.GetDirectoryName(FolderPath);
-                var fullParentPath = System.IO.Path.GetDirectoryName(FullPath);
-                dataList.Add(new ZippedFolder(zip, fullParentPath, parentPath, "..."));
+                if (string.IsNullOrEmpty(FolderPath))
+                    dataList.Add(new Folder(System.IO.Path.GetDirectoryName(zip.Path)){ Name = "..."});
+                else
+                {
+                    var parentPath = System.IO.Path.GetDirectoryName(FolderPath);
+                    var fullParentPath = System.IO.Path.GetDirectoryName(FullPath);
+                    dataList.Add(new ZippedFolder(zip, fullParentPath, parentPath, "..."));
+                }
             }
             return dataList;
         }
@@ -42,6 +48,17 @@ namespace MC.Source.Entries.Zipped
         protected override List<Entity> GetData(List<Entity> dataList)
         {
             return zip.GetEntity(dataList, FolderPath);
+        }
+
+        protected override void CreateDirectory(string path)
+        {
+            //we don't want to create directory
+            //entries are creating directories automaticaly
+        }
+
+        protected override List<Entity> GetDefaultData()
+        {
+            return zip.GetFolderEntries(FolderPath);
         }
 
         public override void AcceptArchive(IThreadsVisitor visitor)
@@ -60,16 +77,6 @@ namespace MC.Source.Entries.Zipped
         }
 
         public override void AcceptSearch(IThreadsVisitor visitor)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override Buffer Copy()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void Paste(string path, Buffer buffer)
         {
             throw new NotImplementedException();
         }

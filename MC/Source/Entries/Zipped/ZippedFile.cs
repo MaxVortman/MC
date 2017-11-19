@@ -36,7 +36,7 @@ namespace MC.Source.Entries.Zipped
             Date = entry.Date;
         }
 
-    public override void AcceptArchive(IThreadsVisitor visitor)
+        public override void AcceptArchive(IThreadsVisitor visitor)
         {
             throw new NotImplementedException();
         }
@@ -58,12 +58,49 @@ namespace MC.Source.Entries.Zipped
 
         public override Buffer Copy()
         {
-            throw new NotImplementedException();
+            const int bytesToCopy = 16384;
+            var partBufferFile = new byte[bytesToCopy];
+            var tempPath = System.IO.Path.GetTempFileName();
+            using (var inStream = zip.GetArchiveEntry(Path).Open())
+            {
+                using (var outStream = System.IO.File.Open(tempPath, FileMode.Append, FileAccess.Write, FileShare.None))
+                {
+                    var bytesCopied = 0;
+                    do
+                    {
+                        bytesCopied = inStream.Read(partBufferFile, 0, bytesToCopy);
+                        if (bytesCopied > 0)
+                        {
+                            outStream.Write(partBufferFile, 0, bytesCopied);
+                        }
+                    } while (bytesCopied > 0);
+                }
+            }
+
+            return new FileBuffer(Name, tempPath);
         }
 
         public override void Paste(string path, Buffer buffer)
         {
-            throw new NotImplementedException();
+            var tempPath = (buffer as FileBuffer).TempPath;
+            const int bytesToCopy = 16384;
+            var partBufferFile = new byte[bytesToCopy];
+            using (var inStream = System.IO.File.Open(tempPath, FileMode.Open, FileAccess.Read, FileShare.Read))
+            {
+                var newEntry = zip.CreateEntry(path);
+                using (var outStream = newEntry.Open())
+                {
+                    var bytesCopied = 0;
+                    do
+                    {
+                        bytesCopied = inStream.Read(partBufferFile, 0, bytesToCopy);
+                        if (bytesCopied > 0)
+                        {
+                            outStream.Write(partBufferFile, 0, bytesCopied);
+                        }
+                    } while (bytesCopied > 0);
+                }
+            }
         }
 
         public override void UpdateName(string newPath)

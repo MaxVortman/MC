@@ -21,22 +21,16 @@ namespace MC.Source.Fillers
 
         private readonly GraphicalApp graphicalApp;
         private FileSystemWatcher systemWatcher;
-
+        private Zip zip;
         public void OpenEntry(Entity entity)
         {
             try
             {
-                if (entity.IsArchive())
-                {
-                    var baseEntity = new List<Entity>();
-                    baseEntity.Add(new Folder(Path.GetDirectoryName(entity.FullPath)) { Name = "...", Date = "", Size = "" });
-                    graphicalApp.SetCaptionOfPath(entity.FullPath);
-                    graphicalApp.DataSource = new ObservableCollection<Entity>(new Zip(entity.FullPath).GetEntity(baseEntity));
-                }
-                else
                 if (entity is Directory)
                 {
-                    var dir = entity as Directory;
+                    if (entity is Folder && zip != null)
+                        zip.Dispose();
+                    var dir = entity as Directory;  
                     //systemWatcher.Path = dir.Path;
                     //systemWatcher.EnableRaisingEvents = true;
                     //start fill            
@@ -45,9 +39,18 @@ namespace MC.Source.Fillers
                     var dataList = dir.GetEntry();
                     graphicalApp.DataSource = new ObservableCollection<Entity>(dataList);
                 }
-                else
+                else if(entity is File)
                 {
-                    (entity as File)?.Open();
+                    if (entity.IsArchive())
+                    {
+                        var baseEntity = new List<Entity>();
+                        baseEntity.Add(new Folder(Path.GetDirectoryName(entity.FullPath)) { Name = "...", Date = "", Size = "" });
+                        graphicalApp.SetCaptionOfPath(entity.FullPath);
+                        zip = new Zip(entity.FullPath);
+                        graphicalApp.DataSource = new ObservableCollection<Entity>(zip.GetEntity(baseEntity));
+                    }
+                    else
+                        (entity as File)?.Open();
                 }
             }
             catch (UnauthorizedAccessException e)

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using MC.Source.Visitors;
 using MC.Source.Visitors.EncryptVisitors;
@@ -49,7 +50,7 @@ namespace MC.Source.Entries
         public override Buffer Copy()
         {
 
-            var dataList = GetData(new List<Entity>(500));
+            var dataList = GetDefaultData();
             int count = dataList.Count;
             Buffer[] buffer = new Buffer[count];
             int i = 0;
@@ -67,11 +68,10 @@ namespace MC.Source.Entries
 
         public override void Paste(string path, Buffer buffer)
         {
-
-            System.IO.Directory.CreateDirectory(path);
+            CreateDirectory(path);
 
             Buffer[] filesBuffer = (buffer as FolderBuffer).FoldersBuffer;
-            var dataList = GetData(new List<Entity>(500));
+            List<Entity> dataList = GetDefaultData();
             int count = dataList.Count;
             int i = 0;
             foreach (Entity elem in dataList)
@@ -82,6 +82,16 @@ namespace MC.Source.Entries
                     i++;
                 }
             }
+        }
+
+        protected virtual List<Entity> GetDefaultData()
+        {
+            return GetData(new List<Entity>(50));
+        }
+
+        protected virtual void CreateDirectory(string path)
+        {
+            System.IO.Directory.CreateDirectory(path);
         }
 
         public static bool Exists(string path)

@@ -8,7 +8,7 @@
 
         }
 
-        private string Name { get; set; }
+        public string Name { get; }
     }
 
     public class FileBuffer : Buffer

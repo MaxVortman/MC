@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Text.RegularExpressions;
 using System.Windows;
 using MC.Source.Entries;
 using File = MC.Source.Entries.File;
@@ -11,15 +12,14 @@ namespace MC.Source
         static Buffer _buffer;
         private static Entity _dataToCopy;
 
-        internal static void CopyFile(object elem)
+        internal static void CopyFile(Entity entity)
         {
             DeleteTemp(_buffer);
-
-            var item = elem as Entity;
+            
             try
             {
-                _buffer = item.Copy();
-                _dataToCopy = item;
+                _buffer = entity.Copy();
+                _dataToCopy = entity;
             }
             catch (Exception e)
             {
@@ -69,12 +69,12 @@ namespace MC.Source
             }
         }
 
-        internal static void CutFile(object elem)
+        internal static void CutFile(Entity entity)
         {
             try
             {
-                CopyFile(elem);
-                DeleteFile(elem);
+                CopyFile(entity);
+                DeleteFile(entity);
             }
             catch (Exception e)
             {
@@ -85,6 +85,8 @@ namespace MC.Source
         internal static void PasteFileBy(string path)
         {
             if (_buffer == null) return;
+            if (path.Contains(".zip"))
+                path = ExtractZipRootPath(path);
             var fullPath = System.IO.Path.Combine(path, _dataToCopy.Name);
             try
             {
@@ -94,6 +96,11 @@ namespace MC.Source
             {
                 MessageBox.Show(e.Message, "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+        }
+
+        private static string ExtractZipRootPath(string path)
+        {
+            return Regex.Match(path, $@"\.zip\\([\w|\W]*)").Groups[1].Value;
         }
 
         internal static void DeleteFile(object elem)

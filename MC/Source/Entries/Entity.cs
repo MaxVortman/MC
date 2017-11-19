@@ -15,8 +15,10 @@ namespace MC.Source.Entries
         public string FullPath { get; protected set; }
 
 
-        protected static string FormatSize(long size)
+        protected static string FormatSize(long? size)
         {
+            if (size == null)
+                return null;
             var stringSize = "";
             var sizeI = Convert.ToDouble(size);
             var d23 = Math.Pow(2, 30);

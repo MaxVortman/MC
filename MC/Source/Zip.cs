@@ -16,29 +16,30 @@ namespace MC.Source
     {
         private ZipArchive archive;
         private readonly string path;
-        private IReadOnlyCollection<ZipArchiveEntry> zipArchiveEntries;
+        private List<ZipArchiveEntry> zipArchiveEntries;
 
         public string Path => path;
 
-        public IReadOnlyCollection<ZipArchiveEntry> ZipArchiveEntries { get => zipArchiveEntries; private set => zipArchiveEntries = value; }
+        public List<ZipArchiveEntry> ZipArchiveEntries { get => zipArchiveEntries; private set => zipArchiveEntries = value; }
 
         public Zip(string path)
         {
             this.path = path;
             CreateArchive();
-            ZipArchiveEntries = archive.Entries;
+            ZipArchiveEntries = new List<ZipArchiveEntry>(archive.Entries);
         }
 
         private void CreateArchive()
         {
-            var file = System.IO.File.Open(Path, FileMode.Open, FileAccess.Read, FileShare.Read);
-            archive = new ZipArchive(file, ZipArchiveMode.Read, false);
+            var file = System.IO.File.Open(Path, FileMode.Open);
+            archive = new ZipArchive(file, ZipArchiveMode.Update, false);
         }
 
         public void Dispose()
         {
             archive.Dispose();
-            GC.SuppressFinalize(this);
+            GC.Collect();
+            GC.SuppressFinalize(this);           
         }  
 
         public List<Entity> GetEntity(List<Entity> baseEntity, string baseFolderPath = "")
@@ -62,6 +63,18 @@ namespace MC.Source
             }
             baseEntity.AddRange(baseFileEntity);
             return baseEntity;
+        }
+
+        public List<Entity> GetFolderEntries(string folderPath)
+        {
+            var folderEntries = new List<Entity>();
+            foreach (var entry in ZipArchiveEntries)
+            {
+                if (!entry.FullName.Contains(folderPath))
+                    continue;
+                folderEntries.Add(new ZippedFile(this, new Entry(entry, Path)));
+            }
+            return folderEntries;
         }
 
         public ZipArchiveEntry GetArchiveEntry(string path)
@@ -88,6 +101,13 @@ namespace MC.Source
                 return false;
             }
             return true;
+        }
+
+        public ZipArchiveEntry CreateEntry(string path)
+        {
+            var newEntry = archive.CreateEntry(path);
+            ZipArchiveEntries = new List<ZipArchiveEntry>(archive.Entries);
+            return newEntry;
         }
 
         public static bool IsArchive(string path)
