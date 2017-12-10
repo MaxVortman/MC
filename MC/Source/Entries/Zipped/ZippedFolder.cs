@@ -12,7 +12,7 @@ using System.Text.RegularExpressions;
 
 namespace MC.Source.Entries.Zipped
 {
-    class ZippedFolder : Directory
+    public class ZippedFolder : Directory
     {
         private readonly Zip zip;
 
@@ -56,7 +56,7 @@ namespace MC.Source.Entries.Zipped
             //entries are creating directories automaticaly
         }
 
-        protected override List<Entity> GetDefaultData()
+        protected override List<Entity> GetAllSubFiles()
         {
             return zip.GetFolderEntries(FolderPath);
         }

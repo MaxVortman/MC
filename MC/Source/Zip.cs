@@ -29,6 +29,11 @@ namespace MC.Source
             ZipArchiveEntries = new List<ZipArchiveEntry>(archive.Entries);
         }
 
+        public IEnumerable<Entity> GetEntity(string path)
+        {
+            return GetEntity(new List<Entity>(), path);
+        }
+
         private void CreateArchive()
         {
             var file = System.IO.File.Open(Path, FileMode.Open);
@@ -65,6 +70,11 @@ namespace MC.Source
             return baseEntity;
         }
 
+        public ZippedFolder GetRootFolder()
+        {
+            throw new NotImplementedException();
+        }
+
         public List<Entity> GetFolderEntries(string folderPath)
         {
             var folderEntries = new List<Entity>();
@@ -73,6 +83,18 @@ namespace MC.Source
                 if (!entry.FullName.Contains(folderPath))
                     continue;
                 folderEntries.Add(new ZippedFile(this, new Entry(entry, Path)));
+            }
+            return folderEntries;
+        }
+
+        public IEnumerable<string> GetFilesPathFromFolder(string path)
+        {
+            var folderEntries = new List<string>();
+            foreach (var entry in ZipArchiveEntries)
+            {
+                if (!entry.FullName.Contains(path))
+                    continue;
+                folderEntries.Add(entry.FullName);
             }
             return folderEntries;
         }
@@ -117,6 +139,11 @@ namespace MC.Source
                 return true;
             }
             return false;
+        }
+
+        public Stream GetStream(string path)
+        {
+            return archive.GetEntry(path).Open();
         }
     }
 }

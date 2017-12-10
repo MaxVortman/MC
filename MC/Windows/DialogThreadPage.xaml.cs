@@ -21,10 +21,10 @@ namespace MC.Windows
     /// </summary>
     public partial class DialogThreadPage : Page
     {
-        private readonly Action action;
+        private readonly myAction action;
         private readonly Entity entity;
 
-        public DialogThreadPage(Action action, Entity entity)
+        public DialogThreadPage(myAction action, Entity entity)
         {
             InitializeComponent();
             this.action = action;

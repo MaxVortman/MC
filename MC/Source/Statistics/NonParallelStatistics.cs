@@ -20,6 +20,7 @@ namespace MC.Source.Statistics
                 var time = new Stopwatch();
                 time.Start();
                 string line;
+                //TO DO: File.ReadAllLines(path)
                 using (var txtFile = System.IO.File.Open(path, FileMode.Open, FileAccess.Read))
                 {
                     using (StreamReader reader = new StreamReader(txtFile))

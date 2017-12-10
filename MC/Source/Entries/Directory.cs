@@ -30,7 +30,7 @@ namespace MC.Source.Entries
         }
 
 
-        //TO DO: абстрагировать, добавить zipped
+        
         protected virtual List<Entity> GetData(List<Entity> dataList)
         {
             //enumerate folder's path
@@ -50,7 +50,7 @@ namespace MC.Source.Entries
         public override Buffer Copy()
         {
 
-            var dataList = GetDefaultData();
+            var dataList = GetAllSubFiles();
             int count = dataList.Count;
             Buffer[] buffer = new Buffer[count];
             int i = 0;
@@ -71,7 +71,7 @@ namespace MC.Source.Entries
             CreateDirectory(path);
 
             Buffer[] filesBuffer = (buffer as FolderBuffer).FoldersBuffer;
-            List<Entity> dataList = GetDefaultData();
+            List<Entity> dataList = GetAllSubFiles();
             int count = dataList.Count;
             int i = 0;
             foreach (Entity elem in dataList)
@@ -84,7 +84,7 @@ namespace MC.Source.Entries
             }
         }
 
-        protected virtual List<Entity> GetDefaultData()
+        protected virtual List<Entity> GetAllSubFiles()
         {
             return GetData(new List<Entity>(50));
         }

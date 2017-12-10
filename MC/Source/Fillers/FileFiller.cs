@@ -30,7 +30,7 @@ namespace MC.Source.Fillers
                 {
                     if (entity is Folder && zip != null)
                         zip.Dispose();
-                    var dir = entity as Directory;  
+                    var dir = entity as Directory;
                     //systemWatcher.Path = dir.Path;
                     //systemWatcher.EnableRaisingEvents = true;
                     //start fill            
@@ -64,7 +64,5 @@ namespace MC.Source.Fillers
                 graphicalApp.DataSource = new ObservableCollection<Entity>(dataList);
             }
         }
-
-
     }
 }

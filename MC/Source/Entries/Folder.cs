@@ -5,7 +5,7 @@ using MC.Windows;
 
 namespace MC.Source.Entries
 {
-    class Folder : Directory
+    public class Folder : Directory
     {
         public Folder(string Path)
         {

@@ -18,6 +18,7 @@ using MC.Source.Graphics;
 using Directory = MC.Source.Entries.Directory;
 using File = MC.Source.Entries.File;
 using MC.Source.Visitors.EncryptVisitors;
+using MC.Source.Watchers;
 
 namespace MC.Windows
 {
@@ -29,7 +30,7 @@ namespace MC.Windows
      *        drag and drop lvitem.   
     */
 
-    public enum Action {Archive, Search }
+    public enum myAction {Archive, Search }
 
     public partial class MainWindow : MetroWindow
     {
@@ -64,8 +65,8 @@ namespace MC.Windows
 
             var drives = DriveInfo.GetDrives();
             Places.ItemsSource = DriveFiller.FillTheListBoxWithDrives(drives);
-            var watcher1 = new WatcherCreator(_graphics1, Dispatcher).CreateWatcher();
-            var watcher2 = new WatcherCreator(_graphics2, Dispatcher).CreateWatcher();
+            var watcher1 = new StandardWatcherCreator(_graphics1, Dispatcher).CreateStandardWatcher();
+            var watcher2 = new StandardWatcherCreator(_graphics2, Dispatcher).CreateStandardWatcher();
             fileFiller1 = new FileFiller(_graphics1, watcher1);
             fileFiller2 = new FileFiller(_graphics2, watcher2);
             fileFiller1.OpenEntry(new Folder(drives[0].Name));
@@ -126,7 +127,7 @@ namespace MC.Windows
                     FileManipulator.DeleteFile(selectedListItem);
                     break;
                 case "Archive":
-                    ShowChooseDialog(selectedListItem, Action.Archive);
+                    ShowChooseDialog(selectedListItem, myAction.Archive);
                     break;
                 case "Unarchive":
                     UnziperArchives.UnarchiveElemInThread(selectedListItem);
@@ -164,7 +165,7 @@ namespace MC.Windows
             }
         }
 
-        private void ShowChooseDialog(Entity selectedItem, Action action)
+        private void ShowChooseDialog(Entity selectedItem, myAction action)
         {
             var dialog = new DialogThreadPage(action, selectedItem);
             var win = new NavigationWindow() { Content = dialog, Width = 300, Height = 200 };
@@ -257,7 +258,7 @@ namespace MC.Windows
         private void MenuItemLV_Click(object sender, RoutedEventArgs e)
         {
             var item = sender as MenuItem;
-            ShowChooseDialog(new Folder(item.Header.ToString()), Action.Search);
+            ShowChooseDialog(new Folder(item.Header.ToString()), myAction.Search);
         }
 
         private void HelloBtn_Click(object sender, RoutedEventArgs e)
