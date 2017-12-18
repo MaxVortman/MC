@@ -33,23 +33,13 @@ namespace MC.Source.Entries
         
         protected virtual List<Entity> GetData(List<Entity> dataList)
         {
-            //enumerate folder's path
-            foreach (var item in System.IO.Directory.EnumerateDirectories(FullPath))
-            {
-                dataList.Add(new Folder(item));
-            }
-            //enumerate file's path
-            foreach (var item in System.IO.Directory.EnumerateFiles(FullPath))
-            {
-                dataList.Add(new File(item));
-            }
-
+            foreach (var entity in System.IO.Directory.EnumerateFileSystemEntries(FullPath))
+                dataList.Add(EntityFactory.GetEntity(entity));
             return dataList;
         }
 
         public override Buffer Copy()
         {
-
             var dataList = GetAllSubFiles();
             int count = dataList.Count;
             Buffer[] buffer = new Buffer[count];

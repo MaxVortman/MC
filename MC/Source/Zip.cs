@@ -16,17 +16,47 @@ namespace MC.Source
     {
         private ZipArchive archive;
         private readonly string path;
-        private List<ZipArchiveEntry> zipArchiveEntries;
+        private List<string> filePaths;
+        private List<string> folderPaths;
 
         public string Path => path;
+        public List<ZipArchiveEntry> Entries { get; private set; }
+        /// <summary>
+        /// paths of file into the archive
+        /// </summary>
+        public List<string> FilePaths { get { return filePaths ?? GetFilePaths(); } }
 
-        public List<ZipArchiveEntry> ZipArchiveEntries { get => zipArchiveEntries; private set => zipArchiveEntries = value; }
+        private List<string> GetFilePaths()
+        {
+            filePaths = (from f in Entries.AsParallel()
+                         select GetFullPath(f.FullName)).ToList();
+            return filePaths;
+        }
+        /// <summary>
+        /// paths of folder into the archive 
+        /// </summary>
+        public List<string> FolderPaths { get { return folderPaths ?? GetFolderPaths(); } }
+
+        private List<string> GetFolderPaths()
+        {
+            var regex = new Regex($@"\\[\w|\W]+?\\");
+            folderPaths = new List<string>();
+            foreach (var entry in Entries)
+            {
+                foreach (Match m in regex.Matches(entry.FullName))
+                {
+                    if(!folderPaths.Contains(m.Value))
+                        folderPaths.Add(m.Value);                    
+                }
+            }
+            return folderPaths;
+        }
 
         public Zip(string path)
         {
             this.path = path;
             CreateArchive();
-            ZipArchiveEntries = new List<ZipArchiveEntry>(archive.Entries);
+            Entries = new List<ZipArchiveEntry>(archive.Entries);
         }
 
         public IEnumerable<Entity> GetEntity(string path)
@@ -51,7 +81,7 @@ namespace MC.Source
         {
             var baseFileEntity = new List<Entity>();
             var baseFolderPathForRegexp = baseFolderPath.Replace("\\", "\\\\");
-            foreach (var entry in ZipArchiveEntries)
+            foreach (var entry in Entries)
             {
                 if (!entry.FullName.Contains(baseFolderPath))
                     continue;
@@ -61,13 +91,18 @@ namespace MC.Source
                 else
                 {
                     var folderPath = GetFolderPath(entry.FullName, baseFolderPathForRegexp);
-                    var fullFolderPath = System.IO.Path.Combine(Path, folderPath);
+                    string fullFolderPath = GetFullPath(folderPath);
                     if (!baseEntity.Contains(e => e.FullPath == fullFolderPath))
                         baseEntity.Add(new ZippedFolder(this, fullFolderPath, folderPath, GetFolderName(folderPath)));
                 }
             }
             baseEntity.AddRange(baseFileEntity);
             return baseEntity;
+        }
+
+        private string GetFullPath(string folderPath)
+        {
+            return System.IO.Path.Combine(Path, folderPath);
         }
 
         public ZippedFolder GetRootFolder()
@@ -78,7 +113,7 @@ namespace MC.Source
         public List<Entity> GetFolderEntries(string folderPath)
         {
             var folderEntries = new List<Entity>();
-            foreach (var entry in ZipArchiveEntries)
+            foreach (var entry in Entries)
             {
                 if (!entry.FullName.Contains(folderPath))
                     continue;
@@ -90,7 +125,7 @@ namespace MC.Source
         public IEnumerable<string> GetFilesPathFromFolder(string path)
         {
             var folderEntries = new List<string>();
-            foreach (var entry in ZipArchiveEntries)
+            foreach (var entry in Entries)
             {
                 if (!entry.FullName.Contains(path))
                     continue;
@@ -128,7 +163,7 @@ namespace MC.Source
         public ZipArchiveEntry CreateEntry(string path)
         {
             var newEntry = archive.CreateEntry(path);
-            ZipArchiveEntries = new List<ZipArchiveEntry>(archive.Entries);
+            Entries = new List<ZipArchiveEntry>(archive.Entries);
             return newEntry;
         }
 

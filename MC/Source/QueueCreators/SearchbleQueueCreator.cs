@@ -28,7 +28,7 @@ namespace MC.Source.QueueCreators
                 if (Zip.IsArchive(fPath))
                 {
                     zip = new Zip(fPath);
-                    foreach (var entry in zip.ZipArchiveEntries)
+                    foreach (var entry in zip.Entries)
                     {
                         _listOfPath.Add(new Entries.Zipped.ZippedFile(zip, new Entries.Zipped.Entry(entry, zip.Path)));
                     }
