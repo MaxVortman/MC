@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MC.Source.Entries.Zipped;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,25 +9,27 @@ namespace MC.Source.Entries
 {
     public class EntityFactory
     {
-        private static Zip zip;
-
+        /// <summary>
+        /// Factory for Entity
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
         public static Entity GetEntity(string path)
         {
-            if (System.IO.File.Exists(path)) {
-                if (System.IO.Path.GetExtension(path).Equals(".zip"))
-                {
-                    if (zip != null)
-                        zip.Dispose();
-                    zip = new Zip(path);
-                    return zip.GetRootFolder();
-                }
-                else
-                    return new File(path);
-            }
             if (System.IO.Directory.Exists(path))
                 return new Folder(path);
-
-            if (zip.)
+            if (System.IO.File.Exists(path))
+            {
+                if (System.IO.Path.GetExtension(path).Equals(".zip"))
+                {
+                    using (var zip = new Zip(path))
+                    {
+                        return zip.GetRootFolder();
+                    }
+                }
+                return new File(path);
+            }
+            throw new ArgumentException("This entity is superfluous.");
         }
     }
 }

@@ -21,6 +21,9 @@ namespace MC.Source
 
         public string Path => path;
         public List<ZipArchiveEntry> Entries { get; private set; }
+
+        #region Get File Paths
+
         /// <summary>
         /// paths of file into the archive
         /// </summary>
@@ -29,9 +32,14 @@ namespace MC.Source
         private List<string> GetFilePaths()
         {
             filePaths = (from f in Entries.AsParallel()
-                         select GetFullPath(f.FullName)).ToList();
+                         select f.FullName).ToList();
             return filePaths;
         }
+
+        #endregion
+
+        #region Get Folder Paths 
+
         /// <summary>
         /// paths of folder into the archive 
         /// </summary>
@@ -39,7 +47,7 @@ namespace MC.Source
 
         private List<string> GetFolderPaths()
         {
-            var regex = new Regex($@"\\[\w|\W]+?\\");
+            var regex = new Regex($@"[\w|\W]+?\\");
             folderPaths = new List<string>();
             foreach (var entry in Entries)
             {
@@ -51,6 +59,8 @@ namespace MC.Source
             }
             return folderPaths;
         }
+
+        #endregion
 
         public Zip(string path)
         {
@@ -70,12 +80,16 @@ namespace MC.Source
             archive = new ZipArchive(file, ZipArchiveMode.Update, false);
         }
 
+        #region Dispose
+
         public void Dispose()
         {
             archive.Dispose();
             GC.Collect();
             GC.SuppressFinalize(this);           
-        }  
+        }
+
+        #endregion
 
         public List<Entity> GetEntity(List<Entity> baseEntity, string baseFolderPath = "")
         {
@@ -107,7 +121,7 @@ namespace MC.Source
 
         public ZippedFolder GetRootFolder()
         {
-            throw new NotImplementedException();
+            return new ZippedFolder(this, Path, "", System.IO.Path.GetFileName(Path));
         }
 
         public List<Entity> GetFolderEntries(string folderPath)

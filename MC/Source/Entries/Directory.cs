@@ -33,8 +33,8 @@ namespace MC.Source.Entries
         
         protected virtual List<Entity> GetData(List<Entity> dataList)
         {
-            foreach (var entity in System.IO.Directory.EnumerateFileSystemEntries(FullPath))
-                dataList.Add(EntityFactory.GetEntity(entity));
+            foreach (var path in System.IO.Directory.EnumerateFileSystemEntries(FullPath))
+                dataList.Add(EntityFactory.GetEntity(path));
             return dataList;
         }
 
