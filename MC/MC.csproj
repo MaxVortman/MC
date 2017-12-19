@@ -79,6 +79,7 @@
     <Compile Include="Resources\IconListManager.cs" />
     <Compile Include="Source\AesEncryptor.cs" />
     <Compile Include="Source\Archivers\ArchiveFactory.cs" />
+    <Compile Include="Source\Entries\DataFactory.cs" />
     <Compile Include="Source\Entries\Directory.cs" />
     <Compile Include="Source\Entries\Entity.cs" />
     <Compile Include="Source\Archivers\FileArchiver.cs" />

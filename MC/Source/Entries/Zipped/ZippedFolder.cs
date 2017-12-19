@@ -45,9 +45,9 @@ namespace MC.Source.Entries.Zipped
             return dataList;
         }
 
-        protected override List<Entity> GetData(List<Entity> dataList)
+        public IEnumerable<string> EnumerateEntry()
         {
-            return zip.GetEntity(dataList, FolderPath);
+            return zip.GetEntity(FolderPath);
         }
 
         protected override void CreateDirectory(string path)

@@ -68,12 +68,6 @@ namespace MC.Source
             CreateArchive();
             Entries = new List<ZipArchiveEntry>(archive.Entries);
         }
-
-        public IEnumerable<Entity> GetEntity(string path)
-        {
-            return GetEntity(new List<Entity>(), path);
-        }
-
         private void CreateArchive()
         {
             var file = System.IO.File.Open(Path, FileMode.Open);
@@ -91,9 +85,10 @@ namespace MC.Source
 
         #endregion
 
-        public List<Entity> GetEntity(List<Entity> baseEntity, string baseFolderPath = "")
+        
+        public IEnumerable<string> GetEntity(string baseFolderPath)
         {
-            var baseFileEntity = new List<Entity>();
+            var entity = new List<string>();
             var baseFolderPathForRegexp = baseFolderPath.Replace("\\", "\\\\");
             foreach (var entry in Entries)
             {
@@ -101,17 +96,16 @@ namespace MC.Source
                     continue;
 
                 if (IsFile(entry.FullName, baseFolderPathForRegexp))
-                    baseFileEntity.Add(new ZippedFile(this, new Entry(entry, Path)));
+                    entity.Add(entry.FullName);
                 else
                 {
                     var folderPath = GetFolderPath(entry.FullName, baseFolderPathForRegexp);
                     string fullFolderPath = GetFullPath(folderPath);
-                    if (!baseEntity.Contains(e => e.FullPath == fullFolderPath))
-                        baseEntity.Add(new ZippedFolder(this, fullFolderPath, folderPath, GetFolderName(folderPath)));
+                    if (!entity.Contains(fullFolderPath))
+                        entity.Add(folderPath);
                 }
             }
-            baseEntity.AddRange(baseFileEntity);
-            return baseEntity;
+            return entity;
         }
 
         private string GetFullPath(string folderPath)
