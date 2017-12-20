@@ -16,6 +16,7 @@ namespace MC.Source
     {
         private ZipArchive archive;
         private readonly string path;
+        private readonly Stream sourceStream;
         private List<string> filePaths;
         private List<string> folderPaths;
 
@@ -62,16 +63,18 @@ namespace MC.Source
 
         #endregion
 
-        public Zip(string path)
+        public Zip(string path, Stream sourceStream)
         {
-            this.path = path;
+            this.path = path;            
+            this.sourceStream = sourceStream;
             CreateArchive();
             Entries = new List<ZipArchiveEntry>(archive.Entries);
         }
+
+
         private void CreateArchive()
-        {
-            var file = System.IO.File.Open(Path, FileMode.Open);
-            archive = new ZipArchive(file, ZipArchiveMode.Update, false);
+        {            
+            archive = new ZipArchive(sourceStream, ZipArchiveMode.Update, false);
         }
 
         #region Dispose
@@ -155,7 +158,7 @@ namespace MC.Source
 
         private string GetFolderPath(string fullName, string baseFolderPath)
         {
-            return Regex.Match(fullName, $@"({baseFolderPath}[\w|\W]+?\\)").Groups[1].Value;
+            return Regex.Match(fullName, $@"({baseFolderPath}[\w|\W]+?)\\").Groups[1].Value;
         }
 
         private bool IsFile(string fullName, string baseFolderPath)
@@ -186,6 +189,14 @@ namespace MC.Source
         public Stream GetStream(string path)
         {
             return archive.GetEntry(path).Open();
+        }        
+
+        public bool IsFile(string path)
+        {
+            var file = (from e in Entries
+                        where e.FullName == path
+                        select e).FirstOrDefault();
+            return file != null;
         }
     }
 }

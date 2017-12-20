@@ -1,6 +1,7 @@
 ﻿using MC.Source.Searchers;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,7 +28,7 @@ namespace MC.Source.QueueCreators
             {
                 if (Zip.IsArchive(fPath))
                 {
-                    zip = new Zip(fPath);
+                    zip = new Zip(fPath, File.Open(fPath, FileMode.Open));
                     foreach (var entry in zip.Entries)
                     {
                         _listOfPath.Add(new Entries.Zipped.ZippedFile(zip, new Entries.Zipped.Entry(entry, zip.Path)));

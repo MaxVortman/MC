@@ -1,6 +1,7 @@
 ﻿using MC.Source.Entries.Zipped;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -31,11 +32,11 @@ namespace MC.Source.Entries
         private static Entity CreateZippedEntity(Directory directory, string path)
         {
             var zippedDir = directory as ZippedFolder;
-            if (ZippedFile.IsFile(path))
+            if (zippedDir.Zip.IsFile(path))
             {
                 if (System.IO.Path.GetExtension(path).Equals(".zip"))
                 {
-                    return CreateNewRootZippedFolder(path);
+                    return CreateNewRootZippedFolder(path, zippedDir.Zip.GetStream(path));
                 }
                 return new ZippedFile(zippedDir.Zip, zippedDir.GetEntry(path));
             }
@@ -52,19 +53,17 @@ namespace MC.Source.Entries
             {
                 if (System.IO.Path.GetExtension(path).Equals(".zip"))
                 {
-                    return CreateNewRootZippedFolder(path);
+                    return CreateNewRootZippedFolder(path, System.IO.File.Open(path, FileMode.Open));
                 }
                 return new File(path);
             }
             throw new ArgumentException("This entity is superfluous.");
         }
 
-        private static ZippedFolder CreateNewRootZippedFolder(string path)
+        private static ZippedFolder CreateNewRootZippedFolder(string path, Stream stream)
         {
-            using (var zip = new Zip(path))
-            {
-                return zip.GetRootFolder();
-            }            
+            var zip = new Zip(path, stream);
+            return zip.GetRootFolder();            
         }
     }
 }

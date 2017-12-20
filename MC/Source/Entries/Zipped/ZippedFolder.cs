@@ -31,9 +31,7 @@ namespace MC.Source.Entries.Zipped
 
         private string GetName()
         {
-            var name = Regex.Match(FullPath, $@"[\w|\W]+\\([\w|\W]+)").Groups[1].Value;
-            if (name[name.Length - 1] == '\\')
-                name = name.Remove(name.Length - 1);
+            var name = Regex.Match(FullPath, $@"([\w|\W]+\\)?([\w|\W]+)").Groups[2].Value;
             return name;
         }
 
@@ -44,11 +42,11 @@ namespace MC.Source.Entries.Zipped
             if (FullPath.Length > 3)
             {
                 if (string.IsNullOrEmpty(FolderPath))
+                    //TO DO : problem with zip in zip
                     dataList.Add(new Folder(System.IO.Path.GetDirectoryName(Zip.Path)){ Name = "..."});
                 else
                 {
                     var parentPath = System.IO.Path.GetDirectoryName(FolderPath);
-                    var fullParentPath = System.IO.Path.GetDirectoryName(FullPath);
                     dataList.Add(new ZippedFolder(Zip, parentPath) { Name = "..."});
                 }
             }

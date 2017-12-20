@@ -37,11 +37,6 @@ namespace MC.Source.Entries.Zipped
             Date = entry.Date;
         }
 
-        public static bool IsFile(string path)
-        {
-            return !Regex.Match(path, $@"[\w|\W]+\\").Value.Equals(path);
-        }
-
         public override void AcceptArchive(IThreadsVisitor visitor)
         {
             throw new NotImplementedException();
