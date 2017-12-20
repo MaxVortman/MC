@@ -86,7 +86,7 @@ namespace MC.Source
         #endregion
 
         
-        public IEnumerable<string> GetEntity(string baseFolderPath)
+        public IEnumerable<string> GetEntityPaths(string baseFolderPath)
         {
             var entity = new List<string>();
             var baseFolderPathForRegexp = baseFolderPath.Replace("\\", "\\\\");
@@ -100,8 +100,7 @@ namespace MC.Source
                 else
                 {
                     var folderPath = GetFolderPath(entry.FullName, baseFolderPathForRegexp);
-                    string fullFolderPath = GetFullPath(folderPath);
-                    if (!entity.Contains(fullFolderPath))
+                    if (!entity.Contains(folderPath))
                         entity.Add(folderPath);
                 }
             }
@@ -115,7 +114,7 @@ namespace MC.Source
 
         public ZippedFolder GetRootFolder()
         {
-            return new ZippedFolder(this, Path, "", System.IO.Path.GetFileName(Path));
+            return new ZippedFolder(this, "");
         }
 
         public List<Entity> GetFolderEntries(string folderPath)
@@ -156,7 +155,7 @@ namespace MC.Source
 
         private string GetFolderPath(string fullName, string baseFolderPath)
         {
-            return Regex.Match(fullName, $@"({baseFolderPath}[\w|\W]+?)\\").Groups[1].Value;
+            return Regex.Match(fullName, $@"({baseFolderPath}[\w|\W]+?\\)").Groups[1].Value;
         }
 
         private bool IsFile(string fullName, string baseFolderPath)

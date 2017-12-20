@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using MC.Source.Searchers;
 using MC.Source.Visitors.EncryptVisitors;
@@ -34,6 +35,11 @@ namespace MC.Source.Entries.Zipped
             Size = FormatSize(entry.Size);
             CompressedLength = FormatSize(entry.CompressedLength);
             Date = entry.Date;
+        }
+
+        public static bool IsFile(string path)
+        {
+            return !Regex.Match(path, $@"[\w|\W]+\\").Value.Equals(path);
         }
 
         public override void AcceptArchive(IThreadsVisitor visitor)

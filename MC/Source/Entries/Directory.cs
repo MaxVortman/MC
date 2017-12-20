@@ -10,11 +10,16 @@ namespace MC.Source.Entries
     public abstract class Directory : Entity
     {
         
-        public List<Entity> GetEntry()
+        public List<Entity> GetEntries()
         {
             //must be faster
-            var dataList = CreateDataList();
-            return GetData(dataList);
+            var data = CreateDataList();
+            return GetData(data);
+        }
+
+        public virtual IEnumerable<string> EnumerateFileSystemEntries()
+        {
+            return System.IO.Directory.EnumerateFileSystemEntries(this.FullPath);
         }
 
         public virtual List<Entity> CreateDataList()
@@ -30,12 +35,10 @@ namespace MC.Source.Entries
         }
 
 
-        
-        protected List<Entity> GetData(List<Entity> dataList)
+        protected List<Entity> GetData(List<Entity> data)
         {
-            foreach (var path in DataFactory.GetData(this))
-                dataList.Add(EntityFactory.GetEntity(path));
-            return dataList;
+            data.AddRange(EntityFactory.GetEntries(this));
+            return data;
         }
 
         public override Buffer Copy()

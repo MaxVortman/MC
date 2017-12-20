@@ -34,7 +34,7 @@ namespace MC.Source.Fillers
                     //start fill            
 
                     graphicalApp.SetCaptionOfPath(dir.FullPath);
-                    var dataList = dir.GetEntry();
+                    var dataList = dir.GetEntries();
                     graphicalApp.DataSource = new ObservableCollection<Entity>(dataList);
                 }
                 else if(entity is File)

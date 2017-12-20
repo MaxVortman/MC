@@ -7,7 +7,7 @@ namespace MC.Source.Archivers
     {
         public IThreder CreateObject(string type, string filePath)
         {
-            IThreder fileArchiver;
+            FileArchiver fileArchiver;
             switch (type)
             {
                 case "Thread":

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using System.Windows;
 using MC.Source.QueueCreators;
 using MC.Source.Threading;
 using Microsoft.Win32;
@@ -22,12 +23,19 @@ namespace MC.Source.Archivers
 
         public FileArchiver(string sourcePathOfFile)
         {
-            this.sourcePathOfFile = sourcePathOfFile;
-            pZip = GetPathOnDialog();
-            zipToOpen = new FileStream(pZip, FileMode.Create, FileAccess.ReadWrite, FileShare.Inheritable);
-            archive = new ZipArchive(zipToOpen, ZipArchiveMode.Update, false);
-            fileQueueCreator = new FileQueueCreator(sourcePathOfFile);
-            filesQueue = fileQueueCreator.GetFilledQueueOfFilesPath();
+            try
+            {
+                this.sourcePathOfFile = sourcePathOfFile;
+                pZip = GetPathOnDialog();
+                zipToOpen = new FileStream(pZip, FileMode.Create, FileAccess.ReadWrite, FileShare.Inheritable);
+                archive = new ZipArchive(zipToOpen, ZipArchiveMode.Update, false);
+                fileQueueCreator = new FileQueueCreator(sourcePathOfFile);
+                filesQueue = fileQueueCreator.GetFilledQueueOfFilesPath();
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+            }
         }
 
         protected void ArchiveFileInEntry(string filePath)
