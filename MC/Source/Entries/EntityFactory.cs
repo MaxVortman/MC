@@ -18,7 +18,7 @@ namespace MC.Source.Entries
             {
                 if (directory is Folder)
                 {
-                    data.Add(CreateFileSystemEntity(path));
+                    data.Add(CreateFileSystemEntity(directory, path));
                 }
                 else
                 if (directory is ZippedFolder)
@@ -36,15 +36,15 @@ namespace MC.Source.Entries
             {
                 if (System.IO.Path.GetExtension(path).Equals(".zip"))
                 {
-                    return CreateNewRootZippedFolder(path, zippedDir.Zip.GetStream(path));
+                    return CreateNewRootZippedFolder(path, zippedDir.Zip.GetStream(path), directory);
                 }
                 return new ZippedFile(zippedDir.Zip, zippedDir.GetEntry(path));
             }
             
-                return new ZippedFolder(zippedDir.Zip, path);
+                return new ZippedFolder(zippedDir.Zip, path, directory);
         }
 
-        private static Entity CreateFileSystemEntity(string path)
+        private static Entity CreateFileSystemEntity(Directory directory, string path)
         {
             if (System.IO.Directory.Exists(path))
                 return new Folder(path);
@@ -53,17 +53,18 @@ namespace MC.Source.Entries
             {
                 if (System.IO.Path.GetExtension(path).Equals(".zip"))
                 {
-                    return CreateNewRootZippedFolder(path, System.IO.File.Open(path, FileMode.Open));
+                    return CreateNewRootZippedFolder(path, System.IO.File.Open(path, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite), directory);
                 }
                 return new File(path);
             }
             throw new ArgumentException("This entity is superfluous.");
         }
 
-        private static ZippedFolder CreateNewRootZippedFolder(string path, Stream stream)
+        private static ZippedFolder CreateNewRootZippedFolder(string path, Stream stream, Directory directory)
         {
             var zip = new Zip(path, stream);
-            return zip.GetRootFolder();            
+            directory.DisposeZipAction = () => { zip.Dispose(); };
+            return zip.GetRootFolder(directory);            
         }
     }
 }

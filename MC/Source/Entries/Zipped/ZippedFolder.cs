@@ -15,15 +15,17 @@ namespace MC.Source.Entries.Zipped
     public class ZippedFolder : Directory
     {
         private readonly Zip zip;
+        private readonly Directory underDir;
 
         public string FolderPath { get; }
 
         public Zip Zip => zip;
 
-        public ZippedFolder(Zip zip, string folderPath)
+        public ZippedFolder(Zip zip, string folderPath, Directory underDir)
         {
             this.zip = zip;
             this.FolderPath = folderPath;
+            this.underDir = underDir;
             this.FullPath = System.IO.Path.Combine(zip.Path, folderPath);
             this.Name = GetName();
             this.Image = MainWindow.UserPrefs?.Theme.FolderIconPath;
@@ -39,21 +41,13 @@ namespace MC.Source.Entries.Zipped
         {
             var dataList = new List<Entity>(50);
             // ... folder
-            if (FullPath.Length > 3)
+            if (underDir != null)
             {
-                if (string.IsNullOrEmpty(FolderPath))
-                    //TO DO : problem with zip in zip
-                    dataList.Add(new Folder(System.IO.Path.GetDirectoryName(Zip.Path)){ Name = "..."});
-                else
-                {
-                    var parentPath = System.IO.Path.GetDirectoryName(FolderPath);
-                    dataList.Add(new ZippedFolder(Zip, parentPath) { Name = "..."});
-                }
+                underDir.Name = "...";
+                dataList.Add(underDir);
             }
             return dataList;
         }
-
-
 
         public Entry GetEntry(string path)
         {

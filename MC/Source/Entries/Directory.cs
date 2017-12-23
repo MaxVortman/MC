@@ -9,7 +9,7 @@ namespace MC.Source.Entries
 {
     public abstract class Directory : Entity
     {
-        
+
         public List<Entity> GetEntries()
         {
             //must be faster
@@ -35,8 +35,11 @@ namespace MC.Source.Entries
         }
 
 
+        public Action DisposeZipAction { get; set; }
+
         protected List<Entity> GetData(List<Entity> data)
         {
+            DisposeZipAction?.Invoke();
             data.AddRange(EntityFactory.GetEntries(this));
             return data;
         }

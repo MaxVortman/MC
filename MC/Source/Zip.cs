@@ -7,6 +7,7 @@ using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MC.Source
@@ -81,14 +82,19 @@ namespace MC.Source
 
         public void Dispose()
         {
+            DisposeZip();
+            GC.SuppressFinalize(this);
+        }
+
+        private void DisposeZip()
+        {
             archive.Dispose();
-            GC.Collect();
-            GC.SuppressFinalize(this);           
+            sourceStream.Dispose();
         }
 
         #endregion
 
-        
+
         public IEnumerable<string> GetEntityPaths(string baseFolderPath)
         {
             var entity = new List<string>();
@@ -115,9 +121,9 @@ namespace MC.Source
             return System.IO.Path.Combine(Path, folderPath);
         }
 
-        public ZippedFolder GetRootFolder()
+        public ZippedFolder GetRootFolder(MC.Source.Entries.Directory directory)
         {
-            return new ZippedFolder(this, "");
+            return new ZippedFolder(this, "", directory);
         }
 
         public List<Entity> GetFolderEntries(string folderPath)
