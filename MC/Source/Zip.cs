@@ -183,15 +183,6 @@ namespace MC.Source
             return newEntry;
         }
 
-        public static bool IsArchive(string path)
-        {
-            if (System.IO.Path.GetExtension(path).Equals(".zip"))
-            {
-                return true;
-            }
-            return false;
-        }
-
         public Stream GetStream(string path)
         {
             return archive.GetEntry(path).Open();

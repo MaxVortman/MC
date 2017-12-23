@@ -22,21 +22,21 @@ namespace MC.Source.QueueCreators
 
         private void GetSearchbleFromFolder(string sourcePath)
         {
-            var filesPath = Entries.Directory.GetAllFiles(sourcePath);
-            Zip zip;
-            foreach (var fPath in filesPath)
-            {
-                if (Zip.IsArchive(fPath))
-                {
-                    zip = new Zip(fPath, File.Open(fPath, FileMode.Open));
-                    foreach (var entry in zip.Entries)
-                    {
-                        _listOfPath.Add(new Entries.Zipped.ZippedFile(zip, new Entries.Zipped.Entry(entry, zip.Path)));
-                    }
-                }
-                else
-                    _listOfPath.Add(new Entries.File(fPath));
-            }
+            //var filesPath = Entries.Directory.GetAllFiles(sourcePath);
+            //Zip zip;
+            //foreach (var fPath in filesPath)
+            //{
+            //    if (Zip.IsArchive(fPath))
+            //    {
+            //        zip = new Zip(fPath, File.Open(fPath, FileMode.Open));
+            //        foreach (var entry in zip.Entries)
+            //        {
+            //            _listOfPath.Add(new Entries.Zipped.ZippedFile(zip, new Entries.Zipped.Entry(entry, zip.Path)));
+            //        }
+            //    }
+            //    else
+            //        _listOfPath.Add(new Entries.File(fPath));
+            //}
         }
     }
 }

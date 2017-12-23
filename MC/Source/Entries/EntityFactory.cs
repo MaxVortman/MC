@@ -36,7 +36,7 @@ namespace MC.Source.Entries
             {
                 if (System.IO.Path.GetExtension(path).Equals(".zip"))
                 {
-                    return CreateNewRootZippedFolder(path, zippedDir.Zip.GetStream(path), directory);
+                    return ZipFactory.GetZippedFolder(path, DirectoryType.Zipped, zippedDir);
                 }
                 return new ZippedFile(zippedDir.Zip, zippedDir.GetEntry(path));
             }
@@ -53,18 +53,11 @@ namespace MC.Source.Entries
             {
                 if (System.IO.Path.GetExtension(path).Equals(".zip"))
                 {
-                    return CreateNewRootZippedFolder(path, System.IO.File.Open(path, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite), directory);
+                    return ZipFactory.GetZippedFolder(path, DirectoryType.System, directory);
                 }
                 return new File(path);
             }
             throw new ArgumentException("This entity is superfluous.");
-        }
-
-        private static ZippedFolder CreateNewRootZippedFolder(string path, Stream stream, Directory directory)
-        {
-            var zip = new Zip(path, stream);
-            directory.DisposeZipAction = () => { zip.Dispose(); };
-            return zip.GetRootFolder(directory);            
         }
     }
 }
