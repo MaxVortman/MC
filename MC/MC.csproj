@@ -82,7 +82,10 @@
     <Compile Include="Source\Entries\Directory.cs" />
     <Compile Include="Source\Entries\Entity.cs" />
     <Compile Include="Source\Archivers\FileArchiver.cs" />
+    <Compile Include="Source\Entries\EntityFactory.cs" />
+    <Compile Include="Source\Entries\DirectoryType.cs" />
     <Compile Include="Source\Entries\Zipped\Entry.cs" />
+    <Compile Include="Source\Entries\Zipped\ZipFactory.cs" />
     <Compile Include="Source\Entries\Zipped\ZippedFile.cs" />
     <Compile Include="Source\Entries\Zipped\ZippedFolder.cs" />
     <Compile Include="Source\QueueCreators\QueueCreator.cs" />
@@ -125,7 +128,10 @@
     <Compile Include="Source\Visitors\ThreadVisitors\TaskVisitor.cs" />
     <Compile Include="Source\Visitors\ThreadVisitors\ThreadVisitor.cs" />
     <Compile Include="Source\Visitors\ThreadVisitors\ThreadsVisitorFactory.cs" />
-    <Compile Include="Source\WatcherCreator.cs" />
+    <Compile Include="Source\Watchers\SnapShot.cs" />
+    <Compile Include="Source\Watchers\StandardWatcherCreator.cs" />
+    <Compile Include="Source\Watchers\WatchersFactory.cs" />
+    <Compile Include="Source\Watchers\ZipSystemWatcher.cs" />
     <Compile Include="Source\Zip.cs" />
     <Compile Include="Windows\AccentStyleWindow.xaml.cs">
       <DependentUpon>AccentStyleWindow.xaml</DependentUpon>

@@ -25,11 +25,11 @@ namespace MC.Windows
     /// </summary>
     public partial class DialogPatternPage : Page
     {
-        private readonly Action action;
+        private readonly myAction action;
         private readonly Entity entity;
         private readonly string typeOfThread;
 
-        public DialogPatternPage(Action action, Entity entity, string typeOfThread)
+        public DialogPatternPage(myAction action, Entity entity, string typeOfThread)
         {
             InitializeComponent();
             this.action = action;
@@ -57,10 +57,10 @@ namespace MC.Windows
         {
             switch (action)
             {
-                case Action.Archive:
+                case myAction.Archive:
                     entity.AcceptArchive(ThreadsVisitorFactory.CreateVisitor(typeOfThread));
                     break;
-                case Action.Search:
+                case myAction.Search:
                     entity.AcceptSearch(ThreadsVisitorFactory.CreateVisitor(typeOfThread));
                     break;
                 default:
@@ -72,10 +72,10 @@ namespace MC.Windows
         {
             switch (action)
             {
-                case Action.Archive:
+                case myAction.Archive:
                     new ArchiveFactory().CreateObject(typeOfThread, entity.FullPath).DoThread();
                     break;
-                case Action.Search:
+                case myAction.Search:
                     new SearchFactory().CreateObject(typeOfThread, entity.FullPath).DoThread();
                     break;
                 default:

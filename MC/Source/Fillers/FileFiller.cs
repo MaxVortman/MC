@@ -21,36 +21,25 @@ namespace MC.Source.Fillers
 
         private readonly GraphicalApp graphicalApp;
         private FileSystemWatcher systemWatcher;
-        private Zip zip;
+
         public void OpenEntry(Entity entity)
-        {
+        {            
             try
-            {
+            {                
                 if (entity is Directory)
                 {
-                    if (entity is Folder && zip != null)
-                        zip.Dispose();
-                    var dir = entity as Directory;  
+                    var dir = entity as Directory;
                     //systemWatcher.Path = dir.Path;
                     //systemWatcher.EnableRaisingEvents = true;
                     //start fill            
 
                     graphicalApp.SetCaptionOfPath(dir.FullPath);
-                    var dataList = dir.GetEntry();
+                    var dataList = dir.GetEntries();
                     graphicalApp.DataSource = new ObservableCollection<Entity>(dataList);
                 }
                 else if(entity is File)
-                {
-                    if (entity.IsArchive())
-                    {
-                        var baseEntity = new List<Entity>();
-                        baseEntity.Add(new Folder(Path.GetDirectoryName(entity.FullPath)) { Name = "...", Date = "", Size = "" });
-                        graphicalApp.SetCaptionOfPath(entity.FullPath);
-                        zip = new Zip(entity.FullPath);
-                        graphicalApp.DataSource = new ObservableCollection<Entity>(zip.GetEntity(baseEntity));
-                    }
-                    else
-                        (entity as File)?.Open();
+                {                
+                    (entity as File)?.Open();
                 }
             }
             catch (UnauthorizedAccessException e)
@@ -64,7 +53,5 @@ namespace MC.Source.Fillers
                 graphicalApp.DataSource = new ObservableCollection<Entity>(dataList);
             }
         }
-
-
     }
 }

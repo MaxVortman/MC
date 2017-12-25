@@ -9,12 +9,18 @@ namespace MC.Source.Entries
 {
     public abstract class Directory : Entity
     {
-        
-        public List<Entity> GetEntry()
+
+        #region Data methods
+        public List<Entity> GetEntries()
         {
             //must be faster
-            var dataList = CreateDataList();
-            return GetData(dataList);
+            var data = CreateDataList();
+            return GetData(data);
+        }
+
+        public virtual IEnumerable<string> EnumerateFileSystemEntries()
+        {
+            return System.IO.Directory.EnumerateFileSystemEntries(this.FullPath);
         }
 
         public virtual List<Entity> CreateDataList()
@@ -30,37 +36,26 @@ namespace MC.Source.Entries
         }
 
 
-        //TO DO: абстрагировать, добавить zipped
-        protected virtual List<Entity> GetData(List<Entity> dataList)
-        {
-            //enumerate folder's path
-            foreach (var item in System.IO.Directory.EnumerateDirectories(FullPath))
-            {
-                dataList.Add(new Folder(item));
-            }
-            //enumerate file's path
-            foreach (var item in System.IO.Directory.EnumerateFiles(FullPath))
-            {
-                dataList.Add(new File(item));
-            }
+        public Action DisposeZipAction { get; set; }
 
-            return dataList;
-        }
+        protected List<Entity> GetData(List<Entity> data)
+        {
+            DisposeZipAction?.Invoke();
+            data.AddRange(EntityFactory.GetEntries(this));
+            return data;
+        } 
+        #endregion
 
         public override Buffer Copy()
         {
-
-            var dataList = GetDefaultData();
+            var dataList = GetAllSubFiles();
             int count = dataList.Count;
             Buffer[] buffer = new Buffer[count];
             int i = 0;
             foreach (Entity elem in dataList)
             {
-                if (i < count)
-                {
-                    buffer[i] = elem.Copy();
-                    i++;
-                }
+                buffer[i] = elem.Copy();
+                i++;                
             }
 
             return new FolderBuffer(Name, buffer);
@@ -71,20 +66,17 @@ namespace MC.Source.Entries
             CreateDirectory(path);
 
             Buffer[] filesBuffer = (buffer as FolderBuffer).FoldersBuffer;
-            List<Entity> dataList = GetDefaultData();
+            List<Entity> dataList = GetAllSubFiles();
             int count = dataList.Count;
             int i = 0;
             foreach (Entity elem in dataList)
             {
-                if (i < count)
-                {
-                    elem.Paste(System.IO.Path.Combine(path, elem.Name), filesBuffer[i]);
-                    i++;
-                }
+                elem.Paste(System.IO.Path.Combine(path, elem.Name), filesBuffer[i]);
+                i++;
             }
-        }
+        }   
 
-        protected virtual List<Entity> GetDefaultData()
+        protected virtual List<Entity> GetAllSubFiles()
         {
             return GetData(new List<Entity>(50));
         }
@@ -99,6 +91,7 @@ namespace MC.Source.Entries
             return System.IO.Directory.Exists(path);
         }
 
+        #region Visitors methods
         public override void AcceptArchive(IThreadsVisitor visitor)
         {
             visitor.Archive(this);
@@ -117,7 +110,8 @@ namespace MC.Source.Entries
         public override void AcceptEncode(IEncryptVisitor visitor)
         {
             visitor.Encode(this);
-        }
+        } 
+        #endregion
 
         public static IEnumerable<string> GetFiles(string path)
         {

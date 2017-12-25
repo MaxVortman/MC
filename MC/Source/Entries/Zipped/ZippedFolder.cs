@@ -12,42 +12,51 @@ using System.Text.RegularExpressions;
 
 namespace MC.Source.Entries.Zipped
 {
-    class ZippedFolder : Directory
+    public class ZippedFolder : Directory
     {
         private readonly Zip zip;
+        private readonly Directory underDir;
 
         public string FolderPath { get; }
 
-        public ZippedFolder(Zip zip, string fullPath, string folderPath, string name)
+        public Zip Zip => zip;
+
+        public ZippedFolder(Zip zip, string folderPath, Directory underDir)
         {
             this.zip = zip;
             this.FolderPath = folderPath;
-            this.Name = name;
-            this.FullPath = fullPath;
+            this.underDir = underDir;
+            this.FullPath = System.IO.Path.Combine(zip.Path, folderPath);
+            this.Name = GetName();
             this.Image = MainWindow.UserPrefs?.Theme.FolderIconPath;
+        }
+
+        private string GetName()
+        {
+            var name = Regex.Match(FullPath, $@"([\w|\W]+\\)?([\w|\W]+)").Groups[2].Value;
+            return name;
         }
 
         public override List<Entity> CreateDataList()
         {
             var dataList = new List<Entity>(50);
             // ... folder
-            if (FullPath.Length > 3)
+            if (underDir != null)
             {
-                if (string.IsNullOrEmpty(FolderPath))
-                    dataList.Add(new Folder(System.IO.Path.GetDirectoryName(zip.Path)){ Name = "..."});
-                else
-                {
-                    var parentPath = System.IO.Path.GetDirectoryName(FolderPath);
-                    var fullParentPath = System.IO.Path.GetDirectoryName(FullPath);
-                    dataList.Add(new ZippedFolder(zip, fullParentPath, parentPath, "..."));
-                }
+                underDir.Name = "...";
+                dataList.Add(underDir);
             }
             return dataList;
         }
 
-        protected override List<Entity> GetData(List<Entity> dataList)
+        public Entry GetEntry(string path)
         {
-            return zip.GetEntity(dataList, FolderPath);
+            return new Entry(zip.GetArchiveEntry(path), path);
+        }
+
+        public override IEnumerable<string> EnumerateFileSystemEntries()
+        {
+            return Zip.GetEntityPaths(FolderPath);
         }
 
         protected override void CreateDirectory(string path)
@@ -56,9 +65,9 @@ namespace MC.Source.Entries.Zipped
             //entries are creating directories automaticaly
         }
 
-        protected override List<Entity> GetDefaultData()
+        protected override List<Entity> GetAllSubFiles()
         {
-            return zip.GetFolderEntries(FolderPath);
+            return Zip.GetFolderEntries(FolderPath);
         }
 
         public override void AcceptArchive(IThreadsVisitor visitor)

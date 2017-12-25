@@ -7,6 +7,7 @@ using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MC.Source
@@ -16,63 +17,136 @@ namespace MC.Source
     {
         private ZipArchive archive;
         private readonly string path;
-        private List<ZipArchiveEntry> zipArchiveEntries;
+        private readonly Stream sourceStream;
+        private List<string> filePaths;
+        private List<string> folderPaths;
 
         public string Path => path;
+        public List<ZipArchiveEntry> Entries { get; private set; }
 
-        public List<ZipArchiveEntry> ZipArchiveEntries { get => zipArchiveEntries; private set => zipArchiveEntries = value; }
+        #region Get File Paths
 
-        public Zip(string path)
+        /// <summary>
+        /// paths of file into the archive
+        /// </summary>
+        public List<string> FilePaths { get { return filePaths ?? GetFilePaths(); } }
+
+        private List<string> GetFilePaths()
         {
-            this.path = path;
-            CreateArchive();
-            ZipArchiveEntries = new List<ZipArchiveEntry>(archive.Entries);
+            filePaths = (from f in Entries.AsParallel()
+                         select f.FullName).ToList();
+            return filePaths;
         }
+
+        #endregion
+
+        #region Get Folder Paths 
+
+        /// <summary>
+        /// paths of folder into the archive 
+        /// </summary>
+        public List<string> FolderPaths { get { return folderPaths ?? GetFolderPaths(); } }
+
+        private List<string> GetFolderPaths()
+        {
+            var regex = new Regex($@"[\w|\W]+?\\");
+            folderPaths = new List<string>();
+            foreach (var entry in Entries)
+            {
+                foreach (Match m in regex.Matches(entry.FullName))
+                {
+                    if(!folderPaths.Contains(m.Value))
+                        folderPaths.Add(m.Value);                    
+                }
+            }
+            return folderPaths;
+        }
+
+        #endregion
+
+        public Zip(string path, Stream sourceStream)
+        {
+            this.path = path;            
+            this.sourceStream = sourceStream;
+            CreateArchive();
+            Entries = new List<ZipArchiveEntry>(archive.Entries);
+        }
+
 
         private void CreateArchive()
-        {
-            var file = System.IO.File.Open(Path, FileMode.Open);
-            archive = new ZipArchive(file, ZipArchiveMode.Update, false);
+        {            
+            archive = new ZipArchive(sourceStream, ZipArchiveMode.Update, false);
         }
+
+        #region Dispose
 
         public void Dispose()
         {
-            archive.Dispose();
-            GC.Collect();
-            GC.SuppressFinalize(this);           
-        }  
+            DisposeZip();
+            GC.SuppressFinalize(this);
+        }
 
-        public List<Entity> GetEntity(List<Entity> baseEntity, string baseFolderPath = "")
+        private void DisposeZip()
         {
-            var baseFileEntity = new List<Entity>();
+            archive.Dispose();
+            sourceStream.Dispose();
+        }
+
+        #endregion
+
+
+        public IEnumerable<string> GetEntityPaths(string baseFolderPath)
+        {
+            var entity = new List<string>();
             var baseFolderPathForRegexp = baseFolderPath.Replace("\\", "\\\\");
-            foreach (var entry in ZipArchiveEntries)
+            foreach (var entry in Entries)
             {
                 if (!entry.FullName.Contains(baseFolderPath))
                     continue;
 
                 if (IsFile(entry.FullName, baseFolderPathForRegexp))
-                    baseFileEntity.Add(new ZippedFile(this, new Entry(entry, Path)));
+                    entity.Add(entry.FullName);
                 else
                 {
+                    //TO DO : full path needed
                     var folderPath = GetFolderPath(entry.FullName, baseFolderPathForRegexp);
-                    var fullFolderPath = System.IO.Path.Combine(Path, folderPath);
-                    if (!baseEntity.Contains(e => e.FullPath == fullFolderPath))
-                        baseEntity.Add(new ZippedFolder(this, fullFolderPath, folderPath, GetFolderName(folderPath)));
+                    if (!entity.Contains(folderPath))
+                        entity.Add(folderPath);
                 }
             }
-            baseEntity.AddRange(baseFileEntity);
-            return baseEntity;
+            return entity;
+        }
+
+        private string GetFullPath(string folderPath)
+        {
+            return System.IO.Path.Combine(Path, folderPath);
+        }
+
+        public ZippedFolder GetRootFolder(MC.Source.Entries.Directory directory)
+        {
+            return new ZippedFolder(this, "", directory);
         }
 
         public List<Entity> GetFolderEntries(string folderPath)
         {
             var folderEntries = new List<Entity>();
-            foreach (var entry in ZipArchiveEntries)
+            foreach (var entry in Entries)
             {
                 if (!entry.FullName.Contains(folderPath))
                     continue;
                 folderEntries.Add(new ZippedFile(this, new Entry(entry, Path)));
+            }
+            return folderEntries;
+        }
+
+        public IEnumerable<string> GetFilesPathFromFolder(string path)
+        {
+            var folderEntries = new List<string>();
+            foreach (var entry in Entries)
+            {
+                if (!entry.FullName.Contains(path))
+                    continue;
+                folderEntries.Add(entry.FullName);
             }
             return folderEntries;
         }
@@ -106,17 +180,21 @@ namespace MC.Source
         public ZipArchiveEntry CreateEntry(string path)
         {
             var newEntry = archive.CreateEntry(path);
-            ZipArchiveEntries = new List<ZipArchiveEntry>(archive.Entries);
+            Entries = new List<ZipArchiveEntry>(archive.Entries);
             return newEntry;
         }
 
-        public static bool IsArchive(string path)
+        public Stream GetStream(string path)
         {
-            if (System.IO.Path.GetExtension(path).Equals(".zip"))
-            {
-                return true;
-            }
-            return false;
+            return archive.GetEntry(path).Open();
+        }        
+
+        public bool IsFile(string path)
+        {
+            var file = (from e in Entries
+                        where e.FullName == path
+                        select e).FirstOrDefault();
+            return file != null;
         }
     }
 }

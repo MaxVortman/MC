@@ -15,7 +15,7 @@ namespace MC.Source.Statistics
 
         public async override Task<string> GetStatisticsAsync()
         {
-            return await System.Threading.Tasks.Task.Run(async () =>
+            return await Task.Run(async () =>
             {
                 var time = new Stopwatch();
                 var line = String.Empty;

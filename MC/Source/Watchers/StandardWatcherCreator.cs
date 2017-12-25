@@ -1,26 +1,33 @@
 ﻿using System.IO;
 using System.Threading;
-using System.Windows.Threading;
 using MC.Source.Graphics;
 using MC.Source.Entries;
 using Directory = MC.Source.Entries.Directory;
 using File = MC.Source.Entries.File;
+using System.Windows.Threading;
 
-namespace MC.Source
+namespace MC.Source.Watchers
 {
-    class WatcherCreator
+    internal class StandardWatcherCreator
     {
 
-        public WatcherCreator(GraphicalApp graphicalApp, Dispatcher dispatcher)
+        #region Constructor
+        public StandardWatcherCreator(GraphicalApp graphicalApp, Dispatcher dispatcher)
         {
             this.graphicalApp = graphicalApp;
-            this._dispatcher = dispatcher;
-        }        
+            this.dispatcher = dispatcher;
+        }
+        #endregion
+
+        #region Private Properties
 
         private readonly GraphicalApp graphicalApp;
-        private readonly Dispatcher _dispatcher;
+        private readonly Dispatcher dispatcher; 
+        #endregion
 
-        public FileSystemWatcher CreateWatcher()
+        #region Create standart Watcher
+
+        internal FileSystemWatcher CreateStandardWatcher()
         {
             var watcher = new FileSystemWatcher
             {
@@ -35,7 +42,10 @@ namespace MC.Source
             return watcher;
         }
 
-        
+        #endregion
+
+        #region Wather's events methods
+
         private void Watcher_Renamed(object sender, RenamedEventArgs e)
         {
             var Data = graphicalApp.DataSource;
@@ -47,7 +57,7 @@ namespace MC.Source
                 elem = item;
                 break;
             }
-            _dispatcher.BeginInvoke(DispatcherPriority.ApplicationIdle, (ThreadStart)delegate ()
+            dispatcher.BeginInvoke(DispatcherPriority.ApplicationIdle, (ThreadStart)delegate ()
             {               
                 if (elem != null)
                 {
@@ -69,7 +79,7 @@ namespace MC.Source
                 elem = item;
                 break;
             }
-            _dispatcher.BeginInvoke(DispatcherPriority.ApplicationIdle, (ThreadStart)delegate ()
+            dispatcher.BeginInvoke(DispatcherPriority.ApplicationIdle, (ThreadStart)delegate ()
             {
                 if (elem != null)
                 {
@@ -93,7 +103,7 @@ namespace MC.Source
             {
                 elem = new File(e.FullPath);
             }
-            _dispatcher.BeginInvoke(DispatcherPriority.ApplicationIdle, (ThreadStart)delegate ()
+            dispatcher.BeginInvoke(DispatcherPriority.ApplicationIdle, (ThreadStart)delegate ()
             {                
                 if (elem != null)
                 {
@@ -111,10 +121,12 @@ namespace MC.Source
                 elem = item;
                 break;
             }
-            _dispatcher.BeginInvoke(DispatcherPriority.ApplicationIdle, (ThreadStart)delegate ()
+            dispatcher.BeginInvoke(DispatcherPriority.ApplicationIdle, (ThreadStart)delegate ()
             {
                 Data.Remove(elem);
             });            
         }
+
+        #endregion
     }
 }

@@ -4,7 +4,7 @@ using MC.Source.Entries;
 
 namespace MC.Source.Graphics
 {
-    internal class GraphicalApp
+    public class GraphicalApp
     {
 
         private readonly ListViewCustom _list;
