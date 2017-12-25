@@ -83,7 +83,7 @@
     <Compile Include="Source\Entries\Entity.cs" />
     <Compile Include="Source\Archivers\FileArchiver.cs" />
     <Compile Include="Source\Entries\EntityFactory.cs" />
-    <Compile Include="Source\Entries\Zipped\DirectoryType.cs" />
+    <Compile Include="Source\Entries\DirectoryType.cs" />
     <Compile Include="Source\Entries\Zipped\Entry.cs" />
     <Compile Include="Source\Entries\Zipped\ZipFactory.cs" />
     <Compile Include="Source\Entries\Zipped\ZippedFile.cs" />

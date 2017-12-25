@@ -10,6 +10,7 @@ namespace MC.Source.Entries
     public abstract class Directory : Entity
     {
 
+        #region Data methods
         public List<Entity> GetEntries()
         {
             //must be faster
@@ -42,7 +43,8 @@ namespace MC.Source.Entries
             DisposeZipAction?.Invoke();
             data.AddRange(EntityFactory.GetEntries(this));
             return data;
-        }
+        } 
+        #endregion
 
         public override Buffer Copy()
         {
@@ -52,11 +54,8 @@ namespace MC.Source.Entries
             int i = 0;
             foreach (Entity elem in dataList)
             {
-                if (i < count)
-                {
-                    buffer[i] = elem.Copy();
-                    i++;
-                }
+                buffer[i] = elem.Copy();
+                i++;                
             }
 
             return new FolderBuffer(Name, buffer);
@@ -72,13 +71,10 @@ namespace MC.Source.Entries
             int i = 0;
             foreach (Entity elem in dataList)
             {
-                if (i < count)
-                {
-                    elem.Paste(System.IO.Path.Combine(path, elem.Name), filesBuffer[i]);
-                    i++;
-                }
+                elem.Paste(System.IO.Path.Combine(path, elem.Name), filesBuffer[i]);
+                i++;
             }
-        }
+        }   
 
         protected virtual List<Entity> GetAllSubFiles()
         {
@@ -95,6 +91,7 @@ namespace MC.Source.Entries
             return System.IO.Directory.Exists(path);
         }
 
+        #region Visitors methods
         public override void AcceptArchive(IThreadsVisitor visitor)
         {
             visitor.Archive(this);
@@ -113,7 +110,8 @@ namespace MC.Source.Entries
         public override void AcceptEncode(IEncryptVisitor visitor)
         {
             visitor.Encode(this);
-        }
+        } 
+        #endregion
 
         public static IEnumerable<string> GetFiles(string path)
         {

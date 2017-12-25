@@ -34,7 +34,7 @@ namespace MC.Source.Entries
             var zippedDir = directory as ZippedFolder;
             if (zippedDir.Zip.IsFile(path))
             {
-                if (System.IO.Path.GetExtension(path).Equals(".zip"))
+                if (File.IsArchive(path))
                 {
                     return ZipFactory.GetZippedFolder(path, DirectoryType.Zipped, zippedDir);
                 }
@@ -51,7 +51,7 @@ namespace MC.Source.Entries
 
             if (System.IO.File.Exists(path))
             {
-                if (System.IO.Path.GetExtension(path).Equals(".zip"))
+                if (File.IsArchive(path))
                 {
                     return ZipFactory.GetZippedFolder(path, DirectoryType.System, directory);
                 }

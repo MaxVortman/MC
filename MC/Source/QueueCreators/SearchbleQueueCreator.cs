@@ -1,4 +1,5 @@
-﻿using MC.Source.Searchers;
+﻿using MC.Source.Entries.Zipped;
+using MC.Source.Searchers;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -22,21 +23,16 @@ namespace MC.Source.QueueCreators
 
         private void GetSearchbleFromFolder(string sourcePath)
         {
-            //var filesPath = Entries.Directory.GetAllFiles(sourcePath);
-            //Zip zip;
-            //foreach (var fPath in filesPath)
-            //{
-            //    if (Zip.IsArchive(fPath))
-            //    {
-            //        zip = new Zip(fPath, File.Open(fPath, FileMode.Open));
-            //        foreach (var entry in zip.Entries)
-            //        {
-            //            _listOfPath.Add(new Entries.Zipped.ZippedFile(zip, new Entries.Zipped.Entry(entry, zip.Path)));
-            //        }
-            //    }
-            //    else
-            //        _listOfPath.Add(new Entries.File(fPath));
-            //}
+            var filesPath = Entries.Directory.GetAllFiles(sourcePath);
+            foreach (var fPath in filesPath)
+            {
+                if (Entries.File.IsArchive(fPath))
+                {
+                    _listOfPath.AddRange(ZipFactory.GetZipEntries(fPath));
+                }
+                else
+                    _listOfPath.Add(new Entries.File(fPath));
+            }
         }
     }
 }

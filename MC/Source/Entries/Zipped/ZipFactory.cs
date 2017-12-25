@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MC.Source.Searchers;
 
 namespace MC.Source.Entries.Zipped
 {
@@ -11,12 +12,17 @@ namespace MC.Source.Entries.Zipped
     {
         private static List<Zip> zips = new List<Zip>();
 
-        public static ZippedFolder GetZippedFolder(string path, DirectoryType dirType , Directory directory)
+        public static ZippedFolder GetZippedFolder(string path, DirectoryType dirType, Directory directory)
         {
-            var existZip = (from z in zips
-                            where z.Path == path
-                            select z).FirstOrDefault();
-            if(existZip == default(Zip))
+            var zip = GetZip(path, dirType, directory);
+            directory.DisposeZipAction = () => { zip.Dispose(); };
+            return zip.GetRootFolder(directory);
+        }
+
+        private static Zip GetZip(string path, DirectoryType dirType, Directory directory = null)
+        {
+            Zip existZip = GetZipFromList(path);
+            if (existZip == default(Zip))
             {
                 Stream stream;
                 switch (dirType)
@@ -33,10 +39,27 @@ namespace MC.Source.Entries.Zipped
                 }
                 var zip = new Zip(path, stream);
                 zips.Add(zip);
-                directory.DisposeZipAction = () => { zip.Dispose(); };
-                return zip.GetRootFolder(directory);
+                return zip;
             }
-            return existZip.GetRootFolder(directory);
+            return existZip;
+        }
+
+        private static Zip GetZipFromList(string path)
+        {
+            return (from z in zips
+                    where z.Path == path
+                    select z).FirstOrDefault();
+        }
+
+        public static IEnumerable<ISearchble> GetZipEntries(string fPath)
+        {
+            var entityPaths = new List<ISearchble>();
+            var zip = GetZip(fPath, DirectoryType.System);
+            foreach (var entry in zip.Entries)
+            {
+                entityPaths.Add(new Entries.Zipped.ZippedFile(zip, new Entries.Zipped.Entry(entry, zip.Path)));
+            }
+            return entityPaths;
         }
     }
 }

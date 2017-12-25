@@ -108,6 +108,7 @@ namespace MC.Source
                     entity.Add(entry.FullName);
                 else
                 {
+                    //TO DO : full path needed
                     var folderPath = GetFolderPath(entry.FullName, baseFolderPathForRegexp);
                     if (!entity.Contains(folderPath))
                         entity.Add(folderPath);

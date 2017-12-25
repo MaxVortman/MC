@@ -88,6 +88,9 @@ namespace MC.Source.Entries.Zipped
             var partBufferFile = new byte[bytesToCopy];
             using (var inStream = System.IO.File.Open(tempPath, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
+                //TO DO : now create entry in the same zip which take it
+                //need change this
+                //because will be cool copy zip entry and paste it in another zip or folder
                 var newEntry = zip.CreateEntry(path);
                 using (var outStream = newEntry.Open())
                 {

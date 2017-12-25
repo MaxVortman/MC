@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MC.Source.Entries.Zipped
+namespace MC.Source.Entries
 {
     public enum DirectoryType
     {

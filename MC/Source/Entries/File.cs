@@ -13,10 +13,7 @@ using MC.Source.Visitors.ThreadVisitors;
 namespace MC.Source.Entries
 {
     public class File : Entity, ISearchble
-    {
-
-        
-
+    {       
         public File(string Path)
         {
             this.FullPath = Path;
@@ -130,6 +127,11 @@ namespace MC.Source.Entries
             {
                 return reader.ReadToEnd();
             }
+        }
+
+        public static bool IsArchive(string path)
+        {
+            return Path.GetExtension(path).Equals(".zip");
         }
     }
 }
