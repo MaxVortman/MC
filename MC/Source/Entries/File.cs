@@ -133,5 +133,11 @@ namespace MC.Source.Entries
         {
             return Path.GetExtension(path).Equals(".zip");
         }
+
+        public static bool Exists(string filePath) => System.IO.File.Exists(filePath);
+
+        public static FileStream Open(string path, FileMode fileMode, FileAccess fileAccess, FileShare fileShare) => System.IO.File.Open(path, fileMode, fileAccess, fileShare);
+
+        public static void Delete(string path) => System.IO.File.Delete(path);
     }
 }

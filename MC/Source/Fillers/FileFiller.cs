@@ -1,26 +1,22 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Windows;
 using MC.Source.Graphics;
 using MC.Source.Entries;
-using Directory = MC.Source.Entries.Directory;
-using File = MC.Source.Entries.File;
-using System.Collections.Generic;
 
 namespace MC.Source.Fillers
 {
     class FileFiller
     {
 
-        public FileFiller(GraphicalApp graphicalApp, FileSystemWatcher systemWatcher)
+        public FileFiller(GraphicalApp graphicalApp, System.IO.FileSystemWatcher systemWatcher)
         {
             this.graphicalApp = graphicalApp;
             this.systemWatcher = systemWatcher;
         }
 
         private readonly GraphicalApp graphicalApp;
-        private FileSystemWatcher systemWatcher;
+        private System.IO.FileSystemWatcher systemWatcher;
 
         public void OpenEntry(Entity entity)
         {            
@@ -46,7 +42,7 @@ namespace MC.Source.Fillers
             {
                 MessageBox.Show(e.Message, "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-            catch (FileNotFoundException e)
+            catch (System.IO.FileNotFoundException e)
             {
                 MessageBox.Show(e.Message, "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
                 var dataList = (entity as Directory).CreateDataList();

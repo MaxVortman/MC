@@ -37,7 +37,7 @@ namespace MC.Windows
             {
                 var datPath = System.IO.Path.Combine(_appDirectory.FullName, LoginBox.Text + ".dat");
                 //if user registered
-                if (System.IO.File.Exists(datPath))
+                if (Source.Entries.File.Exists(datPath))
                 {
                     var binFormat = new BinaryFormatter();
                     UserPrefs userPrefs = null;
@@ -75,7 +75,7 @@ namespace MC.Windows
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             //Create app folder
-            _appDirectory = Directory.CreateDirectory(System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), @"MC"));
+            _appDirectory = Source.Entries.Directory.CreateDirectory(System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), @"MC"));
         }
 
         private void Window_KeyDown(object sender, KeyEventArgs e)

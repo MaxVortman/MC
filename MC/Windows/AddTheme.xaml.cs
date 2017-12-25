@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Reflection;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows;
@@ -94,7 +93,7 @@ namespace MC.Windows
             }
         }
 
-        private DirectoryInfo _themeDirectory;
+        private System.IO.DirectoryInfo _themeDirectory;
         private string _datPath;
         private void OkButton_Click(object sender, RoutedEventArgs e)
         {            
@@ -105,7 +104,7 @@ namespace MC.Windows
                 if (nameOfTheme != Defaulttextontextbox)
                 {
                     //Create theme folder
-                    _themeDirectory = Directory.CreateDirectory(System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "MC", "Themes", nameOfTheme));
+                    _themeDirectory = Source.Entries.Directory.CreateDirectory(System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "MC", "Themes", nameOfTheme));
                     var nameOfTheme_ = nameOfTheme.Replace(" ", "_");
                     _datPath = System.IO.Path.Combine(_themeDirectory.FullName, $"{nameOfTheme_}.dat");
                 }
@@ -121,7 +120,7 @@ namespace MC.Windows
                 }
            
             //move icons to theme directory
-            var iconsDirectory = Directory.CreateDirectory(System.IO.Path.Combine(_themeDirectory.FullName, "Icons")).FullName;
+            var iconsDirectory = Source.Entries.Directory.CreateDirectory(System.IO.Path.Combine(_themeDirectory.FullName, "Icons")).FullName;
             for (int i = 0; i < iconsPath.Length; i++)
             {
                 var newPath = System.IO.Path.Combine(iconsDirectory, System.IO.Path.GetFileName(iconsPath[i]));
@@ -132,8 +131,8 @@ namespace MC.Windows
 
             //serialize theme
             var binFormat = new BinaryFormatter();
-            using (FileStream fStream = System.IO.File.Open(_datPath,
-                FileMode.Create, FileAccess.Write, FileShare.None))
+            using (var fStream = Source.Entries.File.Open(_datPath,
+                System.IO.FileMode.Create, System.IO.FileAccess.Write, System.IO.FileShare.None))
             {
                 binFormat.Serialize(fStream, new Theme()
                 {

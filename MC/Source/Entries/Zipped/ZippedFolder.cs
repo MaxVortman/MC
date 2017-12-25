@@ -59,7 +59,7 @@ namespace MC.Source.Entries.Zipped
             return Zip.GetEntityPaths(FolderPath);
         }
 
-        protected override void CreateDirectory(string path)
+        protected override void CreateDirectoryVirtual(string path)
         {
             //we don't want to create directory
             //entries are creating directories automaticaly

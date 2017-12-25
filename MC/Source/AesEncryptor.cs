@@ -24,9 +24,9 @@ namespace MC.Source
 
                 var decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
 
-                using (var sourceFileStream = System.IO.File.Open(sourcePath, System.IO.FileMode.Open, System.IO.FileAccess.Read))
+                using (var sourceFileStream = Entries.File.Open(sourcePath, System.IO.FileMode.Open, System.IO.FileAccess.Read, System.IO.FileShare.None))
                 {
-                    using (var destinationFileStream = System.IO.File.Open(destinationPath, System.IO.FileMode.Create, System.IO.FileAccess.Write))
+                    using (var destinationFileStream = Entries.File.Open(destinationPath, System.IO.FileMode.Create, System.IO.FileAccess.Write, System.IO.FileShare.None))
                     {
                         using (var csDecrypt = new CryptoStream(sourceFileStream, decryptor, CryptoStreamMode.Read))
                         {
@@ -60,9 +60,9 @@ namespace MC.Source
 
                 var encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
 
-                using (var sourceFileStream = System.IO.File.Open(sourcePath, System.IO.FileMode.Open, System.IO.FileAccess.Read))
+                using (var sourceFileStream = Entries.File.Open(sourcePath, System.IO.FileMode.Open, System.IO.FileAccess.Read, System.IO.FileShare.None))
                 {
-                    using (var destinationFileStream = System.IO.File.Open(destinationPath, System.IO.FileMode.Create, System.IO.FileAccess.Write))
+                    using (var destinationFileStream = Entries.File.Open(destinationPath, System.IO.FileMode.Create, System.IO.FileAccess.Write, System.IO.FileShare.None))
                     {
                         using (var csEncrypt = new CryptoStream(destinationFileStream, encryptor, CryptoStreamMode.Write))
                         {

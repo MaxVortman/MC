@@ -63,7 +63,7 @@ namespace MC.Source.Entries
 
         public override void Paste(string path, Buffer buffer)
         {
-            CreateDirectory(path);
+            CreateDirectoryVirtual(path);
 
             Buffer[] filesBuffer = (buffer as FolderBuffer).FoldersBuffer;
             List<Entity> dataList = GetAllSubFiles();
@@ -81,9 +81,14 @@ namespace MC.Source.Entries
             return GetData(new List<Entity>(50));
         }
 
-        protected virtual void CreateDirectory(string path)
+        protected virtual void CreateDirectoryVirtual(string path)
         {
-            System.IO.Directory.CreateDirectory(path);
+            Directory.CreateDirectory(path);   
+        }
+
+        public static System.IO.DirectoryInfo CreateDirectory(string path)
+        {
+            return System.IO.Directory.CreateDirectory(path);
         }
 
         public static bool Exists(string path)

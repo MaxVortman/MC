@@ -1,9 +1,7 @@
 ﻿using System;
-using System.IO;
 using System.Text.RegularExpressions;
 using System.Windows;
 using MC.Source.Entries;
-using File = MC.Source.Entries.File;
 
 namespace MC.Source
 {
@@ -49,7 +47,7 @@ namespace MC.Source
         {
             var elem = v as Entity;
             var sourcePath = elem.FullPath;
-            var destinationPath = Path.Combine(sourcePath.Remove(sourcePath.LastIndexOf(@"\", StringComparison.Ordinal)), text);
+            var destinationPath = System.IO.Path.Combine(sourcePath.Remove(sourcePath.LastIndexOf(@"\", StringComparison.Ordinal)), text);
 
             try
             {
@@ -111,7 +109,7 @@ namespace MC.Source
                 var path = item.FullPath;
                 if (item is File)
                 {
-                    System.IO.File.Delete(path);
+                    File.Delete(path);
                 }
                 else
                 {

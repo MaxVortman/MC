@@ -62,7 +62,7 @@ namespace Etier.IconHelper
 		public int AddFileIcon( string filePath )
 		{
 			// Check if the file exists, otherwise, throw exception.
-			if (!System.IO.File.Exists( filePath )) throw new System.IO.FileNotFoundException("File does not exist");
+			if (!MC.Source.Entries.File.Exists( filePath )) throw new System.IO.FileNotFoundException("File does not exist");
 			
 			// Split it down so we can get the extension
 			string[] splitPath = filePath.Split(new Char[] {'.'});

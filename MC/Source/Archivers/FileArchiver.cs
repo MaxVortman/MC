@@ -27,7 +27,7 @@ namespace MC.Source.Archivers
             {
                 this.sourcePathOfFile = sourcePathOfFile;
                 pZip = GetPathOnDialog();
-                zipToOpen = new FileStream(pZip, FileMode.Create, FileAccess.ReadWrite, FileShare.Inheritable);
+                zipToOpen = Entries.File.Open(pZip, FileMode.Create, FileAccess.ReadWrite, FileShare.Inheritable);
                 archive = new ZipArchive(zipToOpen, ZipArchiveMode.Update, false);
                 fileQueueCreator = new FileQueueCreator(sourcePathOfFile);
                 filesQueue = fileQueueCreator.GetFilledQueueOfFilesPath();
@@ -47,7 +47,7 @@ namespace MC.Source.Archivers
             {
                 fileEntry = archive.CreateEntry(filePath.Substring(sourcePathOfFile.Length + 1));
             }
-            using (var InFileStream = System.IO.File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.Read))
+            using (var InFileStream = MC.Source.Entries.File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
                 using (var writer = fileEntry.Open())
                 {
