@@ -1,4 +1,5 @@
 ﻿using MC.Source;
+using MC.Source.Entries;
 using MC.Source.Entries.Zipped;
 using System;
 using System.Collections.Generic;
@@ -11,33 +12,31 @@ using System.Timers;
 
 namespace MC.Source.Watchers
 {
-    internal class ZipSystemWatcher
+    public class SnapEventArgs : EventArgs
+    {
+        public SnapEventArgs(ZippedFolder directory)
+        {
+            Directory = directory;
+        }
+        
+        public ZippedFolder Directory { get; }
+    }
+
+    public class ZipSystemWatcher
     {
         const int TIME_TO_ELAPSE = 500;
         private Timer timer;
 
-        #region Event and his args
+        #region Event
 
         public event EventHandler<SnapEventArgs> OnChanged;
-
-        public class SnapEventArgs : EventArgs
-        {
-            public SnapEventArgs(string path)
-            {
-                Path = path;
-            }
-
-            public string Path { get; }
-        }
-
+        
         #endregion
 
         #region Constructor
 
-        public ZipSystemWatcher(string path, Zip zip)
+        public ZipSystemWatcher()
         {
-            Path = path;
-            Zip = zip;
             timer = new Timer(TIME_TO_ELAPSE);
             timer.Elapsed += async (sender, e) => await TimerElapsedAsync();
         }
@@ -45,42 +44,37 @@ namespace MC.Source.Watchers
         #endregion
 
         #region Properties
-        private string path;
-        public string Path {
-            get
-            {
-                return path;
-            }
-            set
-            {
-                Stop();
-                path = value;
-                Start();
-            }
-        }
+        public ZippedFolder Directory { get; set; }
 
-        public Zip Zip { get; }
         private SnapShot lastSnapShot;
 
         #endregion
 
         public void Stop()
         {
-            throw new NotImplementedException();
+            timer.Stop();
+            lastSnapShot = null;
+            Directory = null;
         }
 
         public void Start()
         {
-            timer.Start();
+            if (Directory != null)
+                timer.Start();
+            else
+                throw new ArgumentException("Don't initialize zip and path yet");
         }
 
         private Task TimerElapsedAsync()
         {
             return Task.Run(() =>
             {
-                var snapShot = new SnapShot(Zip, Path);
+                Directory.Zip.UpdateEntries();
+                var snapShot = new SnapShot(Directory.Zip, Directory.FolderPath);
+                snapShot.MakeSnapShot();
                 if (lastSnapShot != null && lastSnapShot.IsChanged(snapShot))
-                    OnChanged.Invoke(this, new SnapEventArgs(Path));
+                    OnChanged.Invoke(this, new SnapEventArgs(Directory));
+                lastSnapShot = snapShot;
             });            
         }
     }

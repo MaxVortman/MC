@@ -139,6 +139,11 @@ namespace MC.Source
             return folderEntries;
         }
 
+        public void UpdateEntries()
+        {
+            Entries = new List<ZipArchiveEntry>(archive?.Entries);
+        }
+
         public IEnumerable<string> GetFilesPathFromFolder(string path)
         {
             var folderEntries = new List<string>();

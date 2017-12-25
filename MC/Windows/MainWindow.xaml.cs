@@ -65,10 +65,8 @@ namespace MC.Windows
 
             var drives = DriveInfo.GetDrives();
             Places.ItemsSource = DriveFiller.FillTheListBoxWithDrives(drives);
-            var watcher1 = new StandardWatcherCreator(_graphics1, Dispatcher).CreateStandardWatcher();
-            var watcher2 = new StandardWatcherCreator(_graphics2, Dispatcher).CreateStandardWatcher();
-            fileFiller1 = new FileFiller(_graphics1, watcher1);
-            fileFiller2 = new FileFiller(_graphics2, watcher2);
+            fileFiller1 = new FileFiller(_graphics1, new WatchersFactory(_graphics1, Dispatcher));
+            fileFiller2 = new FileFiller(_graphics2, new WatchersFactory(_graphics2, Dispatcher));
             fileFiller1.OpenEntry(new Folder(drives[0].Name));
             fileFiller2.OpenEntry(new Folder(drives[1].Name));
         }

@@ -128,10 +128,12 @@
     <Compile Include="Source\Visitors\ThreadVisitors\TaskVisitor.cs" />
     <Compile Include="Source\Visitors\ThreadVisitors\ThreadVisitor.cs" />
     <Compile Include="Source\Visitors\ThreadVisitors\ThreadsVisitorFactory.cs" />
+    <Compile Include="Source\Watchers\IWatcherCreator.cs" />
     <Compile Include="Source\Watchers\SnapShot.cs" />
     <Compile Include="Source\Watchers\StandardWatcherCreator.cs" />
     <Compile Include="Source\Watchers\WatchersFactory.cs" />
     <Compile Include="Source\Watchers\ZipSystemWatcher.cs" />
+    <Compile Include="Source\Watchers\ZipSystemWatcherCreator.cs" />
     <Compile Include="Source\Zip.cs" />
     <Compile Include="Windows\AccentStyleWindow.xaml.cs">
       <DependentUpon>AccentStyleWindow.xaml</DependentUpon>

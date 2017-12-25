@@ -21,9 +21,7 @@ namespace MC.Source.Watchers
             Path = path;
         }
 
-
-
-        private void MakeSnapShot()
+        public void MakeSnapShot()
         {
             Hashes = new List<byte[]>();
             foreach (var entry in Zip.GetFilesPathFromFolder(Path))
@@ -43,6 +41,8 @@ namespace MC.Source.Watchers
         {
             if (this.Zip != anotherSnap.Zip || this.Path != anotherSnap.Path)
                 throw new ArgumentException("Snap shots of different folders");
+            if (Hashes.Count != anotherSnap.Hashes.Count)
+                return true;
             foreach (var hashes in this.Hashes.Zip(anotherSnap.Hashes, Tuple.Create))
             {
                 foreach (var hash in hashes.Item1.Zip(hashes.Item2, Tuple.Create))

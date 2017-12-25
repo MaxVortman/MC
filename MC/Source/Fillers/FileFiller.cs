@@ -3,20 +3,21 @@ using System.Collections.ObjectModel;
 using System.Windows;
 using MC.Source.Graphics;
 using MC.Source.Entries;
+using MC.Source.Watchers;
 
 namespace MC.Source.Fillers
 {
     class FileFiller
     {
 
-        public FileFiller(GraphicalApp graphicalApp, System.IO.FileSystemWatcher systemWatcher)
+        public FileFiller(GraphicalApp graphicalApp, WatchersFactory systemWatcherFactory)
         {
             this.graphicalApp = graphicalApp;
-            this.systemWatcher = systemWatcher;
+            this.systemWatcherFactory = systemWatcherFactory;
         }
 
         private readonly GraphicalApp graphicalApp;
-        private System.IO.FileSystemWatcher systemWatcher;
+        private WatchersFactory systemWatcherFactory;
 
         public void OpenEntry(Entity entity)
         {            
@@ -25,10 +26,7 @@ namespace MC.Source.Fillers
                 if (entity is Directory)
                 {
                     var dir = entity as Directory;
-                    //systemWatcher.Path = dir.Path;
-                    //systemWatcher.EnableRaisingEvents = true;
-                    //start fill            
-
+                   // systemWatcherFactory.StartWatching(dir);           
                     graphicalApp.SetCaptionOfPath(dir.FullPath);
                     var dataList = dir.GetEntries();
                     graphicalApp.DataSource = new ObservableCollection<Entity>(dataList);

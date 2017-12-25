@@ -8,7 +8,7 @@ using System.Windows.Threading;
 
 namespace MC.Source.Watchers
 {
-    internal class StandardWatcherCreator
+    internal class StandardWatcherCreator : IWatcherCreator
     {
 
         #region Constructor
@@ -16,20 +16,23 @@ namespace MC.Source.Watchers
         {
             this.graphicalApp = graphicalApp;
             this.dispatcher = dispatcher;
+            CreateWatcher();
         }
+
         #endregion
 
         #region Private Properties
 
         private readonly GraphicalApp graphicalApp;
-        private readonly Dispatcher dispatcher; 
+        private readonly Dispatcher dispatcher;
+        private FileSystemWatcher watcher;
         #endregion
 
         #region Create standart Watcher
 
-        internal FileSystemWatcher CreateStandardWatcher()
+        private void CreateWatcher()
         {
-            var watcher = new FileSystemWatcher
+            watcher = new FileSystemWatcher
             {
                 NotifyFilter = NotifyFilters.Size | NotifyFilters.FileName |
                                NotifyFilters.DirectoryName | NotifyFilters.CreationTime,
@@ -39,7 +42,6 @@ namespace MC.Source.Watchers
             watcher.Created += Watcher_Created;
             watcher.Deleted += Watcher_Deleted;
             watcher.Renamed += new RenamedEventHandler(Watcher_Renamed);
-            return watcher;
         }
 
         #endregion
@@ -127,6 +129,14 @@ namespace MC.Source.Watchers
             });            
         }
 
+        #endregion
+
+        #region IWatcher method
+        public void StartWatch(Directory directory)
+        {
+            watcher.Path = directory.FullPath;
+            watcher.EnableRaisingEvents = true;
+        } 
         #endregion
     }
 }
