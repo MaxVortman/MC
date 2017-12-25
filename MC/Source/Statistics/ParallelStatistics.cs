@@ -15,24 +15,14 @@ namespace MC.Source.Statistics
 
         public async override Task<string> GetStatisticsAsync()
         {
-            return await Task.Run(async () =>
+            return await Task.Run(() =>
             {
                 var time = new Stopwatch();
-                var line = String.Empty;
                 time.Start();
-                using (var txtFile = System.IO.File.Open(path, FileMode.Open, FileAccess.Read))
-                {
-                    using (var reader = new StreamReader(txtFile))
-                    {
-                        while (!reader.EndOfStream)
-                        {
-                            line = await reader.ReadLineAsync();
-                            countOfLines++;
-                            if (!string.IsNullOrEmpty(line))
-                                CountingStatistics(line);
-                        }
-                    }
-                }
+                var lines = File.ReadAllLines(path);
+                countOfLines = lines.LongLength;
+                CountingStatistics(lines);
+
                 allUniqueWordsByTheirCountingInText = (from kv in allUniqueWordsByTheirCountingInText.AsParallel()
                                                        orderby kv.Value descending
                                                        select kv).Take(10).ToDictionary((a) => a.Key, (a) => a.Value);
@@ -52,10 +42,14 @@ namespace MC.Source.Statistics
             return replayStringBuilder.ToString();
         }
 
-        private void CountingStatistics(string text)
+        private void CountingStatistics(string[] lines)
         {
-            string[] words = SeparateAndCountingWords(text);
-            CreateTopTenMostPopular(words);
+            string[] words;
+            foreach (var line in lines)
+            {
+                words = SeparateAndCountingWords(line);
+                CreateTopTenMostPopular(words);
+            }            
         }
 
         private string[] SeparateAndCountingWords(string text)

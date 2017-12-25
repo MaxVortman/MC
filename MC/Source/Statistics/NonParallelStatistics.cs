@@ -19,20 +19,9 @@ namespace MC.Source.Statistics
             {
                 var time = new Stopwatch();
                 time.Start();
-                string line;
-                //TO DO: File.ReadAllLines(path)
-                using (var txtFile = System.IO.File.Open(path, FileMode.Open, FileAccess.Read))
-                {
-                    using (StreamReader reader = new StreamReader(txtFile))
-                    {
-                        while (!reader.EndOfStream)
-                        {
-                            line = reader.ReadLine();
-                            countOfLines++;
-                            CountingStatistics(line);
-                        }
-                    }
-                }
+                var lines = File.ReadAllLines(path);
+                countOfLines = lines.LongLength;
+                CountingStatistics(lines);     
                 var topTen = (from d in allUniqueWordsByTheirCountingInText
                               orderby d.Value descending
                               select d).Take(10);
@@ -47,21 +36,25 @@ namespace MC.Source.Statistics
             });            
         }
 
-        private void CountingStatistics(string line)
+        private void CountingStatistics(string[] lines)
         {
-            var words = SearchWordsIn(line);
-            countOfWordsInText += words.LongLength;
-            foreach (var word in words)
+            string[] words;
+            foreach (var line in lines)
             {
-                if (allUniqueWordsByTheirCountingInText.Keys.Contains(word))
+                words = SearchWordsIn(line);
+                countOfWordsInText += words.LongLength;
+                foreach (var word in words)
                 {
-                    allUniqueWordsByTheirCountingInText[word]++;
+                    if (allUniqueWordsByTheirCountingInText.Keys.Contains(word))
+                    {
+                        allUniqueWordsByTheirCountingInText[word]++;
+                    }
+                    else
+                    {
+                        allUniqueWordsByTheirCountingInText.Add(word, 1);
+                    }
                 }
-                else
-                {
-                    allUniqueWordsByTheirCountingInText.Add(word, 1);
-                }
-            }
+            }            
         }
 
         private string[] SearchWordsIn(string line)
