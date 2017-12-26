@@ -40,6 +40,7 @@ namespace MC.Source.Entries
 
         protected List<Entity> GetData(List<Entity> data)
         {
+            //TO DO: Fix dispose
             DisposeZipAction?.Invoke();
             data.AddRange(EntityFactory.GetEntries(this));
             return data;
